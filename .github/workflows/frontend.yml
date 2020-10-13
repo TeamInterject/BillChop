@@ -23,7 +23,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./billchop-fe/billchop
+        working-directory: ./billchop-fe
     strategy:
       matrix:
         node-version: [12.x]
