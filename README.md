@@ -6,6 +6,9 @@ Are you tired of having to figure out how to split the bill properly when you ar
 
 BillChop is an online tool that allows you to keep track of your payments, ascertain who owns whom and so much more!
 
+## Github Actions
+Frontend: ![](https://github.com/TeamInterject/BillChop/workflows/Frontend-CI/badge.svg)
+
 ## Disclaimer
 This project is done for UNIBZ university and is created for educational purposes.
 
