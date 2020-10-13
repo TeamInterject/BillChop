@@ -3,6 +3,7 @@
 Are you tired of having to figure out how to split the bill properly when you are out with a group of friends? Do you want to avoid the awkwardness and frustration of having to constantly ping your buddies about their debts?
 
 **Let us introduce you to BillChop!**
+
 BillChop is an online tool that allows you to keep track of your payments, ascertain who owns whom and so much more!
 
 ## Disclaimer
