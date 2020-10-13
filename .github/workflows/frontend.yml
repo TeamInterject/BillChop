@@ -6,11 +6,11 @@ name: Frontend-CI
 # events but only for the master branch
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths:
       - "billchop-fe/**"
   pull_request:
-    branches: [main]
+    branches: [master]
     paths:
       - "billchop-fe/**"
 
