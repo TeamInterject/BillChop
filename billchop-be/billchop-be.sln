@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "billchop-be", "billchop-be\billchop-be.csproj", "{07953E38-5741-4F59-9777-AD3A85C91483}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{07953E38-5741-4F59-9777-AD3A85C91483}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07953E38-5741-4F59-9777-AD3A85C91483}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07953E38-5741-4F59-9777-AD3A85C91483}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07953E38-5741-4F59-9777-AD3A85C91483}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E2F781F8-A98D-488E-B414-EE252154050A}
+	EndGlobalSection
+EndGlobal
