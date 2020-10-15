@@ -1,0 +1,35 @@
+name: Backend-CI
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "billchop-be/**"
+  pull_request:
+    branches: [master]
+    paths:
+      - "billchop-be/**"
+
+jobs:
+  build-backend:
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./billchop-be
+    strategy:
+      matrix:
+        # Testing needs to happen on multiple platforms, since our developers use a variety of machines
+        os: [ubuntu-latest, windows-latest]
+        dotnet-version: ["3.1.101"]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Setup dotnet ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Build solution
+        run: dotnet build
