@@ -8,6 +8,7 @@ BillChop is an online tool that allows you to keep track of your payments, ascer
 
 ## Github Actions
 Frontend: ![](https://github.com/TeamInterject/BillChop/workflows/Frontend-CI/badge.svg)
+Backend: ![](https://github.com/HuCaresTeam/schedulearn/workflows/Backend-CI/badge.svg)
 
 Backend: ![](https://github.com/HuCaresTeam/schedulearn/workflows/Backend-CI/badge.svg)
 
