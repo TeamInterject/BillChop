@@ -1,6 +1,6 @@
 using System;
 
-namespace billchop_be
+namespace BillChopBE
 {
     public class WeatherForecast
     {
