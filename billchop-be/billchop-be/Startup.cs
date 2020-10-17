@@ -1,14 +1,10 @@
-using BillChopBE.DataAccessLayer;
+using BillChopBE.Extensions;
 using BillChopBE.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Data;
-using System.Data.Common;
-using System.Data.SqlClient;
 
 namespace BillChopBE
 {
@@ -29,38 +25,7 @@ namespace BillChopBE
             // Example of creating injectable config obj
             // services.ConfigureValidatableSetting<SomeValidatableConfig>(Configuration.GetSection("SomeSection"));
 
-            services.AddScoped<DbConnection>((serviceProvider) =>
-            {
-                var dbConnection = new SqlConnection(Configuration.GetConnectionString("BillChopDb"));
-                dbConnection.Open();
-                return dbConnection;
-            });
-
-            services.AddScoped((serviceProvider) =>
-            {
-                var dbConnection = serviceProvider
-                    .GetService<DbConnection>();
-
-                return dbConnection.BeginTransaction(IsolationLevel.ReadCommitted);
-            });
-
-            services.AddScoped((serviceProvider) =>
-            {
-                var dbConnection = serviceProvider.GetService<DbConnection>();
-                return new DbContextOptionsBuilder<BillChopContext>()
-                    .UseLazyLoadingProxies()
-                    .UseSqlServer(dbConnection)
-                    .Options;
-            });
-
-            services.AddScoped((serviceProvider) =>
-            {
-                var transaction = serviceProvider.GetService<DbTransaction>();
-                var options = serviceProvider.GetService<DbContextOptions<BillChopContext>>();
-                var context = new BillChopContext(options);
-                context.Database.UseTransaction(transaction);
-                return context;
-            });
+            services.AddBillChopContext(Configuration.GetConnectionString("BillChopDb"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
