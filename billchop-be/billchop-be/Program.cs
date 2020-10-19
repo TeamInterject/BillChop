@@ -10,7 +10,7 @@ namespace BillChopBE
         {
             CreateHostBuilder(args)
                 .Build()
-                .UpgradeBillChopDb() // Migrate our db on startup
+                .MigrateBillChopDb()
                 .Run();
         }
 

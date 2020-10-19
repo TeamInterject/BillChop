@@ -1,10 +1,13 @@
-﻿using BillChopBE.DataAccessLayer.Models.Validation;
+﻿using BillChopBE.DataAccessLayer.Models.Interfaces;
+using BillChopBE.DataAccessLayer.Models.Validation;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BillChopBE.DataAccessLayer.Models
 {
-    public class User : ValidatableModel
+    public class User : ValidatableModel, IDbModel
     {
         [Required]
         [Key]
@@ -12,5 +15,12 @@ namespace BillChopBE.DataAccessLayer.Models
 
         [Required]
         public string Name { get; set; } = null!;
+
+        [JsonIgnore]
+        public virtual IEnumerable<Group> Groups { get; set; } = new List<Group>();
+
+        public virtual IEnumerable<Expense> Expenses { get; set; } = new List<Expense>();
+
+        public virtual IEnumerable<Bill> Bills { get; set; } = new List<Bill>();
     }
 }

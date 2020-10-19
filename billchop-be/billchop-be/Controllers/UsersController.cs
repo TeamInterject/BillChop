@@ -1,28 +1,44 @@
-﻿using System.Threading.Tasks;
-using BillChopBE.DataAccessLayer;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using BillChopBE.DataAccessLayer.Models;
+using BillChopBE.DataAccessLayer.Repositories.Interfaces;
+using BillChopBE.Services;
+using BillChopBE.Services.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BillChopBE.Controllers
 {
     [ApiController]
+    [Produces("application/json")]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly BillChopContext context;
+        private readonly IUserService userService;
 
-        public UsersController(BillChopContext context)
+        public UsersController(IUserService userService)
         {
-            this.context = context;
+            this.userService = userService;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IList<User>>> GetUsers() 
+        {
+            return Ok(await userService.GetUsersAsync());
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> GetUser(Guid id)
+        {
+            return Ok(await userService.GetUserAsync(id));
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateUser()
+        public async Task<ActionResult<User>> CreateUser([FromBody] CreateNewUser newUser)
         {
-            var newUser = await context.AddAsync(new User() { Name = "Hello" });
-            await context.SaveChangesAsync();
-
-            return Ok();
+            return Ok(await userService.AddUserAsync(newUser));
         }
     }
 }

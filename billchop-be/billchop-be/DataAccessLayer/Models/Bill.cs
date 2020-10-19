@@ -1,11 +1,12 @@
-﻿using BillChopBE.DataAccessLayer.Models.Validation;
+﻿using BillChopBE.DataAccessLayer.Models.Interfaces;
+using BillChopBE.DataAccessLayer.Models.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BillChopBE.DataAccessLayer.Models
 {
-    public class Bill : ValidatableModel
+    public class Bill : ValidatableModel, IDbModel
     {
         [Required]
         [Key]
@@ -22,6 +23,6 @@ namespace BillChopBE.DataAccessLayer.Models
 
         public virtual IEnumerable<Expense> Expenses { get; set; } = new List<Expense>();
 
-        public virtual Group? GroupContext { get; set; }
+        public virtual Group GroupContext { get; set; } = null!;
     }
 }

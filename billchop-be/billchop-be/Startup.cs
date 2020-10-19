@@ -1,10 +1,12 @@
 using BillChopBE.Extensions;
 using BillChopBE.Middleware;
+using BillChopBE.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
 
 namespace BillChopBE
 {
@@ -20,12 +22,19 @@ namespace BillChopBE
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                }); ;
 
-            // Example of creating injectable config obj
+            // Example of creating injectable config
             // services.ConfigureValidatableSetting<SomeValidatableConfig>(Configuration.GetSection("SomeSection"));
 
             services.AddBillChopContext(Configuration.GetConnectionString("BillChopDb"));
+            services.AddBillChopRepositories();
+
+            services.AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -7,7 +7,7 @@ namespace BillChopBE.Extensions
 
     public static class WebHostExtensions
     {
-        public static IHost UpgradeBillChopDb(this IHost webHost)
+        public static IHost MigrateBillChopDb(this IHost webHost)
         {
             var connectionString = ConnectionStringResolver.GetBillChopDbConnectionString();
             var options = new DbContextOptionsBuilder<BillChopContext>()
