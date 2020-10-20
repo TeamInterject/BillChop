@@ -2,6 +2,7 @@
 using BillChopBE.DataAccessLayer.Models.Interfaces;
 using BillChopBE.DataAccessLayer.Models.Validation;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
+using BillChopBE.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace BillChopBE.DataAccessLayer.Repositories
 
             modifyCallback(entityToModify);
             if (entityToModify.Id != id)
-                throw new Exception("Modification of entity id is not allowed");
+                throw new DbException("Modification of entity id is not allowed");
 
             entityToModify.Validate();
             await DbContext.SaveChangesAsync();

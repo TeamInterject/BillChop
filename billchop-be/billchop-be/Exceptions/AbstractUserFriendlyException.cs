@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace BillChopBE.UserFriendlyExceptions
+namespace BillChopBE.Exceptions
 {
     public abstract class AbstractUserFriendlyException : Exception
     {

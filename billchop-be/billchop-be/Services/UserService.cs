@@ -1,7 +1,7 @@
 ﻿using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
+using BillChopBE.Exceptions;
 using BillChopBE.Services.Models;
-using BillChopBE.UserFriendlyExceptions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -36,7 +36,7 @@ namespace BillChopBE.Services
 
         public Task<User> AddUserAsync(CreateNewUser newUser)
         {
-            newUser.Validate(); //TODO: Silent validate and throw appropriate?
+            newUser.Validate(); //TODO: Silent validate and throw appropriate HttpException
             var user = newUser.ToUser();
 
             return userRepository.AddAsync(user);
