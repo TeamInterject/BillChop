@@ -43,7 +43,7 @@ namespace BillChopBE.DataAccessLayer
 
             modelbuilder.Entity<User>()
                 .HasMany(u => u.Bills)
-                .WithOne(b => b.Payer)
+                .WithOne(b => b.Loaner)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelbuilder.Entity<Group>()

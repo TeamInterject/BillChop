@@ -19,7 +19,7 @@ namespace BillChopBE.DataAccessLayer.Models
         public decimal Total { get; set; }
 
         [Required]
-        public virtual User Payer { get; set; } = null!;
+        public virtual User Loaner { get; set; } = null!;
 
         public virtual IEnumerable<Expense> Expenses { get; set; } = new List<Expense>();
 
