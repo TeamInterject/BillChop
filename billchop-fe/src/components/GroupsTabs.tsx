@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import ListGroup from "react-bootstrap/ListGroup";
 import GroupTable from "./GroupTable";
-import { AddGroupForm } from "./AddGroupForm";
+import { CreateGroupForm } from "./CreateGroupForm";
 
 const divStyle: React.CSSProperties = {
     display: "flex",
@@ -21,7 +21,7 @@ export class GroupsTabs extends React.Component<{}, {}> {
                         <ListGroup>
                             <ListGroup.Item action href="#roommates">Roommates</ListGroup.Item>
                             <ListGroup.Item action href="#friends">Friends</ListGroup.Item>
-                            <ListGroup.Item action href="#addNewGroup">Add new group...</ListGroup.Item>
+                            <ListGroup.Item action href="#createNewGroup">Create new group...</ListGroup.Item>
                         </ListGroup>
                     </Col>
                     <div style={divStyle}>
@@ -33,8 +33,8 @@ export class GroupsTabs extends React.Component<{}, {}> {
                                 <Tab.Pane eventKey="#friends">
                                     <GroupTable />
                                 </Tab.Pane>
-                                <Tab.Pane eventKey="#addNewGroup">
-                                    <AddGroupForm />
+                                <Tab.Pane eventKey="#createNewGroup">
+                                    <CreateGroupForm />
                                 </Tab.Pane>
                             </Tab.Content>
                         </Col>

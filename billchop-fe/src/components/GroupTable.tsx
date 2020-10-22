@@ -11,20 +11,17 @@ export default class GroupTable extends React.Component<{}, {}> {
                     <Table striped bordered hover>
                         <thead>
                             <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
+                                <th>Name</th>
                                 <th>Amount</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>Mark</td>
-                                <td>Otto</td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td>Jacob</td>
-                                <td>Thornton</td>
                                 <td></td>
                             </tr>
                         </tbody>

@@ -2,7 +2,7 @@ import * as React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
-export class AddGroupForm extends React.Component<{}, {}> {
+export class CreateGroupForm extends React.Component<{}, {}> {
     render() {
         return (
             <div>
