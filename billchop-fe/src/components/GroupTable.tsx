@@ -13,6 +13,7 @@ interface IGroupTableProps {
 interface IGroupTableState {
   group: Group;
   inputValue: string;
+  expenseAmounts?: number[];
 }
 
 export default class GroupTable extends React.Component<
@@ -22,22 +23,32 @@ export default class GroupTable extends React.Component<
   constructor(props: IGroupTableProps) {
     super(props);
     this.renderTableContent = this.renderTableContent.bind(this);
+    this.handleOnSplit = this.handleOnSplit.bind(this);
   }
 
   handleOnClick() {
     Axios.post("url").then((response) => {
       this.setState({
         ...this.state,
-        group: response.data as Group,
+        group: response.data,
+      });
+    });
+  }
+
+  handleOnSplit(amount: number) {
+    Axios.post("url").then((response) => {
+      this.setState({
+        ...this.state,
+        expenseAmounts: response.data,
       });
     });
   }
 
   renderTableContent() {
-    const tableContent = this.props.group.users.map((user) => (
+    const tableContent = this.props.group.users.map((user, index) => (
       <tr>
         <td>user.name</td>
-        <td></td>
+        <td>this.state.expenseAmounts[index] || ""</td>
       </tr>
     ));
     tableContent.push(
@@ -63,7 +74,7 @@ export default class GroupTable extends React.Component<
   render() {
     return (
       <div>
-        <BillSplitInput />
+        <BillSplitInput onSplit={this.handleOnSplit} />
         <div className="m-2">
           <Table striped bordered hover>
             <thead>
@@ -72,17 +83,7 @@ export default class GroupTable extends React.Component<
                 <th>Amount</th>
               </tr>
             </thead>
-            {this.renderTableContent()}
-            <tbody>
-              <tr>
-                <td>Mark</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>Jacob</td>
-                <td></td>
-              </tr>
-            </tbody>
+            <tbody>{this.renderTableContent()}</tbody>
           </Table>
         </div>
       </div>
