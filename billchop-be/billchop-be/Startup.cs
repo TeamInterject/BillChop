@@ -35,7 +35,8 @@ namespace BillChopBE
             services.AddBillChopRepositories();
 
             services.AddScoped<IUserService, UserService>();
-
+            services.AddScoped<IGroupService, GroupService>();
+          
             services.AddSwaggerGen();
             services.AddSwaggerGenNewtonsoftSupport();
         }
