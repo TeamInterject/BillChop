@@ -17,5 +17,6 @@ namespace BillChopBE.DataAccessLayer.Repositories.Interfaces
         public Task<TEntity?> ModifyAsync(Guid id, Action<TEntity> modifyCallback);
 
         public Task<TEntity?> DeleteById(Guid id);
+        Task<int> SaveChangesAsync();
     }
 }
