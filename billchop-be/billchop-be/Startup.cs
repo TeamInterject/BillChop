@@ -35,6 +35,9 @@ namespace BillChopBE
             services.AddBillChopRepositories();
 
             services.AddScoped<IUserService, UserService>();
+
+            services.AddSwaggerGen();
+            services.AddSwaggerGenNewtonsoftSupport();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +51,13 @@ namespace BillChopBE
             {
                 app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             }
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Billchop API v0.0.1-dev.1");
+            });
 
             app.UseHttpsRedirection();
 
