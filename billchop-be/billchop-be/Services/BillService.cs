@@ -20,17 +20,17 @@ namespace BillChopBE.Services
     public class BillService : IBillService
     {
         private readonly IBillRepository billRepository;
-        private readonly IExpenseRepository expenseRepository;
+        private readonly ILoanRepository loanRepository;
         private readonly IGroupRepository groupRepository;
         private readonly IUserRepository userRepository;
 
         public BillService(IBillRepository billRepository,
-            IExpenseRepository expenseRepository,
+            ILoanRepository loanRepository,
             IGroupRepository groupRepository,
             IUserRepository userRepository)
         {
             this.billRepository = billRepository;
-            this.expenseRepository = expenseRepository;
+            this.loanRepository = loanRepository;
             this.groupRepository = groupRepository;
             this.userRepository = userRepository;
         }
@@ -75,21 +75,21 @@ namespace BillChopBE.Services
             return bill;
         }
 
-        private async Task<IEnumerable<Expense>> SplitBillAsync(Bill bill)
+        private async Task<IEnumerable<Loan>> SplitBillAsync(Bill bill)
         {
             var payingUsers = bill.GroupContext.Users.ToList();
             var amounts = bill.Total.SplitEqually(payingUsers.Count).ToList();
 
-            var expenseTasks = payingUsers
-                .Select((user, index) => new Expense()
+            var loanTasks = payingUsers
+                .Select((user, index) => new Loan()
                 {
                     Bill = bill,
                     Loanee = user,
                     Amount = amounts[index]
                 })
-                .Select(expense => expenseRepository.AddAsync(expense));
+                .Select(expense => loanRepository.AddAsync(expense));
 
-            return await Task.WhenAll(expenseTasks);
+            return await Task.WhenAll(loanTasks);
         }
     }
 }

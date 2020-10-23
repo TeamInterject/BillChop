@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BillChopBE.DataAccessLayer.Models
 {
-    public class Expense : ValidatableModel, IDbModel
+    public class Loan : ValidatableModel, IDbModel
     {
         [Required]
         [Key]
@@ -16,7 +16,13 @@ namespace BillChopBE.DataAccessLayer.Models
         public decimal Amount { get; set; }
 
         [Required]
+        public Guid LoaneeId { get; set; }
+
+        [Required]
         public virtual User Loanee { get; set; } = null!;
+
+        [Required]
+        public Guid BillId { get; set; }
 
         [Required]
         public virtual Bill Bill { get; set; } = null!;

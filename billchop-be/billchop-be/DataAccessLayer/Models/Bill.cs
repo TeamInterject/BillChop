@@ -19,9 +19,15 @@ namespace BillChopBE.DataAccessLayer.Models
         public decimal Total { get; set; }
 
         [Required]
+        public Guid LoanerId { get; set; }
+
+        [Required]
         public virtual User Loaner { get; set; } = null!;
 
-        public virtual IEnumerable<Expense> Expenses { get; set; } = new List<Expense>();
+        public virtual IEnumerable<Loan> Loans { get; set; } = new List<Loan>();
+
+        [Required]
+        public Guid GroupContextId { get; set; }
 
         public virtual Group GroupContext { get; set; } = null!;
     }

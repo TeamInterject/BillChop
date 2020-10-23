@@ -26,7 +26,7 @@ namespace BillChopBE.Extensions
             services.AddScoped<IUserRepository, UserEFRepository>();
             services.AddScoped<IGroupRepository, GroupEFRepository>();
             services.AddScoped<IBillRepository, BillEFRepository>();
-            services.AddScoped<IExpenseRepository, ExpenseEFRepository>();
+            services.AddScoped<ILoanRepository, LoanEFRepository>();
 
             return services;
         }
