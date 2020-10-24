@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BillChopBE.DataAccessLayer.Models;
-using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using BillChopBE.Services;
 using BillChopBE.Services.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +10,7 @@ namespace BillChopBE.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("api/groups")]
     public class GroupsController : ControllerBase
     {
         private readonly IGroupService groupService;
@@ -21,10 +19,14 @@ namespace BillChopBE.Controllers
         {
             this.groupService = groupService;
         }
+
         [HttpGet]
-        public async Task<ActionResult<IList<Group>>> GetGroups()
+        public async Task<ActionResult<IList<Group>>> GetGroups(Guid? userId)
         {
-            return Ok(await groupService.GetGroupsAsync());
+            if (!userId.HasValue)
+                return Ok(await groupService.GetGroupsAsync());
+
+            return Ok(await groupService.GetGroupsOfUserAsync(userId.Value));
         }
 
         [HttpGet("{id}")]
@@ -44,11 +46,5 @@ namespace BillChopBE.Controllers
         {
             return Ok(await groupService.AddUserToGroupAsync(groupId, userId));
         }
-        [HttpGet("user/{userId}")]
-        public async Task<ActionResult<Group>> GetGroupsOfUser(Guid userId)
-        {
-            return Ok(await groupService.GetGroupsOfUserAsync(userId));
-        }
     }
-
 }

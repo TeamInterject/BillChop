@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BillChopBE.DataAccessLayer.Models;
-using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using BillChopBE.Services;
 using BillChopBE.Services.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +10,7 @@ namespace BillChopBE.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("api/users")]
     public class UsersController : ControllerBase
     {
         private readonly IUserService userService;

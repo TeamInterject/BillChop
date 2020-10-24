@@ -10,7 +10,7 @@ namespace BillChopBE.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("api/bills")]
     public class BillsController : ControllerBase
     {
         private readonly IBillService billService;
@@ -20,12 +20,16 @@ namespace BillChopBE.Controllers
             this.billService = billService;
         }
 
-        [HttpGet("group/${groupId}")]
-        public async Task<ActionResult<IList<Bill>>> GetBillsByGroupId(Guid groupId)
+        [HttpGet]
+        public async Task<ActionResult<IList<Bill>>> GetBills(Guid? groupId)
         {
-            return Ok(await billService.GetGroupBillsAsync(groupId));
+            if (!groupId.HasValue)
+                return Ok(await billService.GetBillsAsync());
+
+            return Ok(await billService.GetGroupBillsAsync(groupId.Value));
         }
 
+        [HttpPost]
         public async Task<ActionResult<Bill>> CreateBill(CreateNewBill newBill) 
         {
             return Ok(await billService.CreateAndSplitBillAsync(newBill));

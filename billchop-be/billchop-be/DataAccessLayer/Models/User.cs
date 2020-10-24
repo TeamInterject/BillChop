@@ -19,8 +19,10 @@ namespace BillChopBE.DataAccessLayer.Models
         [JsonIgnore]
         public virtual IEnumerable<Group> Groups { get; set; } = new List<Group>();
 
+        [JsonIgnore]
         public virtual IEnumerable<Expense> Expenses { get; set; } = new List<Expense>();
 
+        [JsonIgnore]
         public virtual IEnumerable<Bill> Bills { get; set; } = new List<Bill>();
     }
 }
