@@ -36,7 +36,8 @@ namespace BillChopBE
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGroupService, GroupService>();
-          
+            services.AddScoped<IBillService, BillService>();
+
             services.AddSwaggerGen();
             services.AddSwaggerGenNewtonsoftSupport();
         }

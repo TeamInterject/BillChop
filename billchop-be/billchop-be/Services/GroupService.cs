@@ -53,11 +53,14 @@ namespace BillChopBE.Services
             var group = await GetGroupAsync(groupId);
             if (group == null)
                 throw new NotFoundException($"Group with id {groupId} does not exist.");
+
             var user = await userRepository.GetByIdAsync(userId);
             if (user == null)
                 throw new NotFoundException($"User with id {userId} does not exist.");
+
             group.Users.Add(user);
             await groupRepository.SaveChangesAsync();
+
             return group;
         }
         
@@ -66,6 +69,7 @@ namespace BillChopBE.Services
             var user = await userRepository.GetByIdAsync(id);
             if (user == null)
                 throw new NotFoundException($"User with id {id} does not exist.");
+
             return user.Groups.ToList();
         }
     }  
