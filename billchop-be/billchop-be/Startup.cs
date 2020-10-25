@@ -83,6 +83,12 @@ namespace BillChopBE
 
             app.UseAuthorization();
 
+            app.UseCors(corsBuilder => corsBuilder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .Build());
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
