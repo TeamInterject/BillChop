@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 
 namespace BillChopBE.DataAccessLayer.Repositories.Interfaces
 {
-    public interface IGroupRepository : IRepository<Group>
+    public interface ILoanRepository : IRepository<Loan>
     {
-        Task<IList<Group>> GetUserGroups(Guid userId);
     }
 }

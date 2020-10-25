@@ -23,10 +23,7 @@ namespace BillChopBE.Controllers
         [HttpGet]
         public async Task<ActionResult<IList<Group>>> GetGroups(Guid? userId)
         {
-            if (!userId.HasValue)
-                return Ok(await groupService.GetGroupsAsync());
-
-            return Ok(await groupService.GetGroupsOfUserAsync(userId.Value));
+            return Ok(await groupService.GetGroupsAsync(userId));
         }
 
         [HttpGet("{id}")]
@@ -41,7 +38,7 @@ namespace BillChopBE.Controllers
             return Ok(await groupService.AddGroupAsync(newGroup));
         }
 
-        [HttpPost("{groupId}/add_user/{userId}")]
+        [HttpPost("{groupId}/add-user/{userId}")]
         public async Task<ActionResult<Group>> AddUserToGroup(Guid groupId, Guid userId)
         {
             return Ok(await groupService.AddUserToGroupAsync(groupId, userId));

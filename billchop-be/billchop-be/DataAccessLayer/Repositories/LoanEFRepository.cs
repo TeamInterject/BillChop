@@ -1,16 +1,20 @@
 ﻿using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BillChopBE.DataAccessLayer.Repositories
 {
-    public class ExpenseEFRepository : AbstractEFRepository<Expense>, IExpenseRepository
+    public class LoanEFRepository : AbstractEFRepository<Loan>, ILoanRepository
     {
         private readonly BillChopContext context;
         protected override DbContext DbContext => context;
-        protected override DbSet<Expense> DbSet => context.Expenses;
+        protected override DbSet<Loan> DbSet => context.Loans;
 
-        public ExpenseEFRepository(BillChopContext context)
+        public LoanEFRepository(BillChopContext context)
         {
             this.context = context;
         }

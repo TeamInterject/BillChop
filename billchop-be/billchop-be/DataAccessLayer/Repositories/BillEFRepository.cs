@@ -21,7 +21,9 @@ namespace BillChopBE.DataAccessLayer.Repositories
 
         public async Task<IList<Bill>> GetBillsByGroupId(Guid groupId)
         {
-            return await DbSet.Where(b => b.GroupContext.Id == groupId).ToListAsync();
+            return await DbSet
+                .Where(b => b.GroupContextId == groupId)
+                .ToListAsync();
         }
     }
 }

@@ -3,10 +3,10 @@ using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using BillChopBE.Exceptions;
 using BillChopBE.Extensions;
 using BillChopBE.Services.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 
 namespace BillChopBE.Services
@@ -14,34 +14,36 @@ namespace BillChopBE.Services
     public interface IBillService
     {
         Task<Bill> CreateAndSplitBillAsync(CreateNewBill newBill);
-        Task<IList<Bill>> GetBillsAsync();
-        Task<IList<Bill>> GetGroupBillsAsync(Guid groupId);
+        Task<IList<Bill>> GetBillsAsync(Guid? groupId);
     }
 
     public class BillService : IBillService
     {
         private readonly IBillRepository billRepository;
-        private readonly IExpenseRepository expenseRepository;
+        private readonly ILoanRepository loanRepository;
         private readonly IGroupRepository groupRepository;
         private readonly IUserRepository userRepository;
 
         public BillService(IBillRepository billRepository,
-            IExpenseRepository expenseRepository,
+            ILoanRepository loanRepository,
             IGroupRepository groupRepository,
             IUserRepository userRepository)
         {
             this.billRepository = billRepository;
-            this.expenseRepository = expenseRepository;
+            this.loanRepository = loanRepository;
             this.groupRepository = groupRepository;
             this.userRepository = userRepository;
         }
 
-        public Task<IList<Bill>> GetBillsAsync()
+        public Task<IList<Bill>> GetBillsAsync(Guid? groupId)
         {
+            if (groupId.HasValue)
+                return GetGroupBillsAsync(groupId.Value);
+
             return billRepository.GetAllAsync();
         }
 
-        public async Task<IList<Bill>> GetGroupBillsAsync(Guid groupId)
+        private async Task<IList<Bill>> GetGroupBillsAsync(Guid groupId)
         {
             var group = await groupRepository.GetByIdAsync(groupId);
             if (group == null)
@@ -76,25 +78,25 @@ namespace BillChopBE.Services
             return bill;
         }
 
-        private async Task<IEnumerable<Expense>> SplitBillAsync(Bill bill)
+        private async Task<IEnumerable<Loan>> SplitBillAsync(Bill bill)
         {
             var payingUsers = bill.GroupContext.Users.ToList();
             var amounts = bill.Total.SplitEqually(payingUsers.Count).ToList();
 
-            var expenses = payingUsers
-                .Select((user, index) => new Expense()
+            var loans = payingUsers
+                .Select((user, index) => new Loan()
                 {
                     Bill = bill,
                     Loanee = user,
                     Amount = amounts[index]
                 });
 
-            foreach (var expense in expenses) 
+            foreach (var loan in loans) 
             {
-                await expenseRepository.AddAsync(expense);
+                await loanRepository.AddAsync(loan);
             }
 
-            return expenses;
+            return loans;
         }
     }
 }
