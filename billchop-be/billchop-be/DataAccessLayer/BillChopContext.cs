@@ -1,12 +1,16 @@
 ﻿using BillChopBE.DataAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace BillChopBE.DataAccessLayer
 {
     public class BillChopContext : DbContext
     {
-        public BillChopContext() : base()
+        private readonly ILoggerFactory? loggerFactory;
+
+        public BillChopContext(ILoggerFactory loggerFactory) : base()
         {
+            this.loggerFactory = loggerFactory;
         }
 
         public BillChopContext(DbContextOptions<BillChopContext> options) : base(options)
@@ -15,14 +19,17 @@ namespace BillChopBE.DataAccessLayer
 
         public DbSet<User> Users => Set<User>();
         public DbSet<Group> Groups => Set<Group>();
-        public DbSet<Expense> Expenses => Set<Expense>();
+        public DbSet<Loan> Loans => Set<Loan>();
         public DbSet<Bill> Bills => Set<Bill>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder options) 
         {
             if (!options.IsConfigured)
             {
-                options.UseSqlServer(ConnectionStringResolver.GetBillChopDbConnectionString());
+                options
+                    .UseLoggerFactory(loggerFactory)
+                    .UseLazyLoadingProxies()
+                    .UseSqlServer(ConnectionStringResolver.GetBillChopDbConnectionString());
             }
 
             base.OnConfiguring(options);
@@ -37,13 +44,13 @@ namespace BillChopBE.DataAccessLayer
                 .IsUnique();
 
             modelbuilder.Entity<User>()
-                .HasMany(u => u.Expenses)
+                .HasMany(u => u.Loans)
                 .WithOne(e => e.Loanee)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelbuilder.Entity<User>()
                 .HasMany(u => u.Bills)
-                .WithOne(b => b.Payer)
+                .WithOne(b => b.Loaner)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelbuilder.Entity<Group>()
@@ -55,7 +62,7 @@ namespace BillChopBE.DataAccessLayer
                 .WithOne(b => b.GroupContext);
 
             modelbuilder.Entity<Bill>()
-                .HasMany(b => b.Expenses)
+                .HasMany(b => b.Loans)
                 .WithOne(e => e.Bill)
                 .OnDelete(DeleteBehavior.Cascade);
         }

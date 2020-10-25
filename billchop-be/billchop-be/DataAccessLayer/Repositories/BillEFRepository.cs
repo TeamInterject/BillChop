@@ -1,6 +1,10 @@
 ﻿using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BillChopBE.DataAccessLayer.Repositories
 {
@@ -13,6 +17,13 @@ namespace BillChopBE.DataAccessLayer.Repositories
         public BillEFRepository(BillChopContext context)
         {
             this.context = context;
+        }
+
+        public async Task<IList<Bill>> GetBillsByGroupId(Guid groupId)
+        {
+            return await DbSet
+                .Where(b => b.GroupContextId == groupId)
+                .ToListAsync();
         }
     }
 }

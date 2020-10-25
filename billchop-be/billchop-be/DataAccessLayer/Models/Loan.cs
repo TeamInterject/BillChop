@@ -1,12 +1,13 @@
 ﻿using BillChopBE.DataAccessLayer.Models.Interfaces;
 using BillChopBE.DataAccessLayer.Models.Validation;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BillChopBE.DataAccessLayer.Models
 {
-    public class Expense : ValidatableModel, IDbModel
+    public class Loan : ValidatableModel, IDbModel
     {
         [Required]
         [Key]
@@ -16,9 +17,15 @@ namespace BillChopBE.DataAccessLayer.Models
         public decimal Amount { get; set; }
 
         [Required]
+        [JsonIgnore]
+        public Guid LoaneeId { get; set; }
+
         public virtual User Loanee { get; set; } = null!;
 
         [Required]
+        public Guid BillId { get; set; }
+
+        [JsonIgnore]
         public virtual Bill Bill { get; set; } = null!;
     }
 }

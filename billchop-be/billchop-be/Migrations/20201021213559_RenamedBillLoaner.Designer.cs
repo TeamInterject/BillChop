@@ -4,14 +4,16 @@ using BillChopBE.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BillChopBE.Migrations
 {
     [DbContext(typeof(BillChopContext))]
-    partial class BillChopContextModelSnapshot : ModelSnapshot
+    [Migration("20201021213559_RenamedBillLoaner")]
+    partial class RenamedBillLoaner
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,22 +49,7 @@ namespace BillChopBE.Migrations
                     b.ToTable("Bills");
                 });
 
-            modelBuilder.Entity("BillChopBE.DataAccessLayer.Models.Group", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Groups");
-                });
-
-            modelBuilder.Entity("BillChopBE.DataAccessLayer.Models.Loan", b =>
+            modelBuilder.Entity("BillChopBE.DataAccessLayer.Models.Expense", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,7 +70,22 @@ namespace BillChopBE.Migrations
 
                     b.HasIndex("LoaneeId");
 
-                    b.ToTable("Loans");
+                    b.ToTable("Expenses");
+                });
+
+            modelBuilder.Entity("BillChopBE.DataAccessLayer.Models.Group", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("BillChopBE.DataAccessLayer.Models.User", b =>
@@ -138,16 +140,16 @@ namespace BillChopBE.Migrations
                     b.Navigation("Loaner");
                 });
 
-            modelBuilder.Entity("BillChopBE.DataAccessLayer.Models.Loan", b =>
+            modelBuilder.Entity("BillChopBE.DataAccessLayer.Models.Expense", b =>
                 {
                     b.HasOne("BillChopBE.DataAccessLayer.Models.Bill", "Bill")
-                        .WithMany("Loans")
+                        .WithMany("Expenses")
                         .HasForeignKey("BillId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BillChopBE.DataAccessLayer.Models.User", "Loanee")
-                        .WithMany("Loans")
+                        .WithMany("Expenses")
                         .HasForeignKey("LoaneeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -174,7 +176,7 @@ namespace BillChopBE.Migrations
 
             modelBuilder.Entity("BillChopBE.DataAccessLayer.Models.Bill", b =>
                 {
-                    b.Navigation("Loans");
+                    b.Navigation("Expenses");
                 });
 
             modelBuilder.Entity("BillChopBE.DataAccessLayer.Models.Group", b =>
@@ -186,7 +188,7 @@ namespace BillChopBE.Migrations
                 {
                     b.Navigation("Bills");
 
-                    b.Navigation("Loans");
+                    b.Navigation("Expenses");
                 });
 #pragma warning restore 612, 618
         }
