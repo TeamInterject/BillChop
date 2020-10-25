@@ -62,5 +62,10 @@ namespace BillChopBE.DataAccessLayer.Repositories
 
             return removedEntity.Entity;
         }
+
+        public Task<int> SaveChangesAsync()
+        {
+            return DbContext.SaveChangesAsync();
+        }
     }
 }

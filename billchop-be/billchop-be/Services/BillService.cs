@@ -6,6 +6,7 @@ using BillChopBE.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 
 namespace BillChopBE.Services
@@ -80,16 +81,16 @@ namespace BillChopBE.Services
             var payingUsers = bill.GroupContext.Users.ToList();
             var amounts = bill.Total.SplitEqually(payingUsers.Count).ToList();
 
-            var loanTasks = payingUsers
+            var loans = payingUsers
                 .Select((user, index) => new Loan()
                 {
                     Bill = bill,
                     Loanee = user,
                     Amount = amounts[index]
                 })
-                .Select(expense => loanRepository.AddAsync(expense));
+                .Select(loan => expenseRepository.AddAsync(loan));
 
-            return await Task.WhenAll(loanTasks);
+            return loans;
         }
     }
 }

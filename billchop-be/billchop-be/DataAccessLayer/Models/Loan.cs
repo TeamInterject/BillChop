@@ -1,5 +1,6 @@
 ﻿using BillChopBE.DataAccessLayer.Models.Interfaces;
 using BillChopBE.DataAccessLayer.Models.Validation;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,13 +19,12 @@ namespace BillChopBE.DataAccessLayer.Models
         [Required]
         public Guid LoaneeId { get; set; }
 
-        [Required]
         public virtual User Loanee { get; set; } = null!;
 
         [Required]
         public Guid BillId { get; set; }
 
-        [Required]
+        [JsonIgnore]
         public virtual Bill Bill { get; set; } = null!;
     }
 }
