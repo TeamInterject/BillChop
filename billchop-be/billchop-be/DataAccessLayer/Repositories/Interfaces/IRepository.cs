@@ -1,4 +1,5 @@
-﻿using BillChopBE.DataAccessLayer.Models.Interfaces;
+﻿using BillChopBE.DataAccessLayer.Filters;
+using BillChopBE.DataAccessLayer.Models.Interfaces;
 using BillChopBE.DataAccessLayer.Models.Validation;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace BillChopBE.DataAccessLayer.Repositories.Interfaces
 {
     public interface IRepository<TEntity> where TEntity : class, IValidatableModel, IDbModel
     {
-        public Task<IList<TEntity>> GetAllAsync();
+        public Task<IList<TEntity>> GetAllAsync(IDbFilter<TEntity>? dbFilter = null);
 
         public Task<TEntity?> GetByIdAsync(Guid id);
 

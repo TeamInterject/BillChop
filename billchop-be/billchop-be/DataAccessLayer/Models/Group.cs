@@ -19,6 +19,6 @@ namespace BillChopBE.DataAccessLayer.Models
         public virtual List<User> Users { get; set; } = new List<User>();
         
         [JsonIgnore]
-        public virtual IEnumerable<Bill> Bills { get; set; } = new List<Bill>();
+        public virtual List<Bill> Bills { get; set; } = new List<Bill>();
     }
 }

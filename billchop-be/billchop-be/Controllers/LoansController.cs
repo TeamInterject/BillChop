@@ -1,4 +1,5 @@
-﻿using BillChopBE.DataAccessLayer.Models;
+﻿using BillChopBE.DataAccessLayer.Filters;
+using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,7 +10,7 @@ namespace BillChopBE.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("api/loans")]
     public class LoansController : ControllerBase
     {
         private readonly ILoanService loanService;
@@ -19,25 +20,51 @@ namespace BillChopBE.Controllers
             this.loanService = loanService;
         }
 
+        /// <summary>
+        /// Get all loans that need to be paid back to specific user. AKA the loans the user provided.
+        /// </summary>
+        /// <param name="loanerId">Id of user who lent money.</param>
+        /// <param name="groupId">Optional Id of context group.</param>
+        /// <returns></returns>
+        [HttpGet("provided-loans/{loanerId}")]
+        public async Task<ActionResult<IList<Loan>>> GetProvidedLoans(Guid loanerId, Guid? groupId)
+        {
+            return Ok(await loanService.GetProvidedLoans(loanerId, groupId));
+        }
+
+        /// <summary>
+        /// Get all loans that specific user has to pay back. AKA, the loans the user received.
+        /// </summary>
+        /// <param name="loaneeId">Id of user who borrowed money.</param>
+        /// <param name="groupId">Optional Id of context group.</param>
+        /// <returns></returns>
+        [HttpGet("received-loans/{loaneeId}")]
+        public async Task<ActionResult<IList<Loan>>> GetReceivedLoans(Guid loaneeId, Guid? groupId)
+        {
+            return Ok(await loanService.GetReceivedLoans(loaneeId, groupId));
+        }
+
+        /// <summary>
+        /// Gets all loans user owns to himself, or in other words their own expenses.
+        /// </summary>
+        /// <param name="loanerAndLoaneeId">Id of user who paid for himself, making it an expense.</param>
+        /// <param name="groupId">Optional Id of context group.</param>
+        /// <returns></returns>
+        [HttpGet("self-loans/{loanerAndLoaneeId}")]
+        public async Task<ActionResult<IList<Loan>>> GetSelfLoans(Guid loanerAndLoaneeId, Guid? groupId)
+        {
+            return Ok(await loanService.GetSelfLoans(loanerAndLoaneeId, groupId));
+        }
+
+        /// <summary>
+        /// Gets all loans that can optionally be filterd.
+        /// </summary>
+        /// <param name="loanFilterInfo"></param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IList<Loan>>> GetBillLoans(Guid billId) 
+        public async Task<ActionResult<IList<Loan>>> GetLoans([FromQuery] LoanFilterInfo loanFilterInfo) 
         {
-            return Ok(await loanService.GetBillLoans(billId));
-        }
-
-        public async Task<ActionResult<IList<Loan>>> GetLentUserLoansInGroup(Guid loanerId, Guid groupId) 
-        {
-            return Ok(await loanService.GetLentUserLoansInGroup(loanerId, groupId));
-        }
-
-        public async Task<ActionResult<IList<Loan>>> GetTakenUserLoans(Guid userId) 
-        {
-            return Ok(await loanService.GetTakenUserLoans(userId));
-        }
-
-        public async Task<ActionResult<IList<Loan>>> GetTakenUserLoansInGroup(Guid loaneeId, Guid groupId) 
-        {
-            return Ok(await loanService.GetTakenUserLoansInGroup(loaneeId, groupId));
+            return Ok(await loanService.GetFilteredLoans(loanFilterInfo));
         }
     }
 }

@@ -12,6 +12,7 @@ namespace BillChopBE.Extensions
             var connectionString = ConnectionStringResolver.GetBillChopDbConnectionString();
             var options = new DbContextOptionsBuilder<BillChopContext>()
                     .UseSqlServer(connectionString)
+                    .UseLazyLoadingProxies()
                     .Options;
 
             var dbContext = new BillChopContext(options);

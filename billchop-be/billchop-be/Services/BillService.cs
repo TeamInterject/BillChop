@@ -3,10 +3,10 @@ using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using BillChopBE.Exceptions;
 using BillChopBE.Extensions;
 using BillChopBE.Services.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 
 namespace BillChopBE.Services
@@ -14,8 +14,7 @@ namespace BillChopBE.Services
     public interface IBillService
     {
         Task<Bill> CreateAndSplitBillAsync(CreateNewBill newBill);
-        Task<IList<Bill>> GetBillsAsync();
-        Task<IList<Bill>> GetGroupBillsAsync(Guid groupId);
+        Task<IList<Bill>> GetBillsAsync(Guid? groupId);
     }
 
     public class BillService : IBillService
@@ -36,12 +35,15 @@ namespace BillChopBE.Services
             this.userRepository = userRepository;
         }
 
-        public Task<IList<Bill>> GetBillsAsync()
+        public Task<IList<Bill>> GetBillsAsync(Guid? groupId)
         {
+            if (groupId.HasValue)
+                return GetGroupBillsAsync(groupId.Value);
+
             return billRepository.GetAllAsync();
         }
 
-        public async Task<IList<Bill>> GetGroupBillsAsync(Guid groupId)
+        private async Task<IList<Bill>> GetGroupBillsAsync(Guid groupId)
         {
             var group = await groupRepository.GetByIdAsync(groupId);
             if (group == null)
@@ -87,8 +89,12 @@ namespace BillChopBE.Services
                     Bill = bill,
                     Loanee = user,
                     Amount = amounts[index]
-                })
-                .Select(loan => expenseRepository.AddAsync(loan));
+                });
+
+            foreach (var loan in loans) 
+            {
+                await loanRepository.AddAsync(loan);
+            }
 
             return loans;
         }

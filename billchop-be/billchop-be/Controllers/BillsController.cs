@@ -23,14 +23,11 @@ namespace BillChopBE.Controllers
         [HttpGet]
         public async Task<ActionResult<IList<Bill>>> GetBills(Guid? groupId)
         {
-            if (!groupId.HasValue)
-                return Ok(await billService.GetBillsAsync());
-
-            return Ok(await billService.GetGroupBillsAsync(groupId.Value));
+            return Ok(await billService.GetBillsAsync(groupId));
         }
 
         [HttpPost]
-        public async Task<ActionResult<Bill>> CreateBill(CreateNewBill newBill) 
+        public async Task<ActionResult<Bill>> CreateBill([FromBody] CreateNewBill newBill) 
         {
             return Ok(await billService.CreateAndSplitBillAsync(newBill));
         }

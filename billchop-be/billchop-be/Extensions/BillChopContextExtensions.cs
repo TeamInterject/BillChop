@@ -7,6 +7,7 @@ using BillChopBE.DataAccessLayer;
 using BillChopBE.DataAccessLayer.Repositories;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using System;
+using Microsoft.Extensions.Logging;
 
 namespace BillChopBE.Extensions
 {
@@ -56,7 +57,10 @@ namespace BillChopBE.Extensions
             return services.AddScoped((serviceProvider) =>
             {
                 var dbConnection = serviceProvider.GetService<DbConnection>();
+                var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+
                 return new DbContextOptionsBuilder<BillChopContext>()
+                    .UseLoggerFactory(loggerFactory)
                     .UseLazyLoadingProxies()
                     .UseSqlServer(dbConnection)
                     .Options;

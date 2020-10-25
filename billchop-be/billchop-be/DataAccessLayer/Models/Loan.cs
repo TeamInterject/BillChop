@@ -17,6 +17,7 @@ namespace BillChopBE.DataAccessLayer.Models
         public decimal Amount { get; set; }
 
         [Required]
+        [JsonIgnore]
         public Guid LoaneeId { get; set; }
 
         public virtual User Loanee { get; set; } = null!;

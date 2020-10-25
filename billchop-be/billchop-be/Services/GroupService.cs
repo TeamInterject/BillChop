@@ -11,11 +11,10 @@ namespace BillChopBE.Services
 {
     public interface IGroupService
     {
-        Task<Group> AddGroupAsync(CreateNewGroup newGroup);
+        Task<IList<Group>> GetGroupsAsync(Guid? userId);
         Task<Group> GetGroupAsync(Guid id);
-        Task<IList<Group>> GetGroupsAsync();
+        Task<Group> AddGroupAsync(CreateNewGroup newGroup);
         Task<Group> AddUserToGroupAsync(Guid groupId, Guid userId);
-        Task<IList<Group>> GetGroupsOfUserAsync(Guid id);
     }
 
     public class GroupService : IGroupService
@@ -27,6 +26,23 @@ namespace BillChopBE.Services
         {
             this.groupRepository = groupRepository;
             this.userRepository = userRepository;
+        }
+
+        public Task<IList<Group>> GetGroupsAsync(Guid? userId)
+        {
+            if (userId.HasValue)
+                return GetGroupsOfUserAsync(userId.Value);
+
+            return groupRepository.GetAllAsync();
+        }
+
+        private async Task<IList<Group>> GetGroupsOfUserAsync(Guid userId)
+        {
+            var user = await userRepository.GetByIdAsync(userId);
+            if (user == null)
+                throw new NotFoundException($"User with id {userId} does not exist.");
+
+            return await groupRepository.GetUserGroups(userId);
         }
 
         public async Task<Group> GetGroupAsync(Guid id)
@@ -43,11 +59,6 @@ namespace BillChopBE.Services
             return groupRepository.AddAsync(group);
         }
 
-        public Task<IList<Group>> GetGroupsAsync()
-        {
-            return groupRepository.GetAllAsync();
-        }
-
         public async Task<Group> AddUserToGroupAsync(Guid groupId, Guid userId)
         {
             var group = await GetGroupAsync(groupId);
@@ -62,15 +73,6 @@ namespace BillChopBE.Services
             await groupRepository.SaveChangesAsync();
 
             return group;
-        }
-        
-        public async Task<IList<Group>> GetGroupsOfUserAsync(Guid id)
-        {
-            var user = await userRepository.GetByIdAsync(id);
-            if (user == null)
-                throw new NotFoundException($"User with id {id} does not exist.");
-
-            return user.Groups.ToList();
         }
     }  
 }

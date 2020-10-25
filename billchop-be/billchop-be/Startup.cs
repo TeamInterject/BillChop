@@ -1,3 +1,4 @@
+using BillChopBE.DataAccessLayer.Filters.Factories;
 using BillChopBE.Extensions;
 using BillChopBE.Middleware;
 using BillChopBE.Services;
@@ -6,7 +7,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace BillChopBE
 {
@@ -39,7 +44,15 @@ namespace BillChopBE
             services.AddScoped<IBillService, BillService>();
             services.AddScoped<ILoanService, LoanService>();
 
-            services.AddSwaggerGen();
+            services.AddScoped<ILoanDbFilterFactory, LoanDbFilterFactory>();
+
+            services.AddSwaggerGen(c => 
+            {
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
             services.AddSwaggerGenNewtonsoftSupport();
         }
 

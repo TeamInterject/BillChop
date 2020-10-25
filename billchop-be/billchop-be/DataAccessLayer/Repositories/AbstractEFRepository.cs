@@ -1,4 +1,5 @@
-﻿using BillChopBE.DataAccessLayer.Models;
+﻿using BillChopBE.DataAccessLayer.Filters;
+using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.DataAccessLayer.Models.Interfaces;
 using BillChopBE.DataAccessLayer.Models.Validation;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
@@ -15,9 +16,12 @@ namespace BillChopBE.DataAccessLayer.Repositories
         protected abstract DbSet<TEntity> DbSet { get; }
         protected abstract DbContext DbContext { get; }
 
-        public async Task<IList<TEntity>> GetAllAsync()
+        public async Task<IList<TEntity>> GetAllAsync(IDbFilter<TEntity>? dbFilter = null)
         {
-            return await DbSet.ToListAsync();
+            if (dbFilter == null)
+                return await DbSet.ToListAsync();
+
+            return await dbFilter.ApplyFilter(DbSet).ToListAsync();
         }
 
         public async Task<TEntity?> GetByIdAsync(Guid id)

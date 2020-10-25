@@ -1,4 +1,6 @@
-﻿using BillChopBE.DataAccessLayer.Models;
+﻿using BillChopBE.DataAccessLayer.Filters;
+using BillChopBE.DataAccessLayer.Filters.Factories;
+using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,63 +10,61 @@ namespace BillChopBE.Services
 {
     public interface ILoanService
     {
-        Task<IList<Loan>> GetBillLoans(Guid billId);
-        Task<IList<Loan>> GetLentUserLoansInGroup(Guid loanerId, Guid groupId);
-        Task<IList<Loan>> GetTakenUserLoans(Guid userId);
-        Task<IList<Loan>> GetTakenUserLoansInGroup(Guid loaneeId, Guid groupId);
+        Task<IList<Loan>> GetProvidedLoans(Guid loanerId, Guid? groupId);
+        Task<IList<Loan>> GetReceivedLoans(Guid loaneeId, Guid? groupId);
+        Task<IList<Loan>> GetSelfLoans(Guid loanerAndLoaneeId, Guid? groupId);
+        Task<IList<Loan>> GetFilteredLoans(LoanFilterInfo loanFilterInfo);
     }
 
     public class LoanService : ILoanService
     {
         private readonly ILoanRepository loanRepository;
+        private readonly ILoanDbFilterFactory loanDbFilterFactory;
 
-        public LoanService(ILoanRepository loanRepository)
+        public LoanService(ILoanRepository loanRepository, ILoanDbFilterFactory loanDbFilterFactory)
         {
             this.loanRepository = loanRepository;
+            this.loanDbFilterFactory = loanDbFilterFactory;
         }
 
-        /// <summary>
-        /// Method for getting all loans where user borrowed money.
-        /// Note: Useful for calculating total loan sums for a user.
-        /// </summary>
-        /// <param name="userId">Id of user who borrowed money</param>
-        /// <returns>List of loan instances where user borrowed money.</returns>
-        public Task<IList<Loan>> GetTakenUserLoans(Guid userId)
+        public async Task<IList<Loan>> GetProvidedLoans(Guid loanerId, Guid? groupId)
         {
-            return loanRepository.GetByUserIdAsync(userId);
+            var filterInfo = new LoanFilterInfo()
+            {
+                LoanerId = loanerId,
+                GroupId = groupId,
+            };
+
+            return await GetFilteredLoans(filterInfo);
         }
 
-        /// <summary>
-        /// Method for getting all loans where user borrowed money in a certain group.
-        /// Note: Useful for calculating total loan sums for a user in a group.
-        /// </summary>
-        /// <param name="loaneeId">Id of user who borrowed money</param>
-        /// <param name="groupId">Id of context group</param>
-        /// <returns>List of loan instances where user borrowed money in a certain group.</returns>
-        public Task<IList<Loan>> GetTakenUserLoansInGroup(Guid loaneeId, Guid groupId)
+        public async Task<IList<Loan>> GetReceivedLoans(Guid loaneeId, Guid? groupId)
         {
-            return loanRepository.GetByLoaneeAndGroupAsync(loaneeId, groupId);
+            var filterInfo = new LoanFilterInfo()
+            {
+                LoaneeId = loaneeId,
+                GroupId = groupId,
+            };
+
+            return await GetFilteredLoans(filterInfo);
         }
 
-        /// <summary>
-        /// Get all loans associated with a bill
-        /// </summary>
-        /// <param name="billId">Bill to get loans for</param>
-        /// <returns>List of loans associated with a specific bill</returns>
-        public Task<IList<Loan>> GetBillLoans(Guid billId)
+        public async Task<IList<Loan>> GetSelfLoans(Guid loanerAndLoaneeId, Guid? groupId)
         {
-            return loanRepository.GetByBillIdAsync(billId);
+            var filterInfo = new LoanFilterInfo()
+            {
+                LoaneeId = loanerAndLoaneeId,
+                LoanerId = loanerAndLoaneeId,
+                GroupId = groupId,
+            };
+
+            return await GetFilteredLoans(filterInfo);
         }
 
-        /// <summary>
-        /// Get all loans loaned by a specific user in a specific group.
-        /// </summary>
-        /// <param name="loanerId">Loaner user who is owed money</param>
-        /// <param name="groupId">Loan group context</param>
-        /// <returns>List of loans owed to a user in a specific group context</returns>
-        public Task<IList<Loan>> GetLentUserLoansInGroup(Guid loanerId, Guid groupId)
+        public Task<IList<Loan>> GetFilteredLoans(LoanFilterInfo loanFilterInfo)
         {
-            return loanRepository.GetByLoanerAndGroupAsync(loanerId, groupId);
+            var filter = loanDbFilterFactory.Create(loanFilterInfo);
+            return loanRepository.GetAllAsync(filter);
         }
     }
 }
