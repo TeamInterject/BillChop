@@ -10,10 +10,10 @@ namespace BillChopBE.Services
 {
     public interface ILoanService
     {
-        Task<IList<Loan>> GetProvidedLoans(Guid loanerId, Guid? groupId);
-        Task<IList<Loan>> GetReceivedLoans(Guid loaneeId, Guid? groupId);
-        Task<IList<Loan>> GetSelfLoans(Guid loanerAndLoaneeId, Guid? groupId);
-        Task<IList<Loan>> GetFilteredLoans(LoanFilterInfo loanFilterInfo);
+        Task<IList<Loan>> GetProvidedLoansAsync(Guid loanerId, Guid? groupId);
+        Task<IList<Loan>> GetReceivedLoansAsync(Guid loaneeId, Guid? groupId);
+        Task<IList<Loan>> GetSelfLoansAsync(Guid loanerAndLoaneeId, Guid? groupId);
+        Task<IList<Loan>> GetFilteredLoansAsync(LoanFilterInfo loanFilterInfo);
     }
 
     public class LoanService : ILoanService
@@ -27,7 +27,7 @@ namespace BillChopBE.Services
             this.loanDbFilterFactory = loanDbFilterFactory;
         }
 
-        public async Task<IList<Loan>> GetProvidedLoans(Guid loanerId, Guid? groupId)
+        public async Task<IList<Loan>> GetProvidedLoansAsync(Guid loanerId, Guid? groupId)
         {
             var filterInfo = new LoanFilterInfo()
             {
@@ -35,10 +35,10 @@ namespace BillChopBE.Services
                 GroupId = groupId,
             };
 
-            return await GetFilteredLoans(filterInfo);
+            return await GetFilteredLoansAsync(filterInfo);
         }
 
-        public async Task<IList<Loan>> GetReceivedLoans(Guid loaneeId, Guid? groupId)
+        public async Task<IList<Loan>> GetReceivedLoansAsync(Guid loaneeId, Guid? groupId)
         {
             var filterInfo = new LoanFilterInfo()
             {
@@ -46,10 +46,10 @@ namespace BillChopBE.Services
                 GroupId = groupId,
             };
 
-            return await GetFilteredLoans(filterInfo);
+            return await GetFilteredLoansAsync(filterInfo);
         }
 
-        public async Task<IList<Loan>> GetSelfLoans(Guid loanerAndLoaneeId, Guid? groupId)
+        public async Task<IList<Loan>> GetSelfLoansAsync(Guid loanerAndLoaneeId, Guid? groupId)
         {
             var filterInfo = new LoanFilterInfo()
             {
@@ -58,10 +58,10 @@ namespace BillChopBE.Services
                 GroupId = groupId,
             };
 
-            return await GetFilteredLoans(filterInfo);
+            return await GetFilteredLoansAsync(filterInfo);
         }
 
-        public Task<IList<Loan>> GetFilteredLoans(LoanFilterInfo loanFilterInfo)
+        public Task<IList<Loan>> GetFilteredLoansAsync(LoanFilterInfo loanFilterInfo)
         {
             var filter = loanDbFilterFactory.Create(loanFilterInfo);
             return loanRepository.GetAllAsync(filter);
