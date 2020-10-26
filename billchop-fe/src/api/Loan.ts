@@ -1,4 +1,3 @@
-import Bill from "./Bill";
 import User from "./User";
 
 export default interface Loan {
@@ -7,5 +6,4 @@ export default interface Loan {
   LoaneeId: string;
   Loanee: User;
   BillId: string;
-  Bill: Bill;
 }

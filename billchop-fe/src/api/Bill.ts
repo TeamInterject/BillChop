@@ -1,4 +1,3 @@
-import Group from "./Group";
 import User from "./User";
 import Loan from "./Loan";
 
@@ -10,5 +9,4 @@ export default interface Bill {
   Loaner: User;
   Loans: Loan[];
   GroupContextId: string;
-  GroupContext: Group;
 }
