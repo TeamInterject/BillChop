@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Axios from "axios";
 import Group from "../api/Group";
-import { BillSplitInput } from "./BillSplitInput";
+import BillSplitInput from "./BillSplitInput";
 import User, { CURRENT_USER_ID } from "../api/User";
 import Loan from "../api/Loan";
 
@@ -35,12 +35,15 @@ export default class GroupTable extends React.Component<
       group: undefined,
       nameInputValue: "",
       expenseAmounts: undefined,
-    }
+    };
   }
 
   handleOnAddNewMember(): void {
     const { nameInputValue } = this.state;
-    const { group } = this.state ?? this.props;
+    const { group: stateGroup } = this.state;
+    const { group: propsGroup } = this.props;
+    const group = stateGroup ?? propsGroup;
+
     Axios.post(BASE_URL_API_USERS, {
       name: nameInputValue,
     }).then((userResponse) => {
@@ -58,7 +61,9 @@ export default class GroupTable extends React.Component<
   }
 
   handleOnSplit(amount: number): void {
-    const { group } = this.state ?? this.props;
+    const { group: stateGroup } = this.state;
+    const { group: propsGroup } = this.props;
+    const group = stateGroup ?? propsGroup;
 
     Axios.post(BASE_URL_API_BILLS, {
       name: "Bill",
