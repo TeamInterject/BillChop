@@ -1,12 +1,11 @@
 import * as React from "react";
-import { BillSplitInput } from "./BillSplitInput";
 import Table from "react-bootstrap/Table";
-import Group from "../api/Group";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Axios from "axios";
-import User from "../api/User";
-import { CURRENT_USER_ID } from "../api/User";
+import Group from "../api/Group";
+import { BillSplitInput } from "./BillSplitInput";
+import User, { CURRENT_USER_ID } from "../api/User";
 import Loan from "../api/Loan";
 
 const BASE_URL_API_GROUPS = "https://localhost:44333/api/groups/";
@@ -35,31 +34,31 @@ export default class GroupTable extends React.Component<
     this.state = {
       group: undefined,
       nameInputValue: "",
-      expenseAmounts: undefined
+      expenseAmounts: undefined,
     }
   }
 
-  handleOnAddNewMember() {
+  handleOnAddNewMember(): void {
+    const { nameInputValue } = this.state;
+    const { group } = this.state ?? this.props;
     Axios.post(BASE_URL_API_USERS, {
-      name: this.state.nameInputValue,
+      name: nameInputValue,
     }).then((userResponse) => {
       const newUserId = (userResponse.data as User).Id;
-      const group = this.state.group ?? this.props.group;
-
       Axios.post(
-        BASE_URL_API_GROUPS + group.Id + "/add-user/" + newUserId
+        `${BASE_URL_API_GROUPS + group.Id}/add-user/${newUserId}`
       ).then((response) => {
         this.setState({
           group: response.data,
           nameInputValue: "",
-          expenseAmounts: undefined
+          expenseAmounts: undefined,
         });
       });
     });
   }
 
-  handleOnSplit(amount: number) {
-    const group = this.state.group ?? this.props.group;
+  handleOnSplit(amount: number): void {
+    const { group } = this.state ?? this.props;
 
     Axios.post(BASE_URL_API_BILLS, {
       name: "Bill",
@@ -67,18 +66,18 @@ export default class GroupTable extends React.Component<
       loanerId: CURRENT_USER_ID,
       groupContextId: group.Id,
     }).then((response) => {
-      console.log(response.data);
-      this.setState({
-        ...this.state,
+      this.setState((prevState) => ({
+        ...prevState,
         expenseAmounts: response.data.Loans.map((loan: Loan) => loan.Amount),
-      });
+      }));
     });
   }
 
-  renderTableContent() {
+  renderTableContent(): (JSX.Element | JSX.Element[])[] {
     const tableContent = [];
-    const group = this.state?.group ?? this.props.group;
-    const expenseAmounts = this.state?.expenseAmounts;
+    const { group } = this.state ?? this.props;
+    const { expenseAmounts } = this.state;
+    const { nameInputValue } = this.state;
     tableContent.push(
       group.Users?.map((user, index) => (
         <tr>
@@ -93,9 +92,12 @@ export default class GroupTable extends React.Component<
           <Form.Control
             placeholder="New member's name:"
             onChange={(e) =>
-              this.setState({ ...this.state, nameInputValue: e.target.value })
+              this.setState((prevState) => ({
+                ...prevState,
+                nameInputValue: e.target.value,
+              }))
             }
-            value={this.state?.nameInputValue ?? ""}
+            value={nameInputValue ?? ""}
           />
         </td>
         <td>
@@ -108,7 +110,7 @@ export default class GroupTable extends React.Component<
     return tableContent;
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <div>
         <BillSplitInput onSplit={this.handleOnSplit} />
