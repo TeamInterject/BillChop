@@ -34,7 +34,8 @@ export default class GroupPage extends React.Component<
   }
 
   createNewGroup(groupName: string): void {
-    Axios.post(BASE_URL_API_GROUPS, { name: groupName }).then((createResponse) => {
+    Axios.post(BASE_URL_API_GROUPS, { name: groupName }).then(
+      (createResponse) => {
         Axios.post(
           `${
             BASE_URL_API_GROUPS + (createResponse.data as Group).Id
