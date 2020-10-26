@@ -18,7 +18,7 @@ interface IGroupsTabsProps {
   onCreateNewGroup: (groupName: string) => void;
 }
 
-export default class GroupsTabs extends React.Component<IGroupsTabsProps, {}> {
+export default class GroupsTabs extends React.Component<IGroupsTabsProps> {
   constructor(props: IGroupsTabsProps) {
     super(props);
     this.renderGroups = this.renderGroups.bind(this);
@@ -60,11 +60,11 @@ export default class GroupsTabs extends React.Component<IGroupsTabsProps, {}> {
     return (
       <Tab.Container id="groupsTabs">
         <Row sm={2}>
-          <Col sm={"auto"}>
+          <Col sm="auto">
             <ListGroup>{this.renderGroups()}</ListGroup>
           </Col>
           <div style={divStyle}>
-            <Col sm={"auto"}>
+            <Col sm="auto">
               <Tab.Content>{this.renderTabPanes()}</Tab.Content>
             </Col>
           </div>
