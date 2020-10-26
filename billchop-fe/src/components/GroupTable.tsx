@@ -11,6 +11,11 @@ import Loan from "../api/Loan";
 const BASE_URL_API_GROUPS = "https://localhost:44333/api/groups/";
 const BASE_URL_API_USERS = "https://localhost:44333/api/users/";
 const BASE_URL_API_BILLS = "https://localhost:44333/api/bills/";
+const BASE_URL_API_LOANS = "https://localhost:44333/api/loans/";
+
+interface Dictionary<T> {
+  [Key: string]: T;
+}
 
 interface IGroupTableProps {
   group: Group;
@@ -19,7 +24,7 @@ interface IGroupTableProps {
 interface IGroupTableState {
   group?: Group;
   nameInputValue: string;
-  expenseAmounts?: number[];
+  expenseAmounts?: Dictionary<number>;
 }
 
 export default class GroupTable extends React.Component<
@@ -34,9 +39,36 @@ export default class GroupTable extends React.Component<
     this.state = {
       group: undefined,
       nameInputValue: "",
-      expenseAmounts: undefined,
+      expenseAmounts: {},
     };
   }
+
+  componentDidMount(): void {
+    this.getUserLoans();
+  }
+
+  getUserLoans = (): void => {
+    const { group: stateGroup } = this.state;
+    const { group: propsGroup } = this.props;
+    const group = stateGroup ?? propsGroup;
+
+    Axios.get(
+      `${BASE_URL_API_LOANS}?loanerId=${CURRENT_USER_ID}&groupId=${group.Id}`
+    ).then((loansResponse) => {
+      const expenseAmounts: Dictionary<number> = {};
+
+      console.log(loansResponse.data);
+
+      loansResponse.data.forEach((loan: Loan) => {
+        expenseAmounts[loan.Loanee.Id] = expenseAmounts[loan.Loanee.Id] ?? 0;
+        expenseAmounts[loan.Loanee.Id] += loan.Amount;
+      });
+      this.setState((prevState) => ({
+        ...prevState,
+        expenseAmounts,
+      }));
+    });
+  };
 
   handleOnAddNewMember(): void {
     const { nameInputValue } = this.state;
@@ -70,12 +102,7 @@ export default class GroupTable extends React.Component<
       total: amount,
       loanerId: CURRENT_USER_ID,
       groupContextId: group.Id,
-    }).then((response) => {
-      this.setState((prevState) => ({
-        ...prevState,
-        expenseAmounts: response.data.Loans.map((loan: Loan) => loan.Amount),
-      }));
-    });
+    }).then(() => this.getUserLoans());
   }
 
   renderTableContent(): React.ReactNode {
@@ -85,10 +112,10 @@ export default class GroupTable extends React.Component<
     const group = stateGroup ?? propsGroup;
 
     tableContent.push(
-      group.Users?.map((user, index) => (
+      group.Users?.map((user) => (
         <tr>
           <td>{user.Name}</td>
-          <td>{expenseAmounts ? expenseAmounts[index] : ""}</td>
+          <td>{expenseAmounts ? expenseAmounts[user.Id]?.toFixed(2) : ""}</td>
         </tr>
       ))
     );
