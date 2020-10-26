@@ -1,7 +1,10 @@
 import User from "./User";
 
+import Bill from "./Bill";
+
 export default interface Group {
-  id: string;
-  name: string;
-  users: User[];
+  Id: string;
+  Name: string;
+  Users: User[];
+  Bills: Bill[];
 }

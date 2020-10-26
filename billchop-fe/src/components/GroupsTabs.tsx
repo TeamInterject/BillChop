@@ -27,8 +27,8 @@ export class GroupsTabs extends React.Component<IGroupsTabsProps, {}> {
 
   renderGroups() {
     const listGroupItems = this.props.groups.map((group) => (
-      <ListGroup.Item action href={`#${group.name}`}>
-        {group.name}
+      <ListGroup.Item action href={`#${group.Name}`}>
+        {group.Name}
       </ListGroup.Item>
     ));
     listGroupItems.push(
@@ -41,7 +41,7 @@ export class GroupsTabs extends React.Component<IGroupsTabsProps, {}> {
 
   renderTabPanes() {
     const tabPanes = this.props.groups.map((group) => (
-      <Tab.Pane eventKey={`#${group.name}`}>
+      <Tab.Pane eventKey={`#${group.Name}`}>
         <GroupTable group={group} />
       </Tab.Pane>
     ));
