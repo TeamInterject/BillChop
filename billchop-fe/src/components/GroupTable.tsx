@@ -75,10 +75,12 @@ export default class GroupTable extends React.Component<
     });
   }
 
-  renderTableContent() {
+  renderTableContent(): React.ReactNode {
     const tableContent = [];
-    const group = this.state?.group ?? this.props.group;
-    const expenseAmounts = this.state?.expenseAmounts;
+    const { group: stateGroup, expenseAmounts, nameInputValue } = this.state;
+    const { group: propsGroup } = this.props;
+    const group = stateGroup ?? propsGroup;
+
     tableContent.push(
       group.Users?.map((user, index) => (
         <tr>
@@ -95,7 +97,7 @@ export default class GroupTable extends React.Component<
             onChange={(e) =>
               this.setState({ ...this.state, nameInputValue: e.target.value })
             }
-            value={this.state?.nameInputValue ?? ""}
+            value={nameInputValue ?? ""}
           />
         </td>
         <td>
