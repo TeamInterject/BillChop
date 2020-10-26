@@ -2,11 +2,22 @@ import * as React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
+export interface CreateGroupFormProps {
+  onCreateNewGroup: (groupName: string) => void;
+}
+
+export interface CreateGroupFormState {
+  inputValue: string;
+}
+
 export class CreateGroupForm extends React.Component<
-  { onCreateNewGroup: (groupName: string) => void },
-  { inputValue: string }
+  CreateGroupFormProps,
+  CreateGroupFormState
 > {
-  render() {
+  render(): React.ReactNode {
+    const { onCreateNewGroup } = this.props;
+    const { inputValue } = this.state;
+
     return (
       <div>
         <div className="m-2">
@@ -19,7 +30,7 @@ export class CreateGroupForm extends React.Component<
         <div className="m-2">
           <Button
             variant="outline-primary"
-            onClick={() => this.props.onCreateNewGroup(this.state.inputValue)}
+            onClick={() => onCreateNewGroup(inputValue)}
           >
             Create
           </Button>
