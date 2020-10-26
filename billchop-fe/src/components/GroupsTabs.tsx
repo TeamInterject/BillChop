@@ -18,15 +18,16 @@ interface IGroupsTabsProps {
   onCreateNewGroup: (groupName: string) => void;
 }
 
-export class GroupsTabs extends React.Component<IGroupsTabsProps, {}> {
+export default class GroupsTabs extends React.Component<IGroupsTabsProps, {}> {
   constructor(props: IGroupsTabsProps) {
     super(props);
     this.renderGroups = this.renderGroups.bind(this);
     this.renderTabPanes = this.renderTabPanes.bind(this);
   }
 
-  renderGroups() {
-    const listGroupItems = this.props.groups.map((group) => (
+  renderGroups(): JSX.Element[] {
+    const { groups } = this.props;
+    const listGroupItems = groups.map((group) => (
       <ListGroup.Item action href={`#${group.Name}`}>
         {group.Name}
       </ListGroup.Item>
@@ -39,21 +40,23 @@ export class GroupsTabs extends React.Component<IGroupsTabsProps, {}> {
     return listGroupItems;
   }
 
-  renderTabPanes() {
-    const tabPanes = this.props.groups.map((group) => (
+  renderTabPanes(): JSX.Element[] {
+    const { groups } = this.props;
+    const tabPanes = groups.map((group) => (
       <Tab.Pane eventKey={`#${group.Name}`}>
         <GroupTable group={group} />
       </Tab.Pane>
     ));
+    const { onCreateNewGroup } = this.props;
     tabPanes.push(
       <Tab.Pane eventKey="#createNewGroup">
-        <CreateGroupForm onCreateNewGroup={this.props.onCreateNewGroup} />
+        <CreateGroupForm onCreateNewGroup={onCreateNewGroup} />
       </Tab.Pane>
     );
     return tabPanes;
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <Tab.Container id="groupsTabs">
         <Row sm={2}>
