@@ -57,12 +57,11 @@ export default class GroupTable extends React.Component<
     ).then((loansResponse) => {
       const expenseAmounts: Dictionary<number> = {};
 
-      console.log(loansResponse.data);
-
       loansResponse.data.forEach((loan: Loan) => {
         expenseAmounts[loan.Loanee.Id] = expenseAmounts[loan.Loanee.Id] ?? 0;
         expenseAmounts[loan.Loanee.Id] += loan.Amount;
       });
+
       this.setState((prevState) => ({
         ...prevState,
         expenseAmounts,
