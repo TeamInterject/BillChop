@@ -14,6 +14,13 @@ export class CreateGroupForm extends React.Component<
   CreateGroupFormProps,
   CreateGroupFormState
 > {
+  constructor(props: CreateGroupFormProps) {
+    super(props);
+    this.state = {
+      inputValue: "",
+    };
+  }
+
   render(): React.ReactNode {
     const { onCreateNewGroup } = this.props;
     const { inputValue } = this.state;
