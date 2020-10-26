@@ -97,12 +97,13 @@ export default class GroupTable extends React.Component<
         <td>
           <Form.Control
             placeholder="New member's name:"
-            onChange={(e) =>
+            onChange={(e) => {
+              const eventTargetValue = e.target.value;
               this.setState((prevState) => ({
                 ...prevState,
-                nameInputValue: e.target.value,
-              }))
-            }
+                nameInputValue: eventTargetValue,
+              }));
+            }}
             value={nameInputValue ?? ""}
           />
         </td>
