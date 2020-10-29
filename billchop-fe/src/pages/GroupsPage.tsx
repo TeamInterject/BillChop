@@ -5,23 +5,28 @@ import Sidebar, { ISidebarTab } from "../components/Sidebar";
 import { CURRENT_USER_ID } from "../api/User";
 import NoGroupSelectedSubPage from "./NoGroupSelectedSubPage";
 import "../styles/group-page.css";
+import GroupSubPage from "./GroupSubPage";
 
 const BASE_URL_API_GROUPS = "https://localhost:44333/api/groups/";
 
-export default class GroupPage extends React.Component<
-  unknown,
-  { groups: Group[] }
-> {
+interface IState {
+  groups: Group[];
+  selectedGroupId: string | undefined;
+}
+
+export default class GroupsPage extends React.Component<unknown, IState> {
   constructor(props = {}) {
     super(props);
 
     this.state = {
       groups: [],
+      selectedGroupId: undefined,
     };
 
     this.getGroups = this.getGroups.bind(this);
     this.createNewGroup = this.createNewGroup.bind(this);
     this.getGroupsSidebarTabs = this.getGroupsSidebarTabs.bind(this);
+    this.handleOnGroupTabSelect = this.handleOnGroupTabSelect.bind(this);
   }
 
   componentDidMount(): void {
@@ -44,7 +49,7 @@ export default class GroupPage extends React.Component<
       return {
         groupName: group.Name,
         groupId: group.Id,
-      }
+      };
     });
   }
 
@@ -65,15 +70,28 @@ export default class GroupPage extends React.Component<
     );
   }
 
+  handleOnGroupTabSelect(groupId: string): void {
+    this.setState((prevState) => ({
+      ...prevState,
+      selectedGroupId: groupId,
+    }));
+  }
+
   render(): JSX.Element {
+    const { selectedGroupId } = this.state;
+    const { groups } = this.state;
+    const selectedGroup = groups.find((group) => group.Id === selectedGroupId);
     return (
       <div>
         <Sidebar
           sidebarTabs={this.getGroupsSidebarTabs()}
-          onTabClick={() => {}}
-          onCreateNewGroup={this.createNewGroup}
+          onTabClick={this.handleOnGroupTabSelect}
         />
-        <NoGroupSelectedSubPage />
+        {selectedGroup ? (
+          <GroupSubPage group={selectedGroup} />
+        ) : (
+          <NoGroupSelectedSubPage />
+        )}
       </div>
     );
   }

@@ -10,7 +10,6 @@ export interface ISidebarTab {
 interface IProps {
   sidebarTabs: ISidebarTab[];
   onTabClick: (groupId: string) => void;
-  onCreateNewGroup: (groupName: string) => void;
 }
 
 export default class Sidebar extends React.Component<IProps> {

@@ -11,7 +11,7 @@
   bottom: 0;
 }
 
-.group-page-sub-page-container {
+.group-page__sub-page-container {
   position: fixed;
   margin-left: var(--sidebar-width);
   min-height: 100%;
