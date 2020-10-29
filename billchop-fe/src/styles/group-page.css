@@ -1,0 +1,19 @@
+:root {
+  --sidebar-width: 15%
+}
+
+.sidebar {
+  position: fixed;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  width: var(--sidebar-width);
+  top: 0;
+  bottom: 0;
+}
+
+.group-page-sub-page-container {
+  position: fixed;
+  margin-left: var(--sidebar-width);
+  min-height: 100%;
+  width: calc(100% - var(--sidebar-width));
+}

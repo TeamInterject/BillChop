@@ -1,8 +1,10 @@
 import Axios from "axios";
 import * as React from "react";
 import Group from "../api/Group";
-import GroupsTabs from "../components/GroupsTabs";
+import Sidebar, { ISidebarTab } from "../components/Sidebar";
 import { CURRENT_USER_ID } from "../api/User";
+import NoGroupSelectedSubPage from "./NoGroupSelectedSubPage";
+import "../styles/group-page.css";
 
 const BASE_URL_API_GROUPS = "https://localhost:44333/api/groups/";
 
@@ -19,7 +21,10 @@ export default class GroupPage extends React.Component<
 
     this.getGroups = this.getGroups.bind(this);
     this.createNewGroup = this.createNewGroup.bind(this);
+    this.getGroupsSidebarTabs = this.getGroupsSidebarTabs.bind(this);
+  }
 
+  componentDidMount(): void {
     this.getGroups();
   }
 
@@ -31,6 +36,16 @@ export default class GroupPage extends React.Component<
         });
       }
     );
+  }
+
+  getGroupsSidebarTabs(): ISidebarTab[] {
+    const { groups } = this.state;
+    return groups.map((group) => {
+      return {
+        groupName: group.Name,
+        groupId: group.Id,
+      }
+    });
   }
 
   createNewGroup(groupName: string): void {
@@ -51,9 +66,15 @@ export default class GroupPage extends React.Component<
   }
 
   render(): JSX.Element {
-    const { groups } = this.state;
     return (
-      <GroupsTabs groups={groups} onCreateNewGroup={this.createNewGroup} />
+      <div>
+        <Sidebar
+          sidebarTabs={this.getGroupsSidebarTabs()}
+          onTabClick={() => {}}
+          onCreateNewGroup={this.createNewGroup}
+        />
+        <NoGroupSelectedSubPage />
+      </div>
     );
   }
 }

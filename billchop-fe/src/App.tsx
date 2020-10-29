@@ -4,6 +4,10 @@ import "./App.css";
 
 export default class App extends React.Component {
   public render(): React.ReactNode {
-    return <GroupPage />;
+    return (
+      <div className="mainContainer">
+        <GroupPage />
+      </div>
+    );
   }
 }
