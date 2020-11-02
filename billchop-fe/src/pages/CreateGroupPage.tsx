@@ -26,6 +26,8 @@ export default class CreateGroupPage extends React.Component<
   }
 
   onCreateNewGroup = (event: React.BaseSyntheticEvent): void => {
+    event.preventDefault();
+    event.stopPropagation();
     const { inputValue: groupName } = this.state;
     Axios.post(BASE_URL_API_GROUPS, { name: groupName }).then(
       (createResponse) => {
@@ -34,8 +36,6 @@ export default class CreateGroupPage extends React.Component<
             BASE_URL_API_GROUPS + (createResponse.data as Group).Id
           }/add-user/${CURRENT_USER_ID}`
         ).then(() => {
-          event.preventDefault();
-          event.stopPropagation();
           this.setState({
             shouldRedirect: true,
           });
