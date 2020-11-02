@@ -8,7 +8,7 @@ import {
 import GroupsPage from "./pages/GroupsPage";
 import CreateGroupPage from "./pages/CreateGroupPage";
 import "./App.css";
-import PageHeader from "./components/PageHeader";
+import NavigationBar from "./components/NavigationBar";
 
 export default class App extends React.Component {
   public render(): React.ReactNode {
@@ -16,7 +16,7 @@ export default class App extends React.Component {
       <Router>
         <div className="mainContainer">
           <div className="mainContainer__pageHeader">
-            <PageHeader />
+            <NavigationBar />
           </div>
           <div className="mainContainer__content">
             <Switch>
