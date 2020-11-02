@@ -27,7 +27,7 @@ export default class Sidebar extends React.Component<ISidebarProps> {
         </ListGroup.Item>
       );
     });
-  }
+  };
 
   render(): JSX.Element {
     return (

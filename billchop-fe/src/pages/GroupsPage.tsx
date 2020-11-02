@@ -38,7 +38,7 @@ export default class GroupsPage extends React.Component<
         });
       }
     );
-  }
+  };
 
   getGroupsSidebarTabs = (): ISidebarTab[] => {
     const { groups } = this.state;
@@ -48,11 +48,11 @@ export default class GroupsPage extends React.Component<
         groupId: group.Id,
       };
     });
-  }
+  };
 
   handleOnGroupTabSelect = (groupId: string): void => {
     this.setState({ selectedGroupId: groupId });
-  }
+  };
 
   render(): JSX.Element {
     const { selectedGroupId } = this.state;
