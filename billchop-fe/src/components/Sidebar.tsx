@@ -32,22 +32,6 @@ export default class Sidebar extends React.Component<IProps> {
     ));
   }
 
-  // renderTabPanes(): JSX.Element[] {
-  //   const { groups } = this.props;
-  //   const tabPanes = groups.map((group) => (
-  //     <Tab.Pane eventKey={`#${group.Name}`}>
-  //       <GroupTable group={group} />
-  //     </Tab.Pane>
-  //   ));
-  //   const { onCreateNewGroup } = this.props;
-  //   tabPanes.push(
-  //     <Tab.Pane eventKey="#createNewGroup">
-  //       <CreateGroupForm onCreateNewGroup={onCreateNewGroup} />
-  //     </Tab.Pane>
-  //   );
-  //   return tabPanes;
-  // }
-
   render(): JSX.Element {
     return (
       <div className="sidebar">

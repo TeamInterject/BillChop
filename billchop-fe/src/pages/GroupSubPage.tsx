@@ -2,9 +2,6 @@ import * as React from "react";
 import Group from "../api/Group";
 import GroupTable from "../components/GroupTable";
 
-// interface IState {
-// }
-
 interface IProps {
   group: Group;
 }

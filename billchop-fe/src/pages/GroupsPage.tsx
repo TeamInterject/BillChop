@@ -24,7 +24,6 @@ export default class GroupsPage extends React.Component<unknown, IState> {
     };
 
     this.getGroups = this.getGroups.bind(this);
-    this.createNewGroup = this.createNewGroup.bind(this);
     this.getGroupsSidebarTabs = this.getGroupsSidebarTabs.bind(this);
     this.handleOnGroupTabSelect = this.handleOnGroupTabSelect.bind(this);
   }
@@ -51,23 +50,6 @@ export default class GroupsPage extends React.Component<unknown, IState> {
         groupId: group.Id,
       };
     });
-  }
-
-  createNewGroup(groupName: string): void {
-    Axios.post(BASE_URL_API_GROUPS, { name: groupName }).then(
-      (createResponse) => {
-        Axios.post(
-          `${
-            BASE_URL_API_GROUPS + (createResponse.data as Group).Id
-          }/add-user/${CURRENT_USER_ID}`
-        ).then((response) => {
-          const { groups } = this.state;
-          this.setState({
-            groups: groups.concat(response.data),
-          });
-        });
-      }
-    );
   }
 
   handleOnGroupTabSelect(groupId: string): void {
