@@ -1,13 +1,13 @@
 import * as React from "react";
 import Button from "react-bootstrap/Button";
 
-interface IProps {
+export interface IImageButtonProps {
   imageSource: string;
   alt: string;
   onClick?: () => void;
 }
 
-export default class ImageButton extends React.Component<IProps> {
+export default class ImageButton extends React.Component<IImageButtonProps> {
   render(): JSX.Element {
     const { imageSource, alt, onClick } = this.props;
     return (

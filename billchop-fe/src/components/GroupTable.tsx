@@ -17,7 +17,7 @@ interface Dictionary<T> {
   [Key: string]: T;
 }
 
-interface IGroupTableProps {
+export interface IGroupTableProps {
   group: Group;
 }
 

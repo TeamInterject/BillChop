@@ -2,16 +2,19 @@ import * as React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
-interface IState {
+interface IBillSplitInputState {
   inputValue: string;
 }
 
-interface IProps {
+export interface IBillSplitInputProps {
   onSplit: (amount: number) => void;
 }
 
-export default class BillSplitInput extends React.Component<IProps, IState> {
-  constructor(props: IProps) {
+export default class BillSplitInput extends React.Component<
+  IBillSplitInputProps,
+  IBillSplitInputState
+> {
+  constructor(props: IBillSplitInputProps) {
     super(props);
     this.handleOnClick = this.handleOnClick.bind(this);
     this.state = {

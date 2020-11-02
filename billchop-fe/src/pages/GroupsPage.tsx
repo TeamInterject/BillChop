@@ -9,30 +9,28 @@ import GroupSubPage from "./GroupSubPage";
 
 const BASE_URL_API_GROUPS = "https://localhost:44333/api/groups/";
 
-interface IState {
+interface IGroupsPageState {
   groups: Group[];
-  selectedGroupId: string | undefined;
+  selectedGroupId?: string;
 }
 
-export default class GroupsPage extends React.Component<unknown, IState> {
+export default class GroupsPage extends React.Component<
+  unknown,
+  IGroupsPageState
+> {
   constructor(props = {}) {
     super(props);
 
     this.state = {
       groups: [],
-      selectedGroupId: undefined,
     };
-
-    this.getGroups = this.getGroups.bind(this);
-    this.getGroupsSidebarTabs = this.getGroupsSidebarTabs.bind(this);
-    this.handleOnGroupTabSelect = this.handleOnGroupTabSelect.bind(this);
   }
 
   componentDidMount(): void {
     this.getGroups();
   }
 
-  getGroups(): void {
+  getGroups = (): void => {
     Axios.get(`${BASE_URL_API_GROUPS}?userId=${CURRENT_USER_ID}`).then(
       (response) => {
         this.setState({
@@ -42,7 +40,7 @@ export default class GroupsPage extends React.Component<unknown, IState> {
     );
   }
 
-  getGroupsSidebarTabs(): ISidebarTab[] {
+  getGroupsSidebarTabs = (): ISidebarTab[] => {
     const { groups } = this.state;
     return groups.map((group) => {
       return {
@@ -52,11 +50,8 @@ export default class GroupsPage extends React.Component<unknown, IState> {
     });
   }
 
-  handleOnGroupTabSelect(groupId: string): void {
-    this.setState((prevState) => ({
-      ...prevState,
-      selectedGroupId: groupId,
-    }));
+  handleOnGroupTabSelect = (groupId: string): void => {
+    this.setState({ selectedGroupId: groupId });
   }
 
   render(): JSX.Element {

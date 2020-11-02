@@ -8,23 +8,25 @@ import "../styles/create-group-page.css";
 
 const BASE_URL_API_GROUPS = "https://localhost:44333/api/groups/";
 
-export interface IState {
+interface ICreateGroupPageState {
   inputValue: string;
   shouldRedirect: boolean;
 }
 
-export default class CreateGroupPage extends React.Component<unknown, IState> {
+export default class CreateGroupPage extends React.Component<
+  unknown,
+  ICreateGroupPageState
+> {
   constructor(props = {}) {
     super(props);
     this.state = {
       inputValue: "",
       shouldRedirect: false,
     };
-
-    this.onCreateNewGroup = this.onCreateNewGroup.bind(this);
   }
 
-  onCreateNewGroup(groupName: string): void {
+  onCreateNewGroup = (event: React.BaseSyntheticEvent): void => {
+    const { inputValue: groupName } = this.state;
     Axios.post(BASE_URL_API_GROUPS, { name: groupName }).then(
       (createResponse) => {
         Axios.post(
@@ -32,36 +34,40 @@ export default class CreateGroupPage extends React.Component<unknown, IState> {
             BASE_URL_API_GROUPS + (createResponse.data as Group).Id
           }/add-user/${CURRENT_USER_ID}`
         ).then(() => {
+          event.preventDefault();
+          event.stopPropagation();
           this.setState({
-            inputValue: "",
             shouldRedirect: true,
           });
         });
       }
     );
-  }
+  };
+
+  handleOnFormControlChange = (event: React.BaseSyntheticEvent): void => {
+    this.setState({ inputValue: event.currentTarget.value });
+  };
 
   render(): React.ReactNode {
-    const { inputValue, shouldRedirect } = this.state;
+    const { shouldRedirect } = this.state;
 
     return shouldRedirect ? (
       <Redirect to="/groups" />
     ) : (
       <div className="create-group-page__container d-flex flex-column align-items-center justify-content-center">
         <div>
-          <Form.Label>Group name:</Form.Label>
-          <Form.Control
-            placeholder="Enter the group name"
-            onChange={(e) => this.setState({ inputValue: e.target.value })}
-          />
-          <div className="mt-2">
-            <Button
-              variant="outline-primary"
-              onClick={() => this.onCreateNewGroup(inputValue)}
-            >
-              Create
-            </Button>
-          </div>
+          <Form onSubmit={this.onCreateNewGroup}>
+            <Form.Label>Group name:</Form.Label>
+            <Form.Control
+              placeholder="Enter the group name"
+              onChange={this.handleOnFormControlChange}
+            />
+            <div className="mt-2">
+              <Button variant="outline-primary" type="submit">
+                Create
+              </Button>
+            </div>
+          </Form>
         </div>
       </div>
     );

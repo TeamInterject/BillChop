@@ -7,29 +7,26 @@ export interface ISidebarTab {
   groupId: string;
 }
 
-interface IProps {
+export interface ISidebarProps {
   sidebarTabs: ISidebarTab[];
   onTabClick: (groupId: string) => void;
 }
 
-export default class Sidebar extends React.Component<IProps> {
-  constructor(props: IProps) {
-    super(props);
-    this.renderGroupsTabs = this.renderGroupsTabs.bind(this);
-  }
-
-  renderGroupsTabs(): JSX.Element[] {
+export default class Sidebar extends React.Component<ISidebarProps> {
+  renderGroupsTabs = (): JSX.Element[] => {
     const { sidebarTabs, onTabClick } = this.props;
-    return sidebarTabs.map((tab) => (
-      <ListGroup.Item
-        action
-        key={tab.groupId}
-        href={`#${tab.groupId}`}
-        onClick={() => onTabClick(tab.groupId)}
-      >
-        {tab.groupName}
-      </ListGroup.Item>
-    ));
+    return sidebarTabs.map((tab) => {
+      return (
+        <ListGroup.Item
+          action
+          key={tab.groupId}
+          href={`#${tab.groupId}`}
+          onClick={() => onTabClick(tab.groupId)}
+        >
+          {tab.groupName}
+        </ListGroup.Item>
+      );
+    });
   }
 
   render(): JSX.Element {
