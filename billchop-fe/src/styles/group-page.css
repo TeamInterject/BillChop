@@ -5,6 +5,7 @@
   bottom: 0;
   overflow-y: hidden;
   overflow-x: hidden;
+  border-right: solid 1px black;
 }
 
 .sidebar:hover {
