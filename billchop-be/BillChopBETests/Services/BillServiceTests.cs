@@ -99,7 +99,7 @@ namespace BillChopBETests
             var loanTotal = resultBill.Loans.Sum(loan => loan.Amount);
             loanTotal.ShouldBe(total);
 
-#           //Explanation of ToZero: https://docs.microsoft.com/en-us/dotnet/api/system.midpointrounding?view=netcore-3.1#directed-rounding
+            //Explanation of ToZero: https://docs.microsoft.com/en-us/dotnet/api/system.midpointrounding?view=netcore-3.1#directed-rounding
             var expectedAmount = Math.Round(total / userCount, 2, MidpointRounding.ToZero);
             resultBill.Loans.ForEach((loan) =>
             {
