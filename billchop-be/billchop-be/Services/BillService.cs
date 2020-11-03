@@ -1,7 +1,7 @@
 ﻿using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using BillChopBE.Exceptions;
-using BillChopBE.Extensions;
+using ProjectPortableTools.Extensions;
 using BillChopBE.Services.Models;
 using Microsoft.Extensions.Logging;
 using System;
@@ -52,6 +52,8 @@ namespace BillChopBE.Services
             return await billRepository.GetBillsByGroupId(groupId);
         }
 
+        // TODO.AZ: Investigate if it's possible to consistenly separate the logic from the "piping"
+        // TODO.AZ: In other words, avoiding having logic mixed with getting stuff from db, as it complicates testing.
         public async Task<Bill> CreateAndSplitBillAsync(CreateNewBill newBill)
         {
             newBill.Validate();
@@ -73,12 +75,14 @@ namespace BillChopBE.Services
             };
 
             bill = await billRepository.AddAsync(bill);
-            await SplitBillAsync(bill);
+            SplitBillAsync(bill);
+
+            await billRepository.SaveChangesAsync();
 
             return bill;
         }
 
-        private async Task<IEnumerable<Loan>> SplitBillAsync(Bill bill)
+        private IList<Loan> SplitBillAsync(Bill bill)
         {
             var payingUsers = bill.GroupContext.Users.ToList();
             var amounts = bill.Total.SplitEqually(payingUsers.Count).ToList();
@@ -89,12 +93,9 @@ namespace BillChopBE.Services
                     Bill = bill,
                     Loanee = user,
                     Amount = amounts[index]
-                });
-
-            foreach (var loan in loans) 
-            {
-                await loanRepository.AddAsync(loan);
-            }
+                }).ToList();
+                
+            loans.ForEach(loan => bill.Loans.Add(loan));
 
             return loans;
         }
