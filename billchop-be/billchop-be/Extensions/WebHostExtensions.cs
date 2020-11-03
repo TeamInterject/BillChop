@@ -4,7 +4,6 @@ using Microsoft.Extensions.Hosting;
 
 namespace BillChopBE.Extensions
 {
-
     public static class WebHostExtensions
     {
         public static IHost MigrateBillChopDb(this IHost webHost)
