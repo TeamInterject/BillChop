@@ -17,7 +17,7 @@ interface Dictionary<T> {
   [Key: string]: T;
 }
 
-interface IGroupTableProps {
+export interface IGroupTableProps {
   group: Group;
 }
 
@@ -33,9 +33,6 @@ export default class GroupTable extends React.Component<
 > {
   constructor(props: IGroupTableProps) {
     super(props);
-    this.renderTableContent = this.renderTableContent.bind(this);
-    this.handleOnSplit = this.handleOnSplit.bind(this);
-    this.handleOnAddNewMember = this.handleOnAddNewMember.bind(this);
     this.state = {
       group: undefined,
       nameInputValue: "",
@@ -69,7 +66,7 @@ export default class GroupTable extends React.Component<
     });
   };
 
-  handleOnAddNewMember(): void {
+  handleOnAddNewMember = (): void => {
     const { nameInputValue } = this.state;
     const { group: stateGroup } = this.state;
     const { group: propsGroup } = this.props;
@@ -89,9 +86,9 @@ export default class GroupTable extends React.Component<
         });
       });
     });
-  }
+  };
 
-  handleOnSplit(amount: number): void {
+  handleOnSplit = (amount: number): void => {
     const { group: stateGroup } = this.state;
     const { group: propsGroup } = this.props;
     const group = stateGroup ?? propsGroup;
@@ -102,9 +99,14 @@ export default class GroupTable extends React.Component<
       loanerId: CURRENT_USER_ID,
       groupContextId: group.Id,
     }).then(() => this.getUserLoans());
-  }
+  };
 
-  renderTableContent(): React.ReactNode {
+  handleOnNameInputChange = (event: React.BaseSyntheticEvent): void => {
+    const eventTargetValue = event.target.value;
+    this.setState({ nameInputValue: eventTargetValue });
+  };
+
+  renderTableContent = (): React.ReactNode => {
     const tableContent = [];
     const { group: stateGroup, expenseAmounts, nameInputValue } = this.state;
     const { group: propsGroup } = this.props;
@@ -123,13 +125,7 @@ export default class GroupTable extends React.Component<
         <td>
           <Form.Control
             placeholder="New member's name:"
-            onChange={(e) => {
-              const eventTargetValue = e.target.value;
-              this.setState((prevState) => ({
-                ...prevState,
-                nameInputValue: eventTargetValue,
-              }));
-            }}
+            onChange={this.handleOnNameInputChange}
             value={nameInputValue ?? ""}
           />
         </td>
@@ -141,7 +137,7 @@ export default class GroupTable extends React.Component<
       </tr>
     );
     return tableContent;
-  }
+  };
 
   render(): JSX.Element {
     return (
