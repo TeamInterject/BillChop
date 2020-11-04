@@ -9,15 +9,16 @@ namespace BillChopBE.DataAccessLayer.Repositories.Interfaces
 {
     public interface IRepository<TEntity> where TEntity : class, IValidatableModel, IDbModel
     {
-        public Task<IList<TEntity>> GetAllAsync(IDbFilter<TEntity>? dbFilter = null);
+        Task<IList<TEntity>> GetAllAsync(IDbFilter<TEntity>? dbFilter = null);
 
-        public Task<TEntity?> GetByIdAsync(Guid id);
+        Task<TEntity?> GetByIdAsync(Guid id);
 
-        public Task<TEntity> AddAsync(TEntity user);
+        Task<TEntity> AddAsync(TEntity user);
 
-        public Task<TEntity?> ModifyAsync(Guid id, Action<TEntity> modifyCallback);
+        Task<TEntity?> ModifyAsync(Guid id, Action<TEntity> modifyCallback);
 
-        public Task<TEntity?> DeleteById(Guid id);
+        Task<TEntity?> DeleteById(Guid id);
+        
         Task<int> SaveChangesAsync();
     }
 }

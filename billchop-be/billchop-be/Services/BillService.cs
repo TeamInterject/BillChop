@@ -20,19 +20,13 @@ namespace BillChopBE.Services
     public class BillService : IBillService
     {
         private readonly IBillRepository billRepository;
-        private readonly ILoanRepository loanRepository;
         private readonly IGroupRepository groupRepository;
-        private readonly IUserRepository userRepository;
 
         public BillService(IBillRepository billRepository,
-            ILoanRepository loanRepository,
-            IGroupRepository groupRepository,
-            IUserRepository userRepository)
+            IGroupRepository groupRepository)
         {
             this.billRepository = billRepository;
-            this.loanRepository = loanRepository;
             this.groupRepository = groupRepository;
-            this.userRepository = userRepository;
         }
 
         public Task<IList<Bill>> GetBillsAsync(Guid? groupId)
@@ -62,7 +56,7 @@ namespace BillChopBE.Services
             if (group == null)
                 throw new NotFoundException($"Group with id {newBill.GroupContextId} does not exist.");
 
-            var loaner = await userRepository.GetByIdAsync(newBill.LoanerId);
+            var loaner = group.Users.FirstOrDefault(user => user.Id == newBill.LoanerId);
             if (loaner == null)
                 throw new NotFoundException($"Payee with id {newBill.LoanerId} does not exist.");
 
@@ -70,7 +64,9 @@ namespace BillChopBE.Services
             {
                 Name = newBill.Name,
                 Total = newBill.Total,
+                LoanerId = loaner.Id,
                 Loaner = loaner,
+                GroupContextId = group.Id,
                 GroupContext = group,
             };
 
@@ -90,7 +86,9 @@ namespace BillChopBE.Services
             var loans = payingUsers
                 .Select((user, index) => new Loan()
                 {
+                    BillId = bill.Id,
                     Bill = bill,
+                    LoaneeId = user.Id,
                     Loanee = user,
                     Amount = amounts[index]
                 }).ToList();

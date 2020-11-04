@@ -1,4 +1,5 @@
 using BillChopBE.Services;
+using BillChopBE.Exceptions;
 using NUnit.Framework;
 using FakeItEasy;
 using Shouldly;
@@ -19,13 +20,11 @@ namespace BillChopBETests
         protected class BillServiceSutBuilder : ISutBuilder<BillService>
         {
             internal IBillRepository BillRepository { get; set; } = A.Fake<IBillRepository>();
-            internal ILoanRepository LoanRepository { get; set; } = A.Fake<ILoanRepository>();
             internal IGroupRepository GroupRepository { get; set; } = A.Fake<IGroupRepository>();
-            internal IUserRepository UserRepository { get; set; } = A.Fake<IUserRepository>();
 
             public BillService CreateSut()
             {
-                return new BillService(BillRepository, LoanRepository, GroupRepository, UserRepository);
+                return new BillService(BillRepository, GroupRepository);
             }
 
             public CreateNewBill CreateNewBill(string name, decimal total, Guid? groupContextId = null, Guid? loanerId = null) 
@@ -47,15 +46,24 @@ namespace BillChopBETests
                     Name = name,
                 };
 
+                group.Users = userCount.Select((_) => CreateUser(group)).ToList();
+                return group;
+            }
+
+            public User CreateUser(Group? group = null, string? name = null)
+            {
                 var faker = new Faker();
-                group.Users = userCount.Select((_) => new User()
+                var user = new User()
                 {
                     Name = faker.Person.FullName,
-                    Groups = new List<Group>() { group },
+                    Groups = new List<Group>(),
                     Id = Guid.NewGuid(),
-                }).ToList();
+                };
 
-                return group;
+                if (group != null)
+                    user.Groups.Add(group);
+
+                return user;
             }
         }
 
@@ -65,7 +73,7 @@ namespace BillChopBETests
         [TestCase(99.99, 3)]
         [TestCase(99.01, 3)]
         [TestCase(8.07, 8)]
-        public async Task CreateAndSplitBillAsync_WhenBillIsSplitInGroup_ShouldCreateBillWithEqualLoans(decimal total, int userCount)
+        public async Task CreateAndSplitBillAsync_WhenGroupHasMembers_ShouldCreateBillWithEqualLoans(decimal total, int userCount)
         {
             //Arrange
             var sutBuilder = new BillServiceSutBuilder();
@@ -74,9 +82,6 @@ namespace BillChopBETests
 
             A.CallTo(() => sutBuilder.GroupRepository.GetByIdAsync(group.Id))
                 .Returns(group);
-
-            A.CallTo(() => sutBuilder.UserRepository.GetByIdAsync(loaner.Id))
-                .Returns(loaner);
 
             A.CallTo(() => sutBuilder.BillRepository.AddAsync(A<Bill>._))
                 .ReturnsLazily((Bill bill) => bill);
@@ -106,6 +111,33 @@ namespace BillChopBETests
                 // Allow error of 1 cent
                 loan.Amount.ShouldBeInRange(expectedAmount, expectedAmount + 0.01M);
             });
+        }
+
+        [Test]
+        [TestCase(100.05, 1)]
+        [TestCase(50.30, 2)]
+        [TestCase(99.99, 3)]
+        [TestCase(99.01, 3)]
+        [TestCase(8.07, 8)]
+        public async Task CreateAndSplitBillAsync_WhenBillPayeeIsNotInGroup_ShouldThrow(decimal total, int userCount)
+        {
+            //Arrange
+            var sutBuilder = new BillServiceSutBuilder();
+            var group = sutBuilder.CreateGroupWithUsers("Test group", userCount);
+            var loaner = sutBuilder.CreateUser();
+
+            A.CallTo(() => sutBuilder.GroupRepository.GetByIdAsync(group.Id))
+                .Returns(group);
+
+            A.CallTo(() => sutBuilder.BillRepository.AddAsync(A<Bill>._))
+                .ReturnsLazily((Bill bill) => bill);
+
+            var createNewBill = sutBuilder.CreateNewBill("Test bill", total, group.Id, loaner.Id);
+            var billService = sutBuilder.CreateSut();
+
+            //Act && Aseert
+            var exception = await Assert.ThrowsAsync<NotFoundException>(() => billService.CreateAndSplitBillAsync(createNewBill));
+            exception.Message.ShouldBe($"Payee with id {loaner.Id} does not exist.");
         }
     }
 }
