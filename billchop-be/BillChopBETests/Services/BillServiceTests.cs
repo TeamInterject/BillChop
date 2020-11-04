@@ -94,6 +94,9 @@ namespace BillChopBETests
             var resultBill = await billService.CreateAndSplitBillAsync(createNewBill);
 
             //Assert
+            A.CallTo(() => sutBuilder.BillRepository.AddAsync(A<Bill>._))
+                .MustHaveHappenedOnceExactly();
+
             resultBill.Total.ShouldBe(total);
             resultBill.Name.ShouldBe(createNewBill.Name);
             resultBill.Loaner.ShouldBe(loaner);
@@ -135,7 +138,7 @@ namespace BillChopBETests
 
             //Act & Aseert
             var exception = Assert.ThrowsAsync<NotFoundException>(async () => await billService.CreateAndSplitBillAsync(createNewBill));
-            exception.Message.ShouldBe($"Payee with id {loaner.Id} does not exist.");
+            exception.Message.ShouldBe($"Payee with id {loaner.Id} does not exist in group.");
         }
 
         [Test]
@@ -157,7 +160,7 @@ namespace BillChopBETests
 
             //Act & Assert
             var exception = Assert.ThrowsAsync<NotFoundException>(async () => await billService.CreateAndSplitBillAsync(createNewBill));
-            exception.Message.ShouldBe($"Payee with id {loaner.Id} does not exist.");
+            exception.Message.ShouldBe($"Payee with id {loaner.Id} does not exist in group.");
         }
 
         [Test]

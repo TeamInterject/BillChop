@@ -58,7 +58,7 @@ namespace BillChopBE.Services
 
             var loaner = group.Users.FirstOrDefault(user => user.Id == newBill.LoanerId);
             if (loaner == null)
-                throw new NotFoundException($"Payee with id {newBill.LoanerId} does not exist.");
+                throw new NotFoundException($"Payee with id {newBill.LoanerId} does not exist in group.");
 
             var bill = new Bill()
             {
