@@ -1,3 +1,4 @@
 {
-    "dotnet-test-explorer.testProjectPath": ""
+    "dotnet-test-explorer.testProjectPath": "",
+    "dotnet-test-explorer.autoWatch": true
 }
