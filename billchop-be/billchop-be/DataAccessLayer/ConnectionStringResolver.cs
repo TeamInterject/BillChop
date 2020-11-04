@@ -14,6 +14,11 @@ namespace BillChopBE.DataAccessLayer
               .Build();
         }
 
-        public static string GetBillChopDbConnectionString() => BuildConfiguration().GetConnectionString("BillChopDb");
+        public static string GetBillChopDbConnectionString() {
+            var connectionString = BuildConfiguration().GetConnectionString("BillChopDb");
+            System.Console.WriteLine(connectionString);
+
+            return connectionString;
+        }
     }
 }
