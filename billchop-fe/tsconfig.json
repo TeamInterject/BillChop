@@ -13,17 +13,17 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": false,
+    "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
     "types": [
       "sinon-chai",
       "chai-as-promised",
       "mocha",
-      "chai-jest-snapshot",
+      "chai-jest-snapshot"
     ]
   },
   "include": [
