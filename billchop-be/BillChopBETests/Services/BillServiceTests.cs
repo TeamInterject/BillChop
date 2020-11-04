@@ -12,6 +12,7 @@ using ProjectPortableTools.Extensions;
 using Bogus;
 using System.Collections.Generic;
 using System.Linq;
+using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 
 namespace BillChopBETests
 {
@@ -114,12 +115,9 @@ namespace BillChopBETests
         }
 
         [Test]
-        [TestCase(100.05, 1)]
-        [TestCase(50.30, 2)]
-        [TestCase(99.99, 3)]
-        [TestCase(99.01, 3)]
-        [TestCase(8.07, 8)]
-        public async Task CreateAndSplitBillAsync_WhenBillPayeeIsNotInGroup_ShouldThrow(decimal total, int userCount)
+        [TestCase(100, 1)]
+        [TestCase(400, 8)]
+        public void CreateAndSplitBillAsync_WhenBillPayeeIsNotInGroup_ShouldThrow(decimal total, int userCount)
         {
             //Arrange
             var sutBuilder = new BillServiceSutBuilder();
@@ -135,9 +133,66 @@ namespace BillChopBETests
             var createNewBill = sutBuilder.CreateNewBill("Test bill", total, group.Id, loaner.Id);
             var billService = sutBuilder.CreateSut();
 
-            //Act && Aseert
-            var exception = await Assert.ThrowsAsync<NotFoundException>(() => billService.CreateAndSplitBillAsync(createNewBill));
+            //Act & Aseert
+            var exception = Assert.ThrowsAsync<NotFoundException>(async () => await billService.CreateAndSplitBillAsync(createNewBill));
             exception.Message.ShouldBe($"Payee with id {loaner.Id} does not exist.");
+        }
+
+        [Test]
+        public void CreateAndSplitBillAsync_WhenGroupHasNoMembers_ShouldThrow()
+        {
+            //Arrange
+            var sutBuilder = new BillServiceSutBuilder();
+            var group = sutBuilder.CreateGroupWithUsers("Test group", 0);
+            var loaner = sutBuilder.CreateUser();
+
+            A.CallTo(() => sutBuilder.GroupRepository.GetByIdAsync(group.Id))
+                .Returns(group);
+
+            A.CallTo(() => sutBuilder.BillRepository.AddAsync(A<Bill>._))
+                .ReturnsLazily((Bill bill) => bill);
+
+            var createNewBill = sutBuilder.CreateNewBill("Test bill", 100, group.Id, loaner.Id);
+            var billService = sutBuilder.CreateSut();
+
+            //Act & Assert
+            var exception = Assert.ThrowsAsync<NotFoundException>(async () => await billService.CreateAndSplitBillAsync(createNewBill));
+            exception.Message.ShouldBe($"Payee with id {loaner.Id} does not exist.");
+        }
+
+        [Test]
+        public void CreateAndSplitBillAsync_WhenGroupDoesNotExist_ShouldThrow()
+        {
+            //Arrange
+            var sutBuilder = new BillServiceSutBuilder();
+            var group = sutBuilder.CreateGroupWithUsers("Test group", 0);
+            var loaner = sutBuilder.CreateUser();
+
+            A.CallTo(() => sutBuilder.GroupRepository.GetByIdAsync(group.Id))
+                .Returns<Group?>(null);
+
+            A.CallTo(() => sutBuilder.BillRepository.AddAsync(A<Bill>._))
+                .ReturnsLazily((Bill bill) => bill);
+
+            var createNewBill = sutBuilder.CreateNewBill("Test bill", 100, group.Id, loaner.Id);
+            var billService = sutBuilder.CreateSut();
+
+            //Act & Assert
+            var exception = Assert.ThrowsAsync<NotFoundException>(async () => await billService.CreateAndSplitBillAsync(createNewBill));
+            exception.Message.ShouldBe($"Group with id {group.Id} does not exist.");
+        }
+
+        [Test]
+        public void CreateAndSplitBillAsync_WhenCreateNewGroupIsNotValid_ShouldThrow()
+        {
+            //Arrange
+            var sutBuilder = new BillServiceSutBuilder();
+
+            var createNewBill = new CreateNewBill();
+            var billService = sutBuilder.CreateSut();
+
+            //Act & Assert
+            var exception = Assert.ThrowsAsync<ValidationException>(async () => await billService.CreateAndSplitBillAsync(createNewBill));
         }
     }
 }
