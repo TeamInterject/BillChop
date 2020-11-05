@@ -43,6 +43,7 @@ export default class BillsListAccordion extends React.Component<
               <GroupTable
                 group={group}
                 expenseAmounts={this.generateExpenseAmounts(bill)}
+                showMembersOnlyWithExpenses
               />
             </Card.Body>
           </Accordion.Collapse>

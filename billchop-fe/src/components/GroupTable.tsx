@@ -13,6 +13,7 @@ export interface IGroupTableProps {
   group: Group;
   expenseAmounts?: Dictionary<number>;
   onAddNewMember?: (name: string) => void;
+  showMembersOnlyWithExpenses?: boolean;
 }
 
 export default class GroupTable extends React.Component<
@@ -41,15 +42,33 @@ export default class GroupTable extends React.Component<
   renderTableContent = (): React.ReactNode => {
     const tableContent = [];
     const { nameInputValue } = this.state;
-    const { group, expenseAmounts, onAddNewMember } = this.props;
+    const {
+      group,
+      expenseAmounts,
+      onAddNewMember,
+      showMembersOnlyWithExpenses,
+    } = this.props;
+
+    let groupUsers = group.Users;
+
+    if (showMembersOnlyWithExpenses && expenseAmounts !== undefined) {
+      groupUsers = group.Users?.filter((user) => {
+        return expenseAmounts[user.Id] !== undefined;
+      });
+    }
 
     tableContent.push(
-      group.Users?.map((user) => (
-        <tr key={user.Id}>
-          <td>{user.Name}</td>
-          <td>{expenseAmounts ? expenseAmounts[user.Id]?.toFixed(2) : ""}</td>
-        </tr>
-      ))
+      groupUsers.map((user) => {
+        const expense = expenseAmounts
+          ? expenseAmounts[user.Id]?.toFixed(2)
+          : "";
+        return (
+          <tr key={user.Id}>
+            <td>{user.Name}</td>
+            <td>{expense}</td>
+          </tr>
+        );
+      })
     );
     if (onAddNewMember !== undefined) {
       tableContent.push(

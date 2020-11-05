@@ -31,6 +31,7 @@ export default class AddBillModal extends React.Component<
     const { onAdd } = this.props;
     const { nameInputValue, totalAmountInputValue } = this.state;
     onAdd(nameInputValue, +totalAmountInputValue);
+    this.setState({ nameInputValue: "", totalAmountInputValue: "" });
   };
 
   handleOnHide = (): void => {
