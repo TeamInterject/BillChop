@@ -47,6 +47,6 @@ describe("Sidebar Tests", () => {
     fireEvent.click(result[0]);
 
     expect(stub.callCount).to.be.equal(1);
-    expect(stub.calledWithExactly(expectedGroup));
+    expect(stub.calledWithExactly(expectedGroup.groupId)).to.be.equal(true);
   });
 });
