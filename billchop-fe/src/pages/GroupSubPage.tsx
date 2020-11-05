@@ -1,5 +1,5 @@
 import * as React from "react";
-import Group from "../api/Group";
+import Group from "../backend/models/Group";
 import GroupTable from "../components/GroupTable";
 
 interface IGroupSubPageProps {

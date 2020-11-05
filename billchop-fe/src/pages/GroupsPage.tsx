@@ -1,8 +1,8 @@
 import Axios from "axios";
 import * as React from "react";
-import Group from "../api/Group";
+import Group from "../backend/models/Group";
 import Sidebar, { ISidebarTab } from "../components/Sidebar";
-import { CURRENT_USER_ID } from "../api/User";
+import { CURRENT_USER_ID } from "../backend/models/User";
 import NoGroupSelectedSubPage from "./NoGroupSelectedSubPage";
 import "../styles/group-page.css";
 import GroupSubPage from "./GroupSubPage";

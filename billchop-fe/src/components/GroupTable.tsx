@@ -3,10 +3,10 @@ import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Axios from "axios";
-import Group from "../api/Group";
+import Group from "../backend/models/Group";
 import BillSplitInput from "./BillSplitInput";
-import User, { CURRENT_USER_ID } from "../api/User";
-import Loan from "../api/Loan";
+import User, { CURRENT_USER_ID } from "../backend/models/User";
+import Loan from "../backend/models/Loan";
 
 const BASE_URL_API_GROUPS = "https://localhost:44333/api/groups/";
 const BASE_URL_API_USERS = "https://localhost:44333/api/users/";

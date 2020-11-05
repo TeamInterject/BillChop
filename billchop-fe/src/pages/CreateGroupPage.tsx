@@ -2,8 +2,8 @@ import Axios from "axios";
 import * as React from "react";
 import { Button, Form } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
-import Group from "../api/Group";
-import { CURRENT_USER_ID } from "../api/User";
+import Group from "../backend/models/Group";
+import { CURRENT_USER_ID } from "../backend/models/User";
 import "../styles/create-group-page.css";
 
 const BASE_URL_API_GROUPS = "https://localhost:44333/api/groups/";
