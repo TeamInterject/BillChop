@@ -45,6 +45,7 @@ namespace BillChopBE
             services.AddScoped<ILoanService, LoanService>();
 
             services.AddScoped<ILoanDbFilterFactory, LoanDbFilterFactory>();
+            services.AddScoped<IBillDbFilterFactory, BillDbFilterFactory>();
 
             services.AddSwaggerGen(c => 
             {

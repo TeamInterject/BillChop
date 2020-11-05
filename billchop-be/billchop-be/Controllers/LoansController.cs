@@ -25,11 +25,13 @@ namespace BillChopBE.Controllers
         /// </summary>
         /// <param name="loanerId">Id of user who lent money.</param>
         /// <param name="groupId">Optional Id of context group.</param>
+        /// <param name="startTime">Optional DateTime for filtering loans created after a certain time</param>
+        /// <param name="endTime">Optional DateTime for filtering loans created before a certain time</param>
         /// <returns></returns>
         [HttpGet("provided-loans/{loanerId}")]
-        public async Task<ActionResult<IList<Loan>>> GetProvidedLoans(Guid loanerId, Guid? groupId)
+        public async Task<ActionResult<IList<Loan>>> GetProvidedLoans(Guid loanerId, Guid? groupId, DateTime? startTime, DateTime? endTime)
         {
-            return Ok(await loanService.GetProvidedLoansAsync(loanerId, groupId));
+            return Ok(await loanService.GetProvidedLoansAsync(loanerId, groupId, startTime, endTime));
         }
 
         /// <summary>
@@ -38,11 +40,13 @@ namespace BillChopBE.Controllers
         /// </summary>
         /// <param name="loaneeId">Id of user who borrowed money.</param>
         /// <param name="groupId">Optional Id of context group.</param>
+        /// <param name="startTime">Optional DateTime for filtering loans created after a certain time</param>
+        /// <param name="endTime">Optional DateTime for filtering loans created before a certain time</param>
         /// <returns></returns>
         [HttpGet("received-loans/{loaneeId}")]
-        public async Task<ActionResult<IList<Loan>>> GetReceivedLoans(Guid loaneeId, Guid? groupId)
+        public async Task<ActionResult<IList<Loan>>> GetReceivedLoans(Guid loaneeId, Guid? groupId, DateTime? startTime, DateTime? endTime)
         {
-            return Ok(await loanService.GetReceivedLoansAsync(loaneeId, groupId));
+            return Ok(await loanService.GetReceivedLoansAsync(loaneeId, groupId, startTime, endTime));
         }
 
         /// <summary>
@@ -50,11 +54,13 @@ namespace BillChopBE.Controllers
         /// </summary>
         /// <param name="loanerAndLoaneeId">Id of user who paid for himself, making it an expense.</param>
         /// <param name="groupId">Optional Id of context group.</param>
+        /// <param name="startTime">Optional DateTime for filtering loans created after a certain time</param>
+        /// <param name="endTime">Optional DateTime for filtering loans created before a certain time</param>
         /// <returns></returns>
         [HttpGet("self-loans/{loanerAndLoaneeId}")]
-        public async Task<ActionResult<IList<Loan>>> GetSelfLoans(Guid loanerAndLoaneeId, Guid? groupId)
+        public async Task<ActionResult<IList<Loan>>> GetSelfLoans(Guid loanerAndLoaneeId, Guid? groupId, DateTime? startTime, DateTime? endTime)
         {
-            return Ok(await loanService.GetSelfLoansAsync(loanerAndLoaneeId, groupId));
+            return Ok(await loanService.GetSelfLoansAsync(loanerAndLoaneeId, groupId, startTime, endTime));
         }
 
         /// <summary>

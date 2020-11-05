@@ -10,9 +10,9 @@ namespace BillChopBE.Services
 {
     public interface ILoanService
     {
-        Task<IList<Loan>> GetProvidedLoansAsync(Guid loanerId, Guid? groupId);
-        Task<IList<Loan>> GetReceivedLoansAsync(Guid loaneeId, Guid? groupId);
-        Task<IList<Loan>> GetSelfLoansAsync(Guid loanerAndLoaneeId, Guid? groupId);
+        Task<IList<Loan>> GetProvidedLoansAsync(Guid loanerId, Guid? groupId, DateTime? startTime, DateTime? endTime);
+        Task<IList<Loan>> GetReceivedLoansAsync(Guid loaneeId, Guid? groupId, DateTime? startTime, DateTime? endTime);
+        Task<IList<Loan>> GetSelfLoansAsync(Guid loanerAndLoaneeId, Guid? groupId, DateTime? startTime, DateTime? endTime);
         Task<IList<Loan>> GetFilteredLoansAsync(LoanFilterInfo loanFilterInfo);
     }
 
@@ -27,35 +27,41 @@ namespace BillChopBE.Services
             this.loanDbFilterFactory = loanDbFilterFactory;
         }
 
-        public async Task<IList<Loan>> GetProvidedLoansAsync(Guid loanerId, Guid? groupId)
+        public async Task<IList<Loan>> GetProvidedLoansAsync(Guid loanerId, Guid? groupId, DateTime? startTime, DateTime? endTime)
         {
             var filterInfo = new LoanFilterInfo()
             {
                 LoanerId = loanerId,
                 GroupId = groupId,
+                StartTime = startTime,
+                EndTime = endTime,
             };
 
             return await GetFilteredLoansAsync(filterInfo);
         }
 
-        public async Task<IList<Loan>> GetReceivedLoansAsync(Guid loaneeId, Guid? groupId)
+        public async Task<IList<Loan>> GetReceivedLoansAsync(Guid loaneeId, Guid? groupId, DateTime? startTime, DateTime? endTime)
         {
             var filterInfo = new LoanFilterInfo()
             {
                 LoaneeId = loaneeId,
                 GroupId = groupId,
+                StartTime = startTime,
+                EndTime = endTime,
             };
 
             return await GetFilteredLoansAsync(filterInfo);
         }
 
-        public async Task<IList<Loan>> GetSelfLoansAsync(Guid loanerAndLoaneeId, Guid? groupId)
+        public async Task<IList<Loan>> GetSelfLoansAsync(Guid loanerAndLoaneeId, Guid? groupId, DateTime? startTime, DateTime? endTime)
         {
             var filterInfo = new LoanFilterInfo()
             {
                 LoaneeId = loanerAndLoaneeId,
                 LoanerId = loanerAndLoaneeId,
                 GroupId = groupId,
+                StartTime = startTime,
+                EndTime = endTime,
             };
 
             return await GetFilteredLoansAsync(filterInfo);
