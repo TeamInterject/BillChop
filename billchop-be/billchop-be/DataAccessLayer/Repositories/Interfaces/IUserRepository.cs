@@ -6,6 +6,6 @@ namespace BillChopBE.DataAccessLayer.Repositories.Interfaces
 {
     public interface IUserRepository : IRepository<User>
     {
-        Task<IList<User>> SearchUsersAsync(string keyword);
+        Task<IList<User>> SearchNameAndEmailAsync(string keyword, int top);
     }
 }

@@ -32,10 +32,17 @@ namespace BillChopBE.Controllers
             return Ok(await userService.GetUserAsync(id));
         }
 
+        
+        /// <summary>
+        /// Searches for users by matching partial keyword to usernames and emails
+        /// </summary>
+        /// <param name="keyword">Substring of username or email</param>
+        /// <param name="top">Amount of returned results</param>
+        /// <returns></returns>
         [HttpGet("search/{keyword}")]
-        public async Task<ActionResult<User>> SearchForUsers(string keyword)
+        public async Task<ActionResult<User>> SearchForUsers(string keyword, int top = 10)
         {
-            return Ok(await userService.GetUserAsync(keyword));
+            return Ok(await userService.SearchForUsersAsync(keyword, top));
         }
 
         [HttpPost]
