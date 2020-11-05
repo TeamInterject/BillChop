@@ -16,6 +16,10 @@ namespace BillChopBE.DataAccessLayer.Models
         [Required]
         public string Name { get; set; } = null!;
 
+        [Required]
+        [RegularExpression(@"^[\w_+-\.]+@([\w-]+\.)+[\w-]{2,}$")]
+        public string Email { get; set; } = null!;
+
         [JsonIgnore]
         public virtual List<Group> Groups { get; set; } = new List<Group>();
 
