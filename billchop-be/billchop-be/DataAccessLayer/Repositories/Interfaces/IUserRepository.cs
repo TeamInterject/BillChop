@@ -7,5 +7,6 @@ namespace BillChopBE.DataAccessLayer.Repositories.Interfaces
     public interface IUserRepository : IRepository<User>
     {
         Task<IList<User>> SearchNameAndEmailAsync(string keyword, int top);
+        Task<User> GetByEmailAsync(string email);
     }
 }
