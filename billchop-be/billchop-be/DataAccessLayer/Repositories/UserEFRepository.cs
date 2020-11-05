@@ -1,6 +1,11 @@
 ﻿using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BillChopBE.DataAccessLayer.Repositories
 {
@@ -13,6 +18,11 @@ namespace BillChopBE.DataAccessLayer.Repositories
         public UserEFRepository(BillChopContext context) 
         {
             this.context = context;
+        }
+
+        public async Task<User> GetByEmailAsync(string email)
+        {
+            return await (Task<User>)DbSet.Where(u => u.Email == email);
         }
     }
 }
