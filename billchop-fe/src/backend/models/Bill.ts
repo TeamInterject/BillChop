@@ -5,6 +5,7 @@ export default interface Bill {
   Id: string;
   Name: string;
   Total: number;
+  CreationTime: Date;
   LoanerId: string;
   Loaner: User;
   Loans: Loan[];
