@@ -3,7 +3,6 @@ using BillChopBE.DataAccessLayer.Filters.Factories;
 using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using BillChopBE.Exceptions;
-using ProjectPortableTools.Extensions;
 using BillChopBE.Services.Models;
 using Microsoft.Extensions.Logging;
 using System;
