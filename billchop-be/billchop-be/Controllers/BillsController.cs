@@ -21,9 +21,9 @@ namespace BillChopBE.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<Bill>>> GetBills(Guid? groupId)
+        public async Task<ActionResult<IList<Bill>>> GetBills(Guid? groupId, DateTime? startTime, DateTime? endTime)
         {
-            return Ok(await billService.GetBillsAsync(groupId));
+            return Ok(await billService.GetBillsAsync(groupId, startTime, endTime));
         }
 
         [HttpPost]

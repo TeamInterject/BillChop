@@ -1,4 +1,6 @@
-﻿using BillChopBE.DataAccessLayer.Models;
+﻿using BillChopBE.DataAccessLayer.Filters;
+using BillChopBE.DataAccessLayer.Filters.Factories;
+using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using BillChopBE.Exceptions;
 using BillChopBE.Extensions;
@@ -14,7 +16,8 @@ namespace BillChopBE.Services
     public interface IBillService
     {
         Task<Bill> CreateAndSplitBillAsync(CreateNewBill newBill);
-        Task<IList<Bill>> GetBillsAsync(Guid? groupId);
+        Task<IList<Bill>> GetBillsAsync(Guid? groupId, DateTime? startTime, DateTime? endTime);
+        Task<IList<Bill>> GetFilteredBillsAsync(BillFilterInfo billFilterInfo);
     }
 
     public class BillService : IBillService
@@ -23,33 +26,37 @@ namespace BillChopBE.Services
         private readonly ILoanRepository loanRepository;
         private readonly IGroupRepository groupRepository;
         private readonly IUserRepository userRepository;
+        private readonly IBillDbFilterFactory billDbFilterFactory;
 
         public BillService(IBillRepository billRepository,
             ILoanRepository loanRepository,
             IGroupRepository groupRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IBillDbFilterFactory billDbFilterFactory)
         {
             this.billRepository = billRepository;
             this.loanRepository = loanRepository;
             this.groupRepository = groupRepository;
             this.userRepository = userRepository;
+            this.billDbFilterFactory = billDbFilterFactory;
         }
 
-        public Task<IList<Bill>> GetBillsAsync(Guid? groupId)
+        public async Task<IList<Bill>> GetBillsAsync(Guid? groupId, DateTime? startTime, DateTime? endTime)
         {
-            if (groupId.HasValue)
-                return GetGroupBillsAsync(groupId.Value);
+            var filterInfo = new BillFilterInfo()
+            {
+                GroupId = groupId,
+                StartTime = startTime,
+                EndTime = endTime,
+            };
 
-            return billRepository.GetAllAsync();
+            return await GetFilteredBillsAsync(filterInfo);
         }
 
-        private async Task<IList<Bill>> GetGroupBillsAsync(Guid groupId)
+        public Task<IList<Bill>> GetFilteredBillsAsync(BillFilterInfo billFilterInfo)
         {
-            var group = await groupRepository.GetByIdAsync(groupId);
-            if (group == null)
-                throw new NotFoundException($"Group with id {groupId} does not exist");
-
-            return await billRepository.GetBillsByGroupId(groupId);
+            var filter = billDbFilterFactory.Create(billFilterInfo);
+            return billRepository.GetAllAsync(filter);
         }
 
         public async Task<Bill> CreateAndSplitBillAsync(CreateNewBill newBill)

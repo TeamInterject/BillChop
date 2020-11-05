@@ -13,9 +13,12 @@ namespace BillChopBE.Services.Models
         [Required]
         public string Name { get; set; } = null!;
 
+        [Required]
+        public string Email { get; set; } = null!;
+
         public User ToUser()
         {
-            return new User() { Name = Name };
+            return new User() { Name = Name, Email = Email };
         }
     }
 }
