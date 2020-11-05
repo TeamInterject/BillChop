@@ -26,10 +26,10 @@ namespace BillChopBE.Controllers
             return Ok(await userService.GetUsersAsync());
         }
 
-        [HttpGet("login/{email}")]
-        public async Task<ActionResult<IList<User>>> Login([FromBody] FindUser findUser)
+        [HttpPost("login")]
+        public async Task<ActionResult<IList<User>>> Login([FromBody] LoginDetails loginDetails)
         {
-            return Ok(await userService.GetUserAsync(findUser));
+            return Ok(await userService.LoginAsync(loginDetails));
         }
 
         [HttpGet("{id}")]

@@ -13,7 +13,7 @@ namespace BillChopBE.Services
         Task<User> AddUserAsync(CreateNewUser newUser);
         Task<User> GetUserAsync(Guid id);
         Task<IList<User>> GetUsersAsync();
-        Task<User> GetUserAsync(FindUser findUser);
+        Task<User> LoginAsync(LoginDetails loginDetails);
     }
 
     public class UserService : IUserService
@@ -30,10 +30,10 @@ namespace BillChopBE.Services
             return user ?? throw new NotFoundException($"User with id ({id}) does not exist");
         }
 
-        public async Task<User> GetUserAsync(FindUser findUser)
+        public async Task<User> LoginAsync(LoginDetails loginDetails)
         {
-            var user = await userRepository.GetByEmailAsync(findUser.Email);
-            return user ?? throw new NotFoundException($"User with email ({findUser.Email}) does not exist");
+            var user = await userRepository.GetByEmailAsync(loginDetails.Email);
+            return user ?? throw new NotFoundException($"User with email ({loginDetails.Email}) does not exist");
         }
 
         public Task<IList<User>> GetUsersAsync()

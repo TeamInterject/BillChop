@@ -22,7 +22,7 @@ namespace BillChopBE.DataAccessLayer.Repositories
 
         public async Task<User> GetByEmailAsync(string email)
         {
-            return await (Task<User>)DbSet.Where(u => u.Email == email);
+            return await DbSet.FirstAsync(u => u.Email == email);
         }
     }
 }

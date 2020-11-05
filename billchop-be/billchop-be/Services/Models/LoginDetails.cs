@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BillChopBE.Services.Models
 {
-    public class FindUser : ValidatableModel
+    public class LoginDetails : ValidatableModel
     {
         [Required]
         public string Email { get; set; } = null!;
