@@ -26,7 +26,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "cross-env TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' mocha -r source-map-support/register -r jsdom-global/register -r ignore-styles -r ts-node/register \"src/tests/**/*.test.ts{,x}\"",
+    "test": "cross-env TS_NODE_COMPILER_OPTIONS={\\\"module\\\":\\\"commonjs\\\"} mocha -r source-map-support/register -r jsdom-global/register -r ignore-styles -r ts-node/register \"src/tests/**/*.test.ts{,x}\"",
     "eject": "react-scripts eject",
     "format": "prettier --write src/**/*.ts{,x}",
     "lint": "tsc --noEmit && eslint src/**/*.ts{,x}"
