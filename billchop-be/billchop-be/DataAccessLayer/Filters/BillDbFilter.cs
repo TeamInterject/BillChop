@@ -62,7 +62,5 @@ namespace BillChopBE.DataAccessLayer.Filters
         {
             Filters.Add((bill) => bill.GroupContextId == groupId);
         }
-
-        
     }
 }
