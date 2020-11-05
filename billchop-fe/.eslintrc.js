@@ -33,6 +33,7 @@ module.exports = {
       "no-param-reassign": ["error", { "props": false }],
       "no-use-before-define": "off",
       "@typescript-eslint/no-use-before-define": "off",
+      "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
       "prettier/prettier": [
         "error",
         {
