@@ -4,4 +4,4 @@ export default interface User {
 }
 
 // TODO refactor this out
-export const CURRENT_USER_ID = "da45d506-9091-4e6e-4b7e-08d87f0bdce5";
+export const CURRENT_USER_ID = "91d49caa-349b-4baf-51df-08d8819ede7d";
