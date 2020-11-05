@@ -20,6 +20,9 @@ namespace BillChopBE.DataAccessLayer.Models
         public decimal Total { get; set; }
 
         [Required]
+        public DateTime CreationTime { get; set; } = DateTime.Now;
+
+        [Required]
         [JsonIgnore]
         public Guid LoanerId { get; set; }
 
