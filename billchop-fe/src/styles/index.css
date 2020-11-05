@@ -17,7 +17,7 @@ code {
 }
 
 :root {
-  --sidebar-width: 15%;
+  --sidebar-width: 17%;
   --pageHeader-height: 10%;
 }
 
@@ -26,7 +26,7 @@ code {
   top: 40%;
   left: 50%;
   transform: translate(-50%, -40%);
-  width: 85vw;
+  width: 75vw;
   height: 85vh;
   border: solid 1px black;
 }

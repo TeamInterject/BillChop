@@ -1,8 +1,10 @@
 import Axios from "axios";
 import * as React from "react";
+import Bill from "../api/Bill";
 import Group from "../api/Group";
 import Loan from "../api/Loan";
 import { CURRENT_USER_ID } from "../api/User";
+import BillsListAccordion from "../components/BillsListAccordion";
 import GroupPageHeader from "../components/GroupPageHeader";
 import GroupTable from "../components/GroupTable";
 import Dictionary from "../util/Dictionary";
@@ -16,6 +18,7 @@ export interface IGroupSubPageProps {
 }
 
 export interface IGroupSubPageState {
+  bills: Bill[];
   expenseAmounts?: Dictionary<number>;
 }
 
@@ -26,13 +29,31 @@ export default class GroupSubPage extends React.Component<
   constructor(props: IGroupSubPageProps) {
     super(props);
     this.state = {
+      bills: [],
       expenseAmounts: undefined,
     };
   }
 
   componentDidMount(): void {
     this.getUserLoans();
+    this.getGroupBills();
   }
+
+  componentDidUpdate(prevProps: IGroupSubPageProps): void {
+    const { group } = this.props;
+    if (group.Id !== prevProps.group.Id) {
+      this.getUserLoans();
+      this.getGroupBills();
+    }
+  }
+
+  getGroupBills = (): void => {
+    const { group } = this.props;
+
+    Axios.get(`${BASE_URL_API_BILLS}?groupId=${group.Id}`).then((response) => {
+      this.setState({ bills: response.data });
+    });
+  };
 
   getUserLoans = (): void => {
     const { group } = this.props;
@@ -53,18 +74,23 @@ export default class GroupSubPage extends React.Component<
 
   handleOnAddNewBill = (name: string, total: number): void => {
     const { group } = this.props;
+    const { bills } = this.state;
 
     Axios.post(BASE_URL_API_BILLS, {
       name,
       total,
       loanerId: CURRENT_USER_ID,
       groupContextId: group.Id,
-    }).then(() => this.getUserLoans());
+    }).then((response) => {
+      bills.unshift(response.data as Bill);
+      this.setState({ bills });
+      this.getUserLoans();
+    });
   };
 
   render(): JSX.Element {
     const { group, onAddNewMember } = this.props;
-    const { expenseAmounts } = this.state;
+    const { expenseAmounts, bills } = this.state;
 
     return (
       <div className="group-page__sub-page-container">
@@ -74,6 +100,7 @@ export default class GroupSubPage extends React.Component<
           expenseAmounts={expenseAmounts}
           onAddNewMember={onAddNewMember}
         />
+        <BillsListAccordion group={group} bills={bills} />
       </div>
     );
   }

@@ -12,7 +12,7 @@ interface IGroupTableState {
 export interface IGroupTableProps {
   group: Group;
   expenseAmounts?: Dictionary<number>;
-  onAddNewMember: (name: string) => void;
+  onAddNewMember?: (name: string) => void;
 }
 
 export default class GroupTable extends React.Component<
@@ -34,56 +34,56 @@ export default class GroupTable extends React.Component<
   handleOnAddNewMember = (): void => {
     const { onAddNewMember } = this.props;
     const { nameInputValue } = this.state;
-    onAddNewMember(nameInputValue);
+    if (onAddNewMember) onAddNewMember(nameInputValue);
     this.setState({ nameInputValue: "" });
   };
 
   renderTableContent = (): React.ReactNode => {
     const tableContent = [];
     const { nameInputValue } = this.state;
-    const { group, expenseAmounts } = this.props;
+    const { group, expenseAmounts, onAddNewMember } = this.props;
 
     tableContent.push(
       group.Users?.map((user) => (
-        <tr>
+        <tr key={user.Id}>
           <td>{user.Name}</td>
           <td>{expenseAmounts ? expenseAmounts[user.Id]?.toFixed(2) : ""}</td>
         </tr>
       ))
     );
-    tableContent.push(
-      <tr>
-        <td>
-          <Form.Control
-            placeholder="New member's name:"
-            onChange={this.handleOnNameInputChange}
-            value={nameInputValue ?? ""}
-          />
-        </td>
-        <td>
-          <Button variant="outline" onClick={this.handleOnAddNewMember}>
-            Add
-          </Button>
-        </td>
-      </tr>
-    );
+    if (onAddNewMember !== undefined) {
+      tableContent.push(
+        <tr key="addNewMemberRow">
+          <td>
+            <Form.Control
+              placeholder="New member's name:"
+              onChange={this.handleOnNameInputChange}
+              value={nameInputValue ?? ""}
+            />
+          </td>
+          <td>
+            <Button variant="outline" onClick={this.handleOnAddNewMember}>
+              Add
+            </Button>
+          </td>
+        </tr>
+      );
+    }
     return tableContent;
   };
 
   render(): JSX.Element {
     return (
-      <div>
-        <div className="m-2">
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Amount</th>
-              </tr>
-            </thead>
-            <tbody>{this.renderTableContent()}</tbody>
-          </Table>
-        </div>
+      <div className="m-2">
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>{this.renderTableContent()}</tbody>
+        </Table>
       </div>
     );
   }

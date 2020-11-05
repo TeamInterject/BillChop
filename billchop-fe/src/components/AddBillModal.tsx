@@ -77,10 +77,11 @@ export default class AddBillModal extends React.Component<
                   this.setState({ totalAmountInputValue: e.target.value })
                 }
                 value={totalAmountInputValue}
+                type="number"
               />
             </Form.Row>
             <Form.Row>
-              <Button className="mt-4" type="submit">
+              <Button className="mt-3" type="submit">
                 Add
               </Button>
             </Form.Row>
