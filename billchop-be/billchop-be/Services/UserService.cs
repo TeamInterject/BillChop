@@ -13,6 +13,7 @@ namespace BillChopBE.Services
         Task<User> AddUserAsync(CreateNewUser newUser);
         Task<User> GetUserAsync(Guid id);
         Task<IList<User>> GetUsersAsync();
+        Task<IList<User>> SearchForUsersAsync(string keyword, int top);
         Task<User> LoginAsync(LoginDetails loginDetails);
     }
 
@@ -41,6 +42,11 @@ namespace BillChopBE.Services
         public Task<IList<User>> GetUsersAsync()
         {
             return userRepository.GetAllAsync();
+        }
+
+        public Task<IList<User>> SearchForUsersAsync(string keyword, int top)
+        {
+            return userRepository.SearchNameAndEmailAsync(keyword, top);
         }
 
         public Task<User> AddUserAsync(CreateNewUser newUser)

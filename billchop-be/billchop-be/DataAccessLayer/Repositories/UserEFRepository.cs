@@ -15,11 +15,20 @@ namespace BillChopBE.DataAccessLayer.Repositories
         protected override DbContext DbContext => context;
         protected override DbSet<User> DbSet => context.Users;
 
-        public UserEFRepository(BillChopContext context) 
+        public UserEFRepository(BillChopContext context)
         {
             this.context = context;
         }
 
+        public async Task<IList<User>> SearchNameAndEmailAsync(string keyword, int top)
+        {
+            keyword = keyword.ToLower();
+            return await DbSet
+                .Where(g => g.Email.ToLower().Contains(keyword) || g.Name.ToLower().Contains(keyword))
+                .Take(top)
+                .ToListAsync();
+        }
+        
         public async Task<User> GetByEmailAsync(string email)
         {
             return await DbSet.FirstAsync(u => u.Email == email);
