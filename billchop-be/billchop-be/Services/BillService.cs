@@ -25,7 +25,7 @@ namespace BillChopBE.Services
         private readonly IBillRepository billRepository;
         private readonly IGroupRepository groupRepository;
         private readonly IBillDbFilterFactory billDbFilterFactory;
-
+        
         public BillService(IBillRepository billRepository,
             IGroupRepository groupRepository,
             IBillDbFilterFactory billDbFilterFactory)
@@ -99,7 +99,6 @@ namespace BillChopBE.Services
                     Loanee = user,
                     Amount = amounts[index]
                 }).ToList();
-
             loans.ForEach(loan => bill.Loans.Add(loan));
 
             return loans;
