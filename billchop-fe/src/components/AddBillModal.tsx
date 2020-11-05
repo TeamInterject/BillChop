@@ -59,25 +59,31 @@ export default class AddBillModal extends React.Component<
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={this.handleOnSubmit}>
-            <Form.Label>Name:</Form.Label>
-            <Form.Control
-              placeholder="Enter the name of the bill"
-              onChange={(e) =>
-                this.setState({ nameInputValue: e.target.value })
-              }
-              value={nameInputValue}
-            />
-            <Form.Label className="mt-2">Total amount:</Form.Label>
-            <Form.Control
-              placeholder="Enter the total amount of the bill"
-              onChange={(e) =>
-                this.setState({ totalAmountInputValue: e.target.value })
-              }
-              value={totalAmountInputValue}
-            />
-            <Button className="mt-4" type="submit">
-              Add
-            </Button>
+            <Form.Row>
+              <Form.Label>Name:</Form.Label>
+              <Form.Control
+                placeholder="Enter the name of the bill"
+                onChange={(e) =>
+                  this.setState({ nameInputValue: e.target.value })
+                }
+                value={nameInputValue}
+              />
+            </Form.Row>
+            <Form.Row>
+              <Form.Label className="mt-2">Total amount:</Form.Label>
+              <Form.Control
+                placeholder="Enter the total amount of the bill"
+                onChange={(e) =>
+                  this.setState({ totalAmountInputValue: e.target.value })
+                }
+                value={totalAmountInputValue}
+              />
+            </Form.Row>
+            <Form.Row>
+              <Button className="mt-4" type="submit">
+                Add
+              </Button>
+            </Form.Row>
           </Form>
         </Modal.Body>
       </Modal>
