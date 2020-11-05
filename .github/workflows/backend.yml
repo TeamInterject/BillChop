@@ -33,3 +33,5 @@ jobs:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Build solution
         run: dotnet build
+      - name: Test solution
+        run: dotnet test

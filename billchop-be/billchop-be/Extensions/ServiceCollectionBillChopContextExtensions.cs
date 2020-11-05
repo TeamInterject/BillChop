@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BillChopBE.Extensions
 {
-    public static class BillChopContextExtensions
+    public static class ServiceCollectionBillChopContextExtensions
     {
         public static IServiceCollection AddBillChopContext(this IServiceCollection services, string connectionString, IsolationLevel level = IsolationLevel.ReadCommitted)
         {
