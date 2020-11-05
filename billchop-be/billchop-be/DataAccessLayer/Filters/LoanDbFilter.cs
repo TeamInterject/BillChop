@@ -21,9 +21,14 @@ namespace BillChopBE.DataAccessLayer.Filters
         public Guid? GroupId { get; set; }
 
         /// <summary>
-        /// Optional id of bill loans were created from.
+        /// Optional DateTime to find laons created after a certain time.
         /// </summary>
-        public Guid? BillId { get; set; }
+        public DateTime? StartTime { get; set; }
+
+        /// <summary>
+        /// Optional DateTime to find laons created before a certain time.
+        /// </summary>
+        public DateTime? EndTime { get; set; }
     }
 
     public class LoanDbFilter : AbstractDbFilter<Loan>
@@ -39,18 +44,16 @@ namespace BillChopBE.DataAccessLayer.Filters
             if (loanFilterInfo.LoanerId.HasValue)
                 AddLoanerFilter(loanFilterInfo.LoanerId.Value);
 
-            if (loanFilterInfo.BillId.HasValue)
-                AddBillFilter(loanFilterInfo.BillId.Value);
+            if (loanFilterInfo.StartTime.HasValue)
+                AddStartTimeFilter(loanFilterInfo.StartTime.Value);
+
+            if (loanFilterInfo.EndTime.HasValue)
+                AddEndTimeFilter(loanFilterInfo.EndTime.Value);
         }
 
         public void AddGroupFilter(Guid groupId)
         {
             Filters.Add((loan) => loan.Bill.GroupContextId == groupId);
-        }
-
-        public void AddBillFilter(Guid billId)
-        {
-            Filters.Add((loan) => loan.BillId == billId);
         }
 
         public void AddLoaneeFilter(Guid loaneeId) 
@@ -61,6 +64,16 @@ namespace BillChopBE.DataAccessLayer.Filters
         public void AddLoanerFilter(Guid loanerId) 
         {
             Filters.Add((loan) => loan.Bill.LoanerId == loanerId);
+        }
+
+        public void AddStartTimeFilter(DateTime startTime)
+        {
+            Filters.Add((loan) => loan.Bill.CreationTime > startTime);
+        }
+
+        public void AddEndTimeFilter(DateTime endTime)
+        {
+            Filters.Add((loan) => loan.Bill.CreationTime < endTime);
         }
     }
 }

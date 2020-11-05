@@ -1,4 +1,6 @@
 using BillChopBE.Services;
+using BillChopBE.DataAccessLayer.Filters;
+using BillChopBE.DataAccessLayer.Filters.Factories;
 using BillChopBE.Exceptions;
 using NUnit.Framework;
 using FakeItEasy;
@@ -22,10 +24,11 @@ namespace BillChopBETests
         {
             internal IBillRepository BillRepository { get; set; } = A.Fake<IBillRepository>();
             internal IGroupRepository GroupRepository { get; set; } = A.Fake<IGroupRepository>();
+            internal IBillDbFilterFactory BillDbFilterFactory { get; set; } = A.Fake<IBillDbFilterFactory>();
 
             public BillService CreateSut()
             {
-                return new BillService(BillRepository, GroupRepository);
+                return new BillService(BillRepository, GroupRepository, BillDbFilterFactory);
             }
 
             public CreateNewBill CreateNewBill(string name, decimal total, Guid? groupContextId = null, Guid? loanerId = null) 
