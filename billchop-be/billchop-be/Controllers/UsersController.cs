@@ -32,6 +32,12 @@ namespace BillChopBE.Controllers
             return Ok(await userService.GetUserAsync(id));
         }
 
+        [HttpGet("search/{keyword}")]
+        public async Task<ActionResult<User>> SearchForUsers(string keyword)
+        {
+            return Ok(await userService.GetUserAsync(keyword));
+        }
+
         [HttpPost]
         public async Task<ActionResult<User>> CreateUser([FromBody] CreateNewUser newUser)
         {

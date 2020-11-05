@@ -34,6 +34,11 @@ namespace BillChopBE.Services
             return userRepository.GetAllAsync();
         }
 
+        public Task<IList<User>> SearchForUsersAsync(string keyword)
+        {
+            return userRepository.SearchUsersAsync();
+        }
+
         public Task<User> AddUserAsync(CreateNewUser newUser)
         {
             newUser.Validate(); //TODO: Silent validate and throw appropriate HttpException
