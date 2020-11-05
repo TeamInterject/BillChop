@@ -3,7 +3,6 @@ module.exports = {
       "airbnb-typescript",
       "airbnb/hooks",
       "plugin:@typescript-eslint/recommended",
-      "plugin:jest/recommended",
       "prettier",
       "prettier/react",
       "prettier/@typescript-eslint",
@@ -13,7 +12,7 @@ module.exports = {
     env: {
       browser: true,
       es6: true,
-      jest: true,
+      mocha: true
     },
     globals: {
       Atomics: "readonly",
