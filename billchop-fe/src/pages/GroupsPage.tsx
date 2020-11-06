@@ -66,6 +66,7 @@ export default class GroupsPage extends React.Component<
 
     Axios.post(BASE_URL_API_USERS, {
       name,
+      email: `${name.replace(" ", ".")}@gmail.com`,
     }).then((userResponse) => {
       const newUserId = (userResponse.data as User).Id;
       Axios.post(
