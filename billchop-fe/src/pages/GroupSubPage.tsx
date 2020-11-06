@@ -1,16 +1,15 @@
-import Axios from "axios";
 import * as React from "react";
+import { produce } from "immer";
+import BillClient from "../backend/clients/BillClient";
+import LoanClient from "../backend/clients/LoanClient";
 import Bill from "../backend/models/Bill";
 import Group from "../backend/models/Group";
 import Loan from "../backend/models/Loan";
-import { CURRENT_USER_ID } from "../backend/models/User";
 import BillsListAccordion from "../components/BillsListAccordion";
 import GroupPageHeader from "../components/GroupPageHeader";
 import GroupTable from "../components/GroupTable";
 import Dictionary from "../util/Dictionary";
-
-const BASE_URL_API_BILLS = "https://localhost:44333/api/bills/";
-const BASE_URL_API_LOANS = "https://localhost:44333/api/loans/";
+import UserContext from "../backend/helpers/UserContext";
 
 export interface IGroupSubPageProps {
   group: Group;
@@ -26,6 +25,10 @@ export default class GroupSubPage extends React.Component<
   IGroupSubPageProps,
   IGroupSubPageState
 > {
+  private billClient = new BillClient();
+
+  private loanClient = new LoanClient();
+
   constructor(props: IGroupSubPageProps) {
     super(props);
     this.state = {
@@ -50,43 +53,56 @@ export default class GroupSubPage extends React.Component<
   getGroupBills = (): void => {
     const { group } = this.props;
 
-    Axios.get(`${BASE_URL_API_BILLS}?groupId=${group.Id}`).then((response) => {
-      this.setState({ bills: response.data });
-    });
+    this.billClient
+      .getBills({ groupId: group.Id })
+      .then((bills) => this.setState({ bills }));
   };
 
-  getUserLoans = (): void => {
+  getUserLoans = async (): Promise<void> => {
     const { group } = this.props;
 
-    Axios.get(
-      `${BASE_URL_API_LOANS}?loanerId=${CURRENT_USER_ID}&groupId=${group.Id}`
-    ).then((loansResponse) => {
-      const expenseAmounts: Dictionary<number> = {};
+    const currentUserId = await UserContext.getOrCreateTestUser();
 
-      loansResponse.data.forEach((loan: Loan) => {
-        expenseAmounts[loan.Loanee.Id] = expenseAmounts[loan.Loanee.Id] ?? 0;
-        expenseAmounts[loan.Loanee.Id] += loan.Amount;
+    this.loanClient
+      .getProvidedLoans({ loanerId: currentUserId, groupId: group.Id })
+      .then((loans) => {
+        const expenseAmounts = this.buildUserExpenses(loans);
+        this.setState({ expenseAmounts });
       });
-
-      this.setState({ expenseAmounts });
-    });
   };
 
-  handleOnAddNewBill = (name: string, total: number): void => {
+  handleOnAddNewBill = async (name: string, total: number): Promise<void> => {
     const { group } = this.props;
     const { bills } = this.state;
 
-    Axios.post(BASE_URL_API_BILLS, {
-      name,
-      total,
-      loanerId: CURRENT_USER_ID,
-      groupContextId: group.Id,
-    }).then((response) => {
-      bills.unshift(response.data as Bill);
-      this.setState({ bills });
-      this.getUserLoans();
-    });
+    const currentUserId = await UserContext.getOrCreateTestUser();
+
+    this.billClient
+      .postBill({
+        name,
+        total,
+        loanerId: currentUserId,
+        groupContextId: group.Id,
+      })
+      .then((bill) => {
+        const newBills = produce(bills, (draftBills) => {
+          draftBills.unshift(bill);
+        });
+        this.setState({ bills: newBills });
+        this.getUserLoans();
+      });
   };
+
+  private buildUserExpenses(loans: Loan[]): Dictionary<number> {
+    const expenseAmounts: Dictionary<number> = {};
+
+    loans.forEach((loan: Loan) => {
+      expenseAmounts[loan.Loanee.Id] = expenseAmounts[loan.Loanee.Id] ?? 0;
+      expenseAmounts[loan.Loanee.Id] += loan.Amount;
+    });
+
+    return expenseAmounts;
+  }
 
   render(): JSX.Element {
     const { group, onAddNewMember } = this.props;
