@@ -88,17 +88,17 @@ export default class GroupSubPage extends React.Component<
       );
     });
 
-    let month = -1;
     bills.forEach((bill) => {
       const billMonth = new Date(bill.CreationTime).getMonth();
-      if (billMonth !== month) {
-        month = billMonth;
-        datasets.push({ label: getMonthName(month), data: 0 });
-      }
-      datasets[datasets.length - 1].data += bill.Total;
+
+      datasets[billMonth] = datasets[billMonth] ?? {
+        label: getMonthName(billMonth),
+        data: 0,
+      };
+      datasets[billMonth].data += bill.Total;
     });
 
-    return datasets;
+    return Object.values(datasets);
   };
 
   handleOnAddNewBill = async (name: string, total: number): Promise<void> => {
