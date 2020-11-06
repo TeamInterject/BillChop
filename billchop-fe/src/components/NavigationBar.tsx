@@ -20,10 +20,13 @@ export default class NavigationBar extends React.Component {
               </div>
             </Link>
             <Link to="/groups">
-              <ImageButton imageSource={GroupIcon} alt="Groups" />
+              <ImageButton imageSource={GroupIcon} tooltipText="Groups" />
             </Link>
             <Link to="/createGroup">
-              <ImageButton imageSource={GroupCreateIcon} alt="Create Group" />
+              <ImageButton
+                imageSource={GroupCreateIcon}
+                tooltipText="Create Group"
+              />
             </Link>
           </Nav>
           <Link to="/login">

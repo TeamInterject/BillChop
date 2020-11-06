@@ -42,7 +42,7 @@ export default class GroupPageHeader extends React.Component<
             <Col>
               <ImageButton
                 imageSource={AddBillIcon}
-                alt="Add Bill"
+                tooltipText="Add Bill"
                 onClick={() => this.setState({ showAddBillModal: true })}
               />
             </Col>
