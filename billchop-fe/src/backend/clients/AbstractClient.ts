@@ -6,9 +6,9 @@ export default abstract class BaseClient {
     return url(ServerConfig.host, this.relativeUrl);
   }
 
-  protected createQuery = (
+  protected createQuery = <TType>(
     queryParamName: string,
-    queryValue?: string
+    queryValue?: TType
   ): string => {
     return queryValue !== null && queryValue !== undefined
       ? `?${queryParamName}=${queryValue}`

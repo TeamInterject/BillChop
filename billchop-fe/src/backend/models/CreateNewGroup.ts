@@ -1,3 +1,3 @@
 export interface CreateNewGroup {
-  Name: string;
+  name: string;
 }

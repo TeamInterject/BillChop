@@ -1,4 +1,4 @@
 export interface CreateNewUser {
-  Name: string;
-  Email: string;
+  name: string;
+  email: string;
 }

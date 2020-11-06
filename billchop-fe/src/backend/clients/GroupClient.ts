@@ -4,13 +4,15 @@ import BaseClient from "./AbstractClient";
 import Group from "../models/Group";
 import { CreateNewGroup } from "../models/CreateNewGroup";
 
+const userParam = "userId";
+
 export default class GroupClient extends BaseClient {
   public get relativeUrl(): string {
     return "api/groups";
   }
 
   public getGroups = async (userId?: string): Promise<Group[]> => {
-    const userQuery = this.createQuery("userId", userId);
+    const userQuery = this.createQuery(userParam, userId);
     const requestUrl = url(this.baseUrl, userQuery);
 
     return Axios.get(requestUrl).then(
