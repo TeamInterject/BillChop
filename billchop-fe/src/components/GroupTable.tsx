@@ -2,7 +2,7 @@ import * as React from "react";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Group from "../api/Group";
+import Group from "../backend/models/Group";
 import Dictionary from "../util/Dictionary";
 
 interface IGroupTableState {

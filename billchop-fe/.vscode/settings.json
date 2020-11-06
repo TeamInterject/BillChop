@@ -1,0 +1,10 @@
+{
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "eslint.alwaysShowStatus": true,
+  "eslint.lintTask.enable": true,
+  "eslint.run": "onSave",
+  "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+  }
+}

@@ -39,6 +39,7 @@ module.exports = {
         {
           endOfLine: "auto",
         },
-      ]
+      ],
+      "class-methods-use-this": [0]
     },
   };

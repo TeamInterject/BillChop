@@ -1,9 +1,9 @@
 import Axios from "axios";
 import * as React from "react";
-import Bill from "../api/Bill";
-import Group from "../api/Group";
-import Loan from "../api/Loan";
-import { CURRENT_USER_ID } from "../api/User";
+import Bill from "../backend/models/Bill";
+import Group from "../backend/models/Group";
+import Loan from "../backend/models/Loan";
+import { CURRENT_USER_ID } from "../backend/models/User";
 import BillsListAccordion from "../components/BillsListAccordion";
 import GroupPageHeader from "../components/GroupPageHeader";
 import GroupTable from "../components/GroupTable";
