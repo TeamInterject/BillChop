@@ -2,12 +2,13 @@ import Axios from "axios";
 import * as React from "react";
 import Group from "../backend/models/Group";
 import Sidebar, { ISidebarTab } from "../components/Sidebar";
-import { CURRENT_USER_ID } from "../backend/models/User";
+import User, { CURRENT_USER_ID } from "../backend/models/User";
 import NoGroupSelectedSubPage from "./NoGroupSelectedSubPage";
 import "../styles/group-page.css";
 import GroupSubPage from "./GroupSubPage";
 
 const BASE_URL_API_GROUPS = "https://localhost:44333/api/groups/";
+const BASE_URL_API_USERS = "https://localhost:44333/api/users/";
 
 interface IGroupsPageState {
   groups: Group[];
@@ -54,6 +55,32 @@ export default class GroupsPage extends React.Component<
     this.setState({ selectedGroupId: groupId });
   };
 
+  handleOnAddNewMember = (name: string): void => {
+    const { groups, selectedGroupId } = this.state;
+    const group = groups.find((g) => g.Id === selectedGroupId);
+
+    if (group === undefined) {
+      this.getGroups();
+      return;
+    }
+
+    Axios.post(BASE_URL_API_USERS, {
+      name,
+      email: `${name.replace(" ", ".")}@gmail.com`,
+    }).then((userResponse) => {
+      const newUserId = (userResponse.data as User).Id;
+      Axios.post(
+        `${BASE_URL_API_GROUPS + group.Id}/add-user/${newUserId}`
+      ).then((response) => {
+        const index = groups.findIndex((g) => g.Id === selectedGroupId);
+        groups[index] = response.data;
+        this.setState({
+          groups,
+        });
+      });
+    });
+  };
+
   render(): JSX.Element {
     const { selectedGroupId } = this.state;
     const { groups } = this.state;
@@ -65,7 +92,10 @@ export default class GroupsPage extends React.Component<
           onTabClick={this.handleOnGroupTabSelect}
         />
         {selectedGroup ? (
-          <GroupSubPage group={selectedGroup} />
+          <GroupSubPage
+            group={selectedGroup}
+            onAddNewMember={this.handleOnAddNewMember}
+          />
         ) : (
           <NoGroupSelectedSubPage />
         )}
