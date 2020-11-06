@@ -2,29 +2,18 @@ import * as React from "react";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Axios from "axios";
 import Group from "../api/Group";
-import BillSplitInput from "./BillSplitInput";
-import User, { CURRENT_USER_ID } from "../api/User";
-import Loan from "../api/Loan";
+import Dictionary from "../util/Dictionary";
 
-const BASE_URL_API_GROUPS = "https://localhost:44333/api/groups/";
-const BASE_URL_API_USERS = "https://localhost:44333/api/users/";
-const BASE_URL_API_BILLS = "https://localhost:44333/api/bills/";
-const BASE_URL_API_LOANS = "https://localhost:44333/api/loans/";
-
-interface Dictionary<T> {
-  [Key: string]: T;
+interface IGroupTableState {
+  nameInputValue: string;
 }
 
 export interface IGroupTableProps {
   group: Group;
-}
-
-interface IGroupTableState {
-  group?: Group;
-  nameInputValue: string;
   expenseAmounts?: Dictionary<number>;
+  onAddNewMember?: (name: string) => void;
+  showMembersOnlyWithExpenses?: boolean;
 }
 
 export default class GroupTable extends React.Component<
@@ -34,126 +23,86 @@ export default class GroupTable extends React.Component<
   constructor(props: IGroupTableProps) {
     super(props);
     this.state = {
-      group: undefined,
       nameInputValue: "",
-      expenseAmounts: {},
     };
   }
-
-  componentDidMount(): void {
-    this.getUserLoans();
-  }
-
-  getUserLoans = (): void => {
-    const { group: stateGroup } = this.state;
-    const { group: propsGroup } = this.props;
-    const group = stateGroup ?? propsGroup;
-
-    Axios.get(
-      `${BASE_URL_API_LOANS}?loanerId=${CURRENT_USER_ID}&groupId=${group.Id}`
-    ).then((loansResponse) => {
-      const expenseAmounts: Dictionary<number> = {};
-
-      loansResponse.data.forEach((loan: Loan) => {
-        expenseAmounts[loan.Loanee.Id] = expenseAmounts[loan.Loanee.Id] ?? 0;
-        expenseAmounts[loan.Loanee.Id] += loan.Amount;
-      });
-
-      this.setState((prevState) => ({
-        ...prevState,
-        expenseAmounts,
-      }));
-    });
-  };
-
-  handleOnAddNewMember = (): void => {
-    const { nameInputValue } = this.state;
-    const { group: stateGroup } = this.state;
-    const { group: propsGroup } = this.props;
-    const group = stateGroup ?? propsGroup;
-
-    Axios.post(BASE_URL_API_USERS, {
-      name: nameInputValue,
-    }).then((userResponse) => {
-      const newUserId = (userResponse.data as User).Id;
-      Axios.post(
-        `${BASE_URL_API_GROUPS + group.Id}/add-user/${newUserId}`
-      ).then((response) => {
-        this.setState({
-          group: response.data,
-          nameInputValue: "",
-          expenseAmounts: undefined,
-        });
-      });
-    });
-  };
-
-  handleOnSplit = (amount: number): void => {
-    const { group: stateGroup } = this.state;
-    const { group: propsGroup } = this.props;
-    const group = stateGroup ?? propsGroup;
-
-    Axios.post(BASE_URL_API_BILLS, {
-      name: "Bill",
-      total: amount,
-      loanerId: CURRENT_USER_ID,
-      groupContextId: group.Id,
-    }).then(() => this.getUserLoans());
-  };
 
   handleOnNameInputChange = (event: React.BaseSyntheticEvent): void => {
     const eventTargetValue = event.target.value;
     this.setState({ nameInputValue: eventTargetValue });
   };
 
+  handleOnAddNewMember = (): void => {
+    const { onAddNewMember } = this.props;
+    const { nameInputValue } = this.state;
+    if (onAddNewMember) onAddNewMember(nameInputValue);
+    this.setState({ nameInputValue: "" });
+  };
+
   renderTableContent = (): React.ReactNode => {
     const tableContent = [];
-    const { group: stateGroup, expenseAmounts, nameInputValue } = this.state;
-    const { group: propsGroup } = this.props;
-    const group = stateGroup ?? propsGroup;
+    const { nameInputValue } = this.state;
+    const {
+      group,
+      expenseAmounts,
+      onAddNewMember,
+      showMembersOnlyWithExpenses,
+    } = this.props;
+
+    let groupUsers = group.Users;
+
+    if (showMembersOnlyWithExpenses && expenseAmounts !== undefined) {
+      groupUsers = group.Users?.filter((user) => {
+        return expenseAmounts[user.Id] !== undefined;
+      });
+    }
 
     tableContent.push(
-      group.Users?.map((user) => (
-        <tr>
-          <td>{user.Name}</td>
-          <td>{expenseAmounts ? expenseAmounts[user.Id]?.toFixed(2) : ""}</td>
+      groupUsers.map((user) => {
+        const expense = expenseAmounts
+          ? expenseAmounts[user.Id]?.toFixed(2)
+          : "";
+        return (
+          <tr key={user.Id}>
+            <td>{user.Name}</td>
+            <td>{expense}</td>
+          </tr>
+        );
+      })
+    );
+    if (onAddNewMember !== undefined) {
+      tableContent.push(
+        <tr key="addNewMemberRow">
+          <td>
+            <Form.Control
+              placeholder="New member's name:"
+              onChange={this.handleOnNameInputChange}
+              value={nameInputValue ?? ""}
+            />
+          </td>
+          <td>
+            <Button variant="outline" onClick={this.handleOnAddNewMember}>
+              Add
+            </Button>
+          </td>
         </tr>
-      ))
-    );
-    tableContent.push(
-      <tr>
-        <td>
-          <Form.Control
-            placeholder="New member's name:"
-            onChange={this.handleOnNameInputChange}
-            value={nameInputValue ?? ""}
-          />
-        </td>
-        <td>
-          <Button variant="outline" onClick={this.handleOnAddNewMember}>
-            Add
-          </Button>
-        </td>
-      </tr>
-    );
+      );
+    }
     return tableContent;
   };
 
   render(): JSX.Element {
     return (
-      <div>
-        <BillSplitInput onSplit={this.handleOnSplit} />
-        <div className="m-2">
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Amount</th>
-              </tr>
-            </thead>
-            <tbody>{this.renderTableContent()}</tbody>
-          </Table>
-        </div>
+      <div className="m-2">
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>{this.renderTableContent()}</tbody>
+        </Table>
       </div>
     );
   }
