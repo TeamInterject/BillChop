@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Accordion, Button, Card } from "react-bootstrap";
-import Bill from "../api/Bill";
-import Group from "../api/Group";
+import Bill from "../backend/models/Bill";
+import Group from "../backend/models/Group";
 import BillIcon from "../assets/bill-icon.svg";
 import Dictionary from "../util/Dictionary";
 import GroupTable from "./GroupTable";
