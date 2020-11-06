@@ -1,14 +1,13 @@
-import Axios from "axios";
 import * as React from "react";
+import { produce } from "immer";
 import Group from "../backend/models/Group";
 import Sidebar, { ISidebarTab } from "../components/Sidebar";
-import User, { CURRENT_USER_ID } from "../backend/models/User";
 import NoGroupSelectedSubPage from "./NoGroupSelectedSubPage";
 import "../styles/group-page.css";
 import GroupSubPage from "./GroupSubPage";
-
-const BASE_URL_API_GROUPS = "https://localhost:44333/api/groups/";
-const BASE_URL_API_USERS = "https://localhost:44333/api/users/";
+import UserClient from "../backend/clients/UserClient";
+import GroupClient from "../backend/clients/GroupClient";
+import UserContext from "../backend/helpers/UserContext";
 
 interface IGroupsPageState {
   groups: Group[];
@@ -19,6 +18,10 @@ export default class GroupsPage extends React.Component<
   unknown,
   IGroupsPageState
 > {
+  private groupClient = new GroupClient();
+
+  private userClient = new UserClient();
+
   constructor(props = {}) {
     super(props);
 
@@ -31,14 +34,12 @@ export default class GroupsPage extends React.Component<
     this.getGroups();
   }
 
-  getGroups = (): void => {
-    Axios.get(`${BASE_URL_API_GROUPS}?userId=${CURRENT_USER_ID}`).then(
-      (response) => {
-        this.setState({
-          groups: response.data,
-        });
-      }
-    );
+  getGroups = async (): Promise<void> => {
+    const currentUserId = await UserContext.getOrCreateTestUser();
+
+    this.groupClient
+      .getGroups(currentUserId)
+      .then((groups) => this.setState({ groups }));
   };
 
   getGroupsSidebarTabs = (): ISidebarTab[] => {
@@ -57,28 +58,31 @@ export default class GroupsPage extends React.Component<
 
   handleOnAddNewMember = (name: string): void => {
     const { groups, selectedGroupId } = this.state;
-    const group = groups.find((g) => g.Id === selectedGroupId);
+    const selectedGroupIdx = groups.findIndex((g) => g.Id === selectedGroupId);
+    const selectedGroup = groups[selectedGroupIdx];
 
-    if (group === undefined) {
+    if (selectedGroup === undefined) {
       this.getGroups();
       return;
     }
 
-    Axios.post(BASE_URL_API_USERS, {
-      name,
-      email: `${name.replace(" ", ".")}@gmail.com`,
-    }).then((userResponse) => {
-      const newUserId = (userResponse.data as User).Id;
-      Axios.post(
-        `${BASE_URL_API_GROUPS + group.Id}/add-user/${newUserId}`
-      ).then((response) => {
-        const index = groups.findIndex((g) => g.Id === selectedGroupId);
-        groups[index] = response.data;
-        this.setState({
-          groups,
-        });
+    const updateGroups = (updatedGroup: Group): void => {
+      const updatedGroups = produce(groups, (draftGroups) => {
+        draftGroups[selectedGroupIdx] = updatedGroup;
       });
-    });
+
+      this.setState({ groups: updatedGroups });
+    };
+
+    this.userClient
+      .postUser({
+        name,
+        email: `${name.replace(" ", ".")}@gmail.com`,
+      })
+      .then((newUser) =>
+        this.groupClient.addUserToGroup(selectedGroup.Id, newUser.Id)
+      )
+      .then((updatedGroup) => updateGroups(updatedGroup));
   };
 
   render(): JSX.Element {

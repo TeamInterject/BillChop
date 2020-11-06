@@ -1,12 +1,9 @@
-import Axios from "axios";
 import * as React from "react";
 import { Button, Form } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
-import Group from "../backend/models/Group";
-import { CURRENT_USER_ID } from "../backend/models/User";
+import GroupClient from "../backend/clients/GroupClient";
+import UserContext from "../backend/helpers/UserContext";
 import "../styles/create-group-page.css";
-
-const BASE_URL_API_GROUPS = "https://localhost:44333/api/groups/";
 
 interface ICreateGroupPageState {
   inputValue: string;
@@ -17,6 +14,8 @@ export default class CreateGroupPage extends React.Component<
   unknown,
   ICreateGroupPageState
 > {
+  private groupClient = new GroupClient();
+
   constructor(props = {}) {
     super(props);
     this.state = {
@@ -25,23 +24,17 @@ export default class CreateGroupPage extends React.Component<
     };
   }
 
-  onCreateNewGroup = (event: React.BaseSyntheticEvent): void => {
+  onCreateNewGroup = async (event: React.BaseSyntheticEvent): Promise<void> => {
     event.preventDefault();
     event.stopPropagation();
     const { inputValue: groupName } = this.state;
-    Axios.post(BASE_URL_API_GROUPS, { name: groupName }).then(
-      (createResponse) => {
-        Axios.post(
-          `${
-            BASE_URL_API_GROUPS + (createResponse.data as Group).Id
-          }/add-user/${CURRENT_USER_ID}`
-        ).then(() => {
-          this.setState({
-            shouldRedirect: true,
-          });
-        });
-      }
-    );
+
+    const currentUserId = await UserContext.getOrCreateTestUser();
+
+    this.groupClient
+      .postGroup({ name: groupName })
+      .then((group) => this.groupClient.addUserToGroup(group.Id, currentUserId))
+      .then(() => this.setState({ shouldRedirect: true }));
   };
 
   handleOnFormControlChange = (event: React.BaseSyntheticEvent): void => {
