@@ -26,10 +26,29 @@ namespace BillChopBE.Controllers
             return Ok(await userService.GetUsersAsync());
         }
 
+        [HttpPost("login")]
+        public async Task<ActionResult<IList<User>>> Login([FromBody] LoginDetails loginDetails)
+        {
+            return Ok(await userService.LoginAsync(loginDetails));
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(Guid id)
         {
             return Ok(await userService.GetUserAsync(id));
+        }
+
+        
+        /// <summary>
+        /// Searches for users by matching partial keyword to usernames and emails
+        /// </summary>
+        /// <param name="keyword">Substring of username or email</param>
+        /// <param name="top">Amount of returned results</param>
+        /// <returns></returns>
+        [HttpGet("search/{keyword}")]
+        public async Task<ActionResult<User>> SearchForUsers(string keyword, int top = 10)
+        {
+            return Ok(await userService.SearchForUsersAsync(keyword, top));
         }
 
         [HttpPost]

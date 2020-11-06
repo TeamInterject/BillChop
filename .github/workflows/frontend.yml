@@ -19,13 +19,14 @@ jobs:
   # This workflow contains a single job called "build"
   build-frontend:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash
         working-directory: ./billchop-fe
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest]
         node-version: [12.x]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -43,3 +44,5 @@ jobs:
         run: npm run-script lint
       - name: Build App
         run: npm run-script build
+      - name: Test App
+        run: npm test

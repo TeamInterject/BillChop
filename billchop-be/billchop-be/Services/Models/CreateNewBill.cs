@@ -18,5 +18,8 @@ namespace BillChopBE.Services.Models
 
         [Required]
         public Guid GroupContextId { get; set; }
+
+        [Required]
+        public DateTime CreationTime { get; set; }
     }
 }
