@@ -5,6 +5,8 @@ import { CreateNewUser } from "../models/CreateNewUser";
 import BaseClient from "./AbstractClient";
 import { LoginDetails } from "../models/LoginDetails";
 
+const TOP_PARAM = "top";
+
 export default class UserClient extends BaseClient {
   public get relativeUrl(): string {
     return "api/users";
@@ -30,7 +32,7 @@ export default class UserClient extends BaseClient {
   }): Promise<User[]> => {
     const { keyword, top } = props;
 
-    const topQuery = this.createQuery("top", top);
+    const topQuery = this.createQuery(TOP_PARAM, top);
     const requestUrl = url(this.baseUrl, "search", keyword, topQuery);
 
     return Axios.get(requestUrl).then(

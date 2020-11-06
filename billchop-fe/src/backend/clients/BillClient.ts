@@ -4,9 +4,9 @@ import BaseClient from "./AbstractClient";
 import Bill from "../models/Bill";
 import { CreateNewBill } from "../models/CreateNewBill";
 
-const groupParam = "groupId";
-const startTimeParam = "startTime";
-const endTimeParam = "endTime";
+const GROUP_PARAM = "groupId";
+const START_TIME_PARAM = "startTime";
+const END_TIME_PARAM = "endTime";
 
 export default class BillClient extends BaseClient {
   public get relativeUrl(): string {
@@ -20,9 +20,9 @@ export default class BillClient extends BaseClient {
   }): Promise<Bill[]> => {
     const { groupId, startTime, endTime } = props;
 
-    const groupQuery = this.createQuery(groupParam, groupId);
-    const startTimeQuery = this.createQuery(startTimeParam, startTime);
-    const endTimeQuery = this.createQuery(endTimeParam, endTime);
+    const groupQuery = this.createQuery(GROUP_PARAM, groupId);
+    const startTimeQuery = this.createQuery(START_TIME_PARAM, startTime);
+    const endTimeQuery = this.createQuery(END_TIME_PARAM, endTime);
 
     const requestUrl = url(
       this.baseUrl,

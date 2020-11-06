@@ -4,7 +4,7 @@ import BaseClient from "./AbstractClient";
 import Group from "../models/Group";
 import { CreateNewGroup } from "../models/CreateNewGroup";
 
-const userParam = "userId";
+const USER_PARAM = "userId";
 
 export default class GroupClient extends BaseClient {
   public get relativeUrl(): string {
@@ -12,7 +12,7 @@ export default class GroupClient extends BaseClient {
   }
 
   public getGroups = async (userId?: string): Promise<Group[]> => {
-    const userQuery = this.createQuery(userParam, userId);
+    const userQuery = this.createQuery(USER_PARAM, userId);
     const requestUrl = url(this.baseUrl, userQuery);
 
     return Axios.get(requestUrl).then(

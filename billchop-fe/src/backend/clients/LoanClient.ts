@@ -3,11 +3,11 @@ import url from "url-join";
 import BaseClient from "./AbstractClient";
 import Loan from "../models/Loan";
 
-const loaneeParam = "loaneeId";
-const loanerParam = "loanerId";
-const groupParam = "groupId";
-const startTimeParam = "startTime";
-const endTimeParam = "endTime";
+const LOANEE_PARAM = "loaneeId";
+const LOANER_PARAM = "loanerId";
+const GROUP_PARAM = "groupId";
+const START_TIME_PARAM = "startTime";
+const END_TIME_PARAM = "endTime";
 
 export default class LoanClient extends BaseClient {
   public get relativeUrl(): string {
@@ -22,9 +22,9 @@ export default class LoanClient extends BaseClient {
   }): Promise<Loan[]> => {
     const { loanerId, groupId, startTime, endTime } = props;
 
-    const groupQuery = this.createQuery(groupParam, groupId);
-    const startTimeQuery = this.createQuery(startTimeParam, startTime);
-    const endTimeQuery = this.createQuery(endTimeParam, endTime);
+    const groupQuery = this.createQuery(GROUP_PARAM, groupId);
+    const startTimeQuery = this.createQuery(START_TIME_PARAM, startTime);
+    const endTimeQuery = this.createQuery(END_TIME_PARAM, endTime);
 
     const requestUrl = url(
       this.baseUrl,
@@ -48,9 +48,9 @@ export default class LoanClient extends BaseClient {
   }): Promise<Loan[]> => {
     const { loaneeId, groupId, startTime, endTime } = props;
 
-    const groupQuery = this.createQuery(groupParam, groupId);
-    const startTimeQuery = this.createQuery(startTimeParam, startTime);
-    const endTimeQuery = this.createQuery(endTimeParam, endTime);
+    const groupQuery = this.createQuery(GROUP_PARAM, groupId);
+    const startTimeQuery = this.createQuery(START_TIME_PARAM, startTime);
+    const endTimeQuery = this.createQuery(END_TIME_PARAM, endTime);
 
     const requestUrl = url(
       this.baseUrl,
@@ -74,9 +74,9 @@ export default class LoanClient extends BaseClient {
   }): Promise<Loan[]> => {
     const { userId, groupId, startTime, endTime } = props;
 
-    const groupQuery = this.createQuery(groupParam, groupId);
-    const startTimeQuery = this.createQuery(startTimeParam, startTime);
-    const endTimeQuery = this.createQuery(endTimeParam, endTime);
+    const groupQuery = this.createQuery(GROUP_PARAM, groupId);
+    const startTimeQuery = this.createQuery(START_TIME_PARAM, startTime);
+    const endTimeQuery = this.createQuery(END_TIME_PARAM, endTime);
 
     const requestUrl = url(
       this.baseUrl,
@@ -101,11 +101,11 @@ export default class LoanClient extends BaseClient {
   }): Promise<Loan[]> => {
     const { loaneeId, loanerId, groupId, startTime, endTime } = queryProps;
 
-    const loaneeQuery = this.createQuery(loaneeParam, loaneeId);
-    const loanerQuery = this.createQuery(loanerParam, loanerId);
-    const groupQuery = this.createQuery(groupParam, groupId);
-    const startTimeQuery = this.createQuery(startTimeParam, startTime);
-    const endTimeQuery = this.createQuery(endTimeParam, endTime);
+    const loaneeQuery = this.createQuery(LOANEE_PARAM, loaneeId);
+    const loanerQuery = this.createQuery(LOANER_PARAM, loanerId);
+    const groupQuery = this.createQuery(GROUP_PARAM, groupId);
+    const startTimeQuery = this.createQuery(START_TIME_PARAM, startTime);
+    const endTimeQuery = this.createQuery(END_TIME_PARAM, endTime);
 
     const requestUrl = url(
       this.baseUrl,
