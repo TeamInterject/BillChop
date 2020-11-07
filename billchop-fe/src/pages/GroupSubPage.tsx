@@ -58,10 +58,10 @@ export default class GroupSubPage extends React.Component<
       .then((bills) => this.setState({ bills }));
   };
 
-  getUserLoans = async (): Promise<void> => {
+  getUserLoans = (): void => {
     const { group } = this.props;
 
-    const currentUserId = await UserContext.getOrCreateTestUser();
+    const currentUserId = UserContext.authenticatedUser.Id;
 
     this.loanClient
       .getProvidedLoans({ loanerId: currentUserId, groupId: group.Id })
@@ -71,11 +71,11 @@ export default class GroupSubPage extends React.Component<
       });
   };
 
-  handleOnAddNewBill = async (name: string, total: number): Promise<void> => {
+  handleOnAddNewBill = (name: string, total: number): void => {
     const { group } = this.props;
     const { bills } = this.state;
 
-    const currentUserId = await UserContext.getOrCreateTestUser();
+    const currentUserId = UserContext.authenticatedUser.Id;
 
     this.billClient
       .postBill({

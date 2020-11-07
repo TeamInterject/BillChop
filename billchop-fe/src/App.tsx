@@ -1,37 +1,61 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-  Switch,
-} from "react-router-dom";
+import { Router, Redirect, Route, Switch } from "react-router-dom";
 import GroupsPage from "./pages/GroupsPage";
 import CreateGroupPage from "./pages/CreateGroupPage";
 import "./App.css";
 import NavigationBar from "./components/NavigationBar";
+import { PrivateRoute } from "./PrivateRoute";
+import BrowserHistory from "./backend/helpers/History";
+import User from "./backend/models/User";
+import UserContext from "./backend/helpers/UserContext";
+import LoginPage from "./pages/LoginPage";
 
-export default class App extends React.Component {
+export interface AppState {
+  currentUser?: User;
+}
+
+export default class App extends React.Component<unknown, AppState> {
+  constructor(props: unknown) {
+    super(props);
+    this.state = {};
+  }
+
+  public componentDidMount(): void {
+    UserContext.userObservable.subscribe((user) =>
+      this.setState({ currentUser: user })
+    );
+  }
+
+  public logout = (): void => {
+    UserContext.logout();
+  };
+
   public render(): React.ReactNode {
+    const { currentUser } = this.state;
+
     return (
-      <Router>
+      <Router history={BrowserHistory}>
         <div className="mainContainer">
           <div className="mainContainer__pageHeader">
-            <NavigationBar />
+            <NavigationBar currentUser={currentUser} logout={this.logout} />
           </div>
           <div className="mainContainer__content">
             <Switch>
-              <Route exact path="/">
-                <Redirect to="/groups" />
+              <Route exact path="/login">
+                <LoginPage />
               </Route>
-              <Route path="/profile">
+              <PrivateRoute path="/profile">
                 <h1>In constructon</h1>
-              </Route>
-              <Route path="/groups">
+              </PrivateRoute>
+              <PrivateRoute path="/groups">
                 <GroupsPage />
-              </Route>
-              <Route path="/createGroup">
+              </PrivateRoute>
+              <PrivateRoute path="/createGroup">
                 <CreateGroupPage />
-              </Route>
+              </PrivateRoute>
+              <PrivateRoute exact path="/">
+                <Redirect to="/groups" />
+              </PrivateRoute>
             </Switch>
           </div>
         </div>

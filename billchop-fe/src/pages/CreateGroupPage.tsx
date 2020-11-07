@@ -24,12 +24,12 @@ export default class CreateGroupPage extends React.Component<
     };
   }
 
-  onCreateNewGroup = async (event: React.BaseSyntheticEvent): Promise<void> => {
+  onCreateNewGroup = (event: React.BaseSyntheticEvent): void => {
     event.preventDefault();
     event.stopPropagation();
     const { inputValue: groupName } = this.state;
 
-    const currentUserId = await UserContext.getOrCreateTestUser();
+    const currentUserId = UserContext.authenticatedUser.Id;
 
     this.groupClient
       .postGroup({ name: groupName })

@@ -35,7 +35,7 @@ export default class GroupsPage extends React.Component<
   }
 
   getGroups = async (): Promise<void> => {
-    const currentUserId = await UserContext.getOrCreateTestUser();
+    const currentUserId = UserContext.authenticatedUser.Id;
 
     this.groupClient
       .getGroups(currentUserId)
