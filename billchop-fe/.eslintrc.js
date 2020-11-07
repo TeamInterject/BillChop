@@ -1,14 +1,6 @@
 module.exports = {
-    extends: [
-      "airbnb-typescript",
-      "airbnb/hooks",
-      "plugin:@typescript-eslint/recommended",
-      "prettier",
-      "prettier/react",
-      "prettier/@typescript-eslint",
-      "plugin:prettier/recommended"
-    ],
-    plugins: ["react", "@typescript-eslint", "jest"],
+    extends: ["airbnb-typescript-prettier"],
+    plugins: ["react", "@typescript-eslint"],
     env: {
       browser: true,
       es6: true,
@@ -43,6 +35,6 @@ module.exports = {
       "class-methods-use-this": [0],
       // note you must disable the base rule as it can report incorrect errors
       "no-shadow": "off",
-      "@typescript-eslint/no-shadow": ["error"]
+      "@typescript-eslint/no-shadow": ["error"],
     },
   };
