@@ -4,13 +4,13 @@ import UserContext from "../backend/helpers/UserContext";
 import BrowserHistory from "../backend/helpers/History";
 import "./LoginPage.scss";
 
-interface LoginPageState {
+interface ILoginPageState {
   email: string;
 }
 
 export default class LoginPage extends React.Component<
   unknown,
-  LoginPageState
+  ILoginPageState
 > {
   constructor(props: unknown) {
     super(props);
