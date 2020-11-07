@@ -14,6 +14,11 @@ import Dictionary from "../util/Dictionary";
 import getMonthName from "../util/Months";
 import UserContext from "../backend/helpers/UserContext";
 
+export enum LoanType {
+  Provided,
+  Received,
+}
+
 export interface IGroupSubPageProps {
   group: Group;
   onAddNewMember: (name: string) => void;
@@ -61,17 +66,22 @@ export default class GroupSubPage extends React.Component<
       .then((bills) => this.setState({ bills }));
   };
 
-  getUserLoans = (): void => {
+  getUserLoans = async (): Promise<void> => {
     const { group } = this.props;
 
     const currentUserId = UserContext.authenticatedUser.Id;
 
-    this.loanClient
+    const providedLoansAmounts = await this.loanClient
       .getProvidedLoans({ loanerId: currentUserId, groupId: group.Id })
-      .then((loans) => {
-        const expenseAmounts = this.buildUserExpenses(loans);
-        this.setState({ expenseAmounts });
-      });
+      .then((loans) => this.buildLoanAmounts(loans, LoanType.Provided));
+
+    const expenseAmounts = await this.loanClient
+      .getReceivedLoans({ loaneeId: currentUserId, groupId: group.Id })
+      .then((loans) =>
+        this.buildLoanAmounts(loans, LoanType.Received, providedLoansAmounts)
+      );
+
+    this.setState({ expenseAmounts });
   };
 
   getRecentGroupSpendingDatasets = (): IBarChartDataset<number>[] => {
@@ -123,15 +133,24 @@ export default class GroupSubPage extends React.Component<
       });
   };
 
-  private buildUserExpenses(loans: Loan[]): Dictionary<number> {
-    const expenseAmounts: Dictionary<number> = {};
+  private buildLoanAmounts(
+    loans: Loan[],
+    type: LoanType,
+    expenseAmounts?: Dictionary<number>
+  ): Dictionary<number> {
+    const amounts = expenseAmounts ?? {};
 
-    loans.forEach((loan: Loan) => {
-      expenseAmounts[loan.Loanee.Id] = expenseAmounts[loan.Loanee.Id] ?? 0;
-      expenseAmounts[loan.Loanee.Id] += loan.Amount;
+    return produce(amounts, (draftAmounts) => {
+      loans.forEach((loan: Loan) => {
+        if (type === LoanType.Provided) {
+          draftAmounts[loan.Loanee.Id] = draftAmounts[loan.Loanee.Id] ?? 0;
+          draftAmounts[loan.Loanee.Id] += loan.Amount;
+        } else if (type === LoanType.Received) {
+          draftAmounts[loan.Loaner.Id] = draftAmounts[loan.Loaner.Id] ?? 0;
+          draftAmounts[loan.Loaner.Id] -= loan.Amount;
+        }
+      });
     });
-
-    return expenseAmounts;
   }
 
   render(): JSX.Element {
@@ -150,8 +169,9 @@ export default class GroupSubPage extends React.Component<
             <Col>
               <GroupTable
                 group={group}
-                expenseAmounts={expenseAmounts}
+                expenseAmounts={expenseAmounts ?? {}}
                 onAddNewMember={onAddNewMember}
+                colorCode
               />
             </Col>
             <Col>

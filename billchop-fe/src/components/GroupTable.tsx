@@ -11,7 +11,8 @@ interface IGroupTableState {
 
 export interface IGroupTableProps {
   group: Group;
-  expenseAmounts?: Dictionary<number>;
+  expenseAmounts: Dictionary<number>;
+  colorCode?: boolean;
   onAddNewMember?: (name: string) => void;
   showMembersOnlyWithExpenses?: boolean;
 }
@@ -25,6 +26,19 @@ export default class GroupTable extends React.Component<
     this.state = {
       nameInputValue: "",
     };
+  }
+
+  getExpenseStyling(
+    expense: number | undefined | null
+  ): React.CSSProperties | undefined {
+    const { colorCode } = this.props;
+
+    if (!colorCode || !expense || (expense > -0.01 && expense < 0.01))
+      return undefined;
+
+    if (expense > 0) return { color: "green" };
+
+    return { color: "red" };
   }
 
   handleOnNameInputChange = (event: React.BaseSyntheticEvent): void => {
@@ -59,13 +73,15 @@ export default class GroupTable extends React.Component<
 
     tableContent.push(
       groupUsers.map((user) => {
-        const expense = expenseAmounts
-          ? expenseAmounts[user.Id]?.toFixed(2)
-          : "";
+        const expense = expenseAmounts[user.Id]
+          ? expenseAmounts[user.Id].toFixed(2)
+          : "0.00";
         return (
           <tr key={user.Id}>
             <td>{user.Name}</td>
-            <td>{expense}</td>
+            <td style={this.getExpenseStyling(expenseAmounts[user.Id])}>
+              {expense}
+            </td>
           </tr>
         );
       })
