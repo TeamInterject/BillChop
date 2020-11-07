@@ -11,7 +11,7 @@ describe("Sidebar Tests", () => {
     const sidebar = render(
       <Sidebar
         sidebarTabs={[{ groupId: "1", groupName: "Test group" }]}
-        onTabClick={() => {}}
+        onTabClick={sinon.stub()}
       />
     );
 
