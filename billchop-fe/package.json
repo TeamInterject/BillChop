@@ -12,6 +12,7 @@
     "@types/redux-thunk": "^2.1.0",
     "axios": "^0.20.0",
     "bootstrap": "^4.5.3",
+    "history": "^4.10.1",
     "chart.js": "^2.9.4",
     "immer": "^7.0.14",
     "react": "^16.13.1",
@@ -24,6 +25,7 @@
     "react-scripts": "3.4.3",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "rxjs": "^6.6.3",
     "typescript": "^3.8.3",
     "url-join": "^4.0.1",
     "uuid": "^8.3.1"
@@ -85,6 +87,7 @@
     "jsdom": "^16.4.0",
     "jsdom-global": "^3.0.2",
     "mocha": "^8.2.1",
+    "node-sass": "^4.0.0",
     "prettier": "^2.1.2",
     "sinon": "^9.2.1",
     "sinon-chai": "^3.5.0",
