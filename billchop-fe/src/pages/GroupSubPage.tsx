@@ -14,6 +14,11 @@ import Dictionary from "../util/Dictionary";
 import getMonthName from "../util/Months";
 import UserContext from "../backend/helpers/UserContext";
 
+enum LoanType {
+  Provided,
+  Received,
+}
+
 export interface IGroupSubPageProps {
   group: Group;
   onAddNewMember: (name: string) => void;
@@ -68,12 +73,12 @@ export default class GroupSubPage extends React.Component<
 
     const providedLoansAmounts = await this.loanClient
       .getProvidedLoans({ loanerId: currentUserId, groupId: group.Id })
-      .then((loans) => this.buildLoanAmounts(loans, "provided"));
+      .then((loans) => this.buildLoanAmounts(loans, LoanType.Provided));
 
     const expenseAmounts = await this.loanClient
       .getReceivedLoans({ loaneeId: currentUserId, groupId: group.Id })
       .then((loans) =>
-        this.buildLoanAmounts(loans, "received", providedLoansAmounts)
+        this.buildLoanAmounts(loans, LoanType.Received, providedLoansAmounts)
       );
 
     this.setState({ expenseAmounts });
@@ -130,17 +135,17 @@ export default class GroupSubPage extends React.Component<
 
   private buildLoanAmounts(
     loans: Loan[],
-    type: "provided" | "received",
+    type: LoanType,
     expenseAmounts?: Dictionary<number>
   ): Dictionary<number> {
     const amounts = expenseAmounts ?? {};
 
     return produce(amounts, (draftAmounts) => {
       loans.forEach((loan: Loan) => {
-        if (type === "provided") {
+        if (type === LoanType.Provided) {
           draftAmounts[loan.Loanee.Id] = draftAmounts[loan.Loanee.Id] ?? 0;
           draftAmounts[loan.Loanee.Id] += loan.Amount;
-        } else if (type === "received") {
+        } else if (type === LoanType.Received) {
           draftAmounts[loan.Loaner.Id] = draftAmounts[loan.Loaner.Id] ?? 0;
           draftAmounts[loan.Loaner.Id] -= loan.Amount;
         }

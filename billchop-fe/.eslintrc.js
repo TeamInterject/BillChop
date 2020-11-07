@@ -40,6 +40,9 @@ module.exports = {
           endOfLine: "auto",
         },
       ],
-      "class-methods-use-this": [0]
+      "class-methods-use-this": [0],
+      // note you must disable the base rule as it can report incorrect errors
+      "no-shadow": "off",
+      "@typescript-eslint/no-shadow": ["error"]
     },
   };
