@@ -14,7 +14,7 @@ import Dictionary from "../util/Dictionary";
 import getMonthName from "../util/Months";
 import UserContext from "../backend/helpers/UserContext";
 
-enum LoanType {
+export enum LoanType {
   Provided,
   Received,
 }
