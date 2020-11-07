@@ -17,7 +17,7 @@ code {
 }
 
 :root {
-  --sidebar-width: 25%;
+  --sidebar-width: 17%;
   --pageHeader-height: 10%;
 }
 
@@ -26,8 +26,8 @@ code {
   top: 40%;
   left: 50%;
   transform: translate(-50%, -40%);
-  width: 100vw;
-  height: 100vh;
+  width: 75vw;
+  height: 85vh;
   border: solid 1px black;
 }
 
@@ -35,6 +35,7 @@ code {
   position: absolute;
   height: var(--pageHeader-height);
   width: 100%;
+  border-bottom: solid 1px black;
 }
 
 .mainContainer__content {
