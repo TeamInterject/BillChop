@@ -10,11 +10,11 @@ import User from "./backend/models/User";
 import UserContext from "./backend/helpers/UserContext";
 import LoginPage from "./pages/LoginPage";
 
-export interface AppState {
+export interface IAppState {
   currentUser?: User;
 }
 
-export default class App extends React.Component<unknown, AppState> {
+export default class App extends React.Component<unknown, IAppState> {
   constructor(props: unknown) {
     super(props);
     this.state = {};

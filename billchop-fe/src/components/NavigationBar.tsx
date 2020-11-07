@@ -25,7 +25,7 @@ export default class NavigationBar extends React.Component<NavigationBarProps> {
           <Nav className="mr-auto">
             <Link to="/profile">
               <div className="mr-2">
-                <Avatar name={`${currentUser.Name}`} round size="40" />
+                <Avatar name={currentUser.Name} round size="40" />
               </div>
             </Link>
             <Link to="/groups">
