@@ -27,5 +27,10 @@ namespace BillChopBE.DataAccessLayer.Models
 
         [JsonIgnore]
         public virtual Bill Bill { get; set; } = null!;
+
+        public User Loaner
+        {
+            get => Bill.Loaner;
+        }
     }
 }
