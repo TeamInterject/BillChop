@@ -1,9 +1,14 @@
 import React from "react";
 import { Button, Card, Col, Container, Form } from "react-bootstrap";
+import BrowserHistory from "../backend/helpers/History";
 
 export default class RegistrationPage extends React.Component {
   handleRegister = (): void => {
 
+  }
+
+  handleLogin = (): void => {
+    BrowserHistory.push("/login");
   }
 
   render() {
@@ -35,7 +40,7 @@ export default class RegistrationPage extends React.Component {
                     <Button type="submit">Register</Button>
                   </Col>
                   <Col className="d-flex justify-content-end">
-                    <Button variant="light">Login</Button>
+                    <Button variant="light" onClick={this.handleLogin}>Login</Button>
                   </Col>
                 </Form.Row>
               </Form>
