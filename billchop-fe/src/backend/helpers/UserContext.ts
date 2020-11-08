@@ -1,5 +1,4 @@
 import { BehaviorSubject, Observable } from "rxjs";
-import ServerConfig from "../server-config.json";
 import UserClient from "../clients/UserClient";
 import User from "../models/User";
 
@@ -56,22 +55,19 @@ class UserContextManager {
     if (this.user) this.currentUserSubject.next(undefined);
   }
 
-  public async tryCreateTestUser(): Promise<void> {
-    const users = await this.userClient.getUsers();
-    if (users.length !== 0) {
-      return;
+  public async register(name: string, email: string): Promise<Boolean> {
+    try {
+      const newUser = await this.userClient.postUser({
+        name,
+        email,
+      });
+      await this.login(newUser.Email);
+      return true;
+    } catch (e) {
+      return false;
     }
-
-    const user = await this.userClient.postUser({
-      name: "Test User",
-      email: "test.user@gmail.com",
-    });
-
-    this.login(user.Email);
   }
 }
 
-const userContext = new UserContextManager();
-if (ServerConfig.createTestUser) userContext.tryCreateTestUser();
-
-export default userContext;
+const UserContext = new UserContextManager();
+export default UserContext;
