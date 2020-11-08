@@ -8,7 +8,7 @@ export default abstract class BaseClient {
 
   protected createQuery = <TType>(
     queryParamName: string,
-    queryValue?: TType
+    queryValue?: TType,
   ): string => {
     return queryValue !== null && queryValue !== undefined
       ? `?${queryParamName}=${queryValue}`

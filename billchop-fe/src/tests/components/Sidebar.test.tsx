@@ -12,7 +12,7 @@ describe("Sidebar Tests", () => {
       <Sidebar
         sidebarTabs={[{ groupId: "1", groupName: "Test group" }]}
         onTabClick={sinon.stub()}
-      />
+      />,
     );
 
     // Assert
@@ -35,7 +35,7 @@ describe("Sidebar Tests", () => {
           { groupId: "2", groupName: "Group for Testing" },
         ]}
         onTabClick={stub}
-      />
+      />,
     );
 
     // Assert

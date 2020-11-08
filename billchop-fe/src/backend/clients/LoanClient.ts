@@ -32,11 +32,11 @@ export default class LoanClient extends BaseClient {
       loanerId,
       groupQuery,
       startTimeQuery,
-      endTimeQuery
+      endTimeQuery,
     );
 
     return Axios.get(requestUrl).then(
-      (response: AxiosResponse<Loan[]>) => response.data
+      (response: AxiosResponse<Loan[]>) => response.data,
     );
   };
 
@@ -58,11 +58,11 @@ export default class LoanClient extends BaseClient {
       loaneeId,
       groupQuery,
       startTimeQuery,
-      endTimeQuery
+      endTimeQuery,
     );
 
     return Axios.get(requestUrl).then(
-      (response: AxiosResponse<Loan[]>) => response.data
+      (response: AxiosResponse<Loan[]>) => response.data,
     );
   };
 
@@ -84,11 +84,11 @@ export default class LoanClient extends BaseClient {
       userId,
       groupQuery,
       startTimeQuery,
-      endTimeQuery
+      endTimeQuery,
     );
 
     return Axios.get(requestUrl).then(
-      (response: AxiosResponse<Loan[]>) => response.data
+      (response: AxiosResponse<Loan[]>) => response.data,
     );
   };
 
@@ -113,11 +113,11 @@ export default class LoanClient extends BaseClient {
       loanerQuery,
       groupQuery,
       startTimeQuery,
-      endTimeQuery
+      endTimeQuery,
     );
 
     return Axios.get(requestUrl).then(
-      (response: AxiosResponse<Loan[]>) => response.data
+      (response: AxiosResponse<Loan[]>) => response.data,
     );
   };
 }

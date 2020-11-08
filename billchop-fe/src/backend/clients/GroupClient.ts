@@ -16,7 +16,7 @@ export default class GroupClient extends BaseClient {
     const requestUrl = url(this.baseUrl, userQuery);
 
     return Axios.get(requestUrl).then(
-      (response: AxiosResponse<Group[]>) => response.data
+      (response: AxiosResponse<Group[]>) => response.data,
     );
   };
 
@@ -24,7 +24,7 @@ export default class GroupClient extends BaseClient {
     const requestUrl = url(this.baseUrl, groupId);
 
     return Axios.get(requestUrl).then(
-      (response: AxiosResponse<Group>) => response.data
+      (response: AxiosResponse<Group>) => response.data,
     );
   };
 
@@ -32,18 +32,18 @@ export default class GroupClient extends BaseClient {
     const requestUrl = url(this.baseUrl);
 
     return Axios.post(requestUrl, createNewGroup).then(
-      (response: AxiosResponse<Group>) => response.data
+      (response: AxiosResponse<Group>) => response.data,
     );
   };
 
   public addUserToGroup = async (
     groupId: string,
-    userId: string
+    userId: string,
   ): Promise<Group> => {
     const requestUrl = url(this.baseUrl, groupId, "add-user", userId);
 
     return Axios.post(requestUrl).then(
-      (response: AxiosResponse<Group>) => response.data
+      (response: AxiosResponse<Group>) => response.data,
     );
   };
 }

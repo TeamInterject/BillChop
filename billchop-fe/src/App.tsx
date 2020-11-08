@@ -22,7 +22,7 @@ export default class App extends React.Component<unknown, IAppState> {
 
   public componentDidMount(): void {
     UserContext.userObservable.subscribe((user) =>
-      this.setState({ currentUser: user })
+      this.setState({ currentUser: user }),
     );
   }
 

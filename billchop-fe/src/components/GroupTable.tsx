@@ -29,7 +29,7 @@ export default class GroupTable extends React.Component<
   }
 
   getExpenseStyling(
-    expense: number | undefined | null
+    expense: number | undefined | null,
   ): React.CSSProperties | undefined {
     const { colorCode } = this.props;
 
@@ -84,7 +84,7 @@ export default class GroupTable extends React.Component<
             </td>
           </tr>
         );
-      })
+      }),
     );
     if (onAddNewMember !== undefined) {
       tableContent.push(
@@ -101,7 +101,7 @@ export default class GroupTable extends React.Component<
               Add
             </Button>
           </td>
-        </tr>
+        </tr>,
       );
     }
     return tableContent;
