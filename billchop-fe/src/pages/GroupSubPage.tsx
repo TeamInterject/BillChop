@@ -78,7 +78,7 @@ export default class GroupSubPage extends React.Component<
     const expenseAmounts = await this.loanClient
       .getReceivedLoans({ loaneeId: currentUserId, groupId: group.Id })
       .then((loans) =>
-        this.buildLoanAmounts(loans, LoanType.Received, providedLoansAmounts)
+        this.buildLoanAmounts(loans, LoanType.Received, providedLoansAmounts),
       );
 
     this.setState({ expenseAmounts });
@@ -136,7 +136,7 @@ export default class GroupSubPage extends React.Component<
   private buildLoanAmounts(
     loans: Loan[],
     type: LoanType,
-    expenseAmounts?: Dictionary<number>
+    expenseAmounts?: Dictionary<number>,
   ): Dictionary<number> {
     const amounts = expenseAmounts ?? {};
 
