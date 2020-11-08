@@ -15,14 +15,14 @@ export default class UserClient extends BaseClient {
   public getUsers = async (): Promise<User[]> => {
     const requestUrl = this.baseUrl;
     return Axios.get(requestUrl).then(
-      (response: AxiosResponse<User[]>) => response.data
+      (response: AxiosResponse<User[]>) => response.data,
     );
   };
 
   public getUser = async (id: string): Promise<User> => {
     const requestUrl = url(this.baseUrl, id);
     return Axios.get(requestUrl).then(
-      (response: AxiosResponse<User>) => response.data
+      (response: AxiosResponse<User>) => response.data,
     );
   };
 
@@ -36,7 +36,7 @@ export default class UserClient extends BaseClient {
     const requestUrl = url(this.baseUrl, "search", keyword, topQuery);
 
     return Axios.get(requestUrl).then(
-      (response: AxiosResponse<User[]>) => response.data
+      (response: AxiosResponse<User[]>) => response.data,
     );
   };
 
@@ -44,7 +44,7 @@ export default class UserClient extends BaseClient {
     const requestUrl = url(this.baseUrl);
 
     return Axios.post(requestUrl, createNewUser).then(
-      (response: AxiosResponse<User>) => response.data
+      (response: AxiosResponse<User>) => response.data,
     );
   };
 
@@ -52,7 +52,7 @@ export default class UserClient extends BaseClient {
     const requestUrl = url(this.baseUrl, "login");
 
     return Axios.post(requestUrl, loginDetails).then(
-      (response: AxiosResponse<User>) => response.data
+      (response: AxiosResponse<User>) => response.data,
     );
   };
 }

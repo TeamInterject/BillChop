@@ -80,7 +80,7 @@ export default class GroupsPage extends React.Component<
         email: `${name.replace(/ /g, ".")}@gmail.com`,
       })
       .then((newUser) =>
-        this.groupClient.addUserToGroup(selectedGroup.Id, newUser.Id)
+        this.groupClient.addUserToGroup(selectedGroup.Id, newUser.Id),
       )
       .then((updatedGroup) => updateGroups(updatedGroup));
   };

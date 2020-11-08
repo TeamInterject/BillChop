@@ -1,42 +1,43 @@
 module.exports = {
-    extends: ["airbnb-typescript-prettier"],
-    plugins: ["react", "@typescript-eslint"],
-    env: {
-      browser: true,
-      es6: true,
-      mocha: true
+  parser: '@typescript-eslint/parser', // Specifies the ESLint parser
+  extends: [
+    'plugin:react/recommended', // Uses the recommended rules from @eslint-plugin-react
+    'plugin:@typescript-eslint/recommended', // Uses the recommended rules from the @typescript-eslint/eslint-plugin
+  ],
+  env: {
+    browser: true,
+    es6: true,
+    mocha: true
+  },
+  parserOptions: {
+    ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
+    sourceType: 'module', // Allows for the use of imports
+    ecmaFeatures: {
+      jsx: true, // Allows for the parsing of JSX
     },
-    globals: {
-      Atomics: "readonly",
-      SharedArrayBuffer: "readonly",
+    project: "./tsconfig.json",
+  },
+  rules: {
+    'react/jsx-max-props-per-line': ['error', { maximum: 1, when: 'multiline' }],
+    'arrow-parens': ['error', 'always'],
+    'react/jsx-closing-bracket-location': [1, 'line-aligned'],
+    'comma-dangle': ['error', 'always-multiline'],
+    quotes: ['error', 'double'],
+    semi: ['error', 'always'],
+    indent: ['error', 2],
+    'max-len': ['warn', { code: 160 }],
+    'linebreak-style': 0,
+    eqeqeq: ['error', 'always'],
+    'no-multi-spaces': 'error',
+    'no-multiple-empty-lines': 'error',
+    "semi": "off",
+    "@typescript-eslint/semi": ["error"]
+    // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
+    // e.g. "@typescript-eslint/explicit-function-return-type": "off",
+  },
+  settings: {
+    react: {
+      version: 'detect', // Tells eslint-plugin-react to automatically detect the version of React to use
     },
-    parser: "@typescript-eslint/parser",
-    parserOptions: {
-      ecmaFeatures: {
-        jsx: true,
-      },
-      ecmaVersion: 2020,
-      sourceType: "module",
-      project: "./tsconfig.json",
-    },
-    rules: {
-      "linebreak-style": "off",
-      "react/prefer-stateless-function": [0],
-      "no-param-reassign": ["error", { "props": false }],
-      "no-use-before-define": "off",
-      "@typescript-eslint/no-use-before-define": "off",
-      "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
-      "prettier/prettier": [
-        "error",
-        {
-          endOfLine: "auto",
-        },
-      ],
-      "class-methods-use-this": [0],
-      // note you must disable the base rule as it can report incorrect errors
-      "no-shadow": "off",
-      "@typescript-eslint/no-shadow": ["error"],
-      "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": "warn",
-    },
-  };
+  },
+};

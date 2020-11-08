@@ -28,18 +28,18 @@ export default class BillClient extends BaseClient {
       this.baseUrl,
       groupQuery,
       startTimeQuery,
-      endTimeQuery
+      endTimeQuery,
     );
 
     return Axios.get(requestUrl).then(
-      (response: AxiosResponse<Bill[]>) => response.data
+      (response: AxiosResponse<Bill[]>) => response.data,
     );
   };
 
   public postBill = async (createNewBill: CreateNewBill): Promise<Bill> => {
     const requestUrl = url(this.baseUrl);
     return Axios.post(requestUrl, createNewBill).then(
-      (response: AxiosResponse<Bill>) => response.data
+      (response: AxiosResponse<Bill>) => response.data,
     );
   };
 }
