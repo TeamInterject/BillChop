@@ -77,7 +77,7 @@ export default class GroupsPage extends React.Component<
     this.userClient
       .postUser({
         name,
-        email: `${name.replace(" ", ".")}@gmail.com`,
+        email: `${name.replace(/ /g, ".")}@gmail.com`,
       })
       .then((newUser) =>
         this.groupClient.addUserToGroup(selectedGroup.Id, newUser.Id),
