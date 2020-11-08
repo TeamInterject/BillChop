@@ -10,7 +10,7 @@ interface ILoginPageState {
 export default class LoginPage extends React.Component<
   unknown,
   ILoginPageState
-> {
+  > {
   constructor(props: unknown) {
     super(props);
 

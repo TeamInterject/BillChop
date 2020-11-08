@@ -37,7 +37,8 @@ export default class App extends React.Component<unknown, IAppState> {
     return (
       <Router history={BrowserHistory}>
         <div className={currentUser && "mainContainer"}>
-          {currentUser && <NavigationBar currentUser={currentUser} logout={this.logout} />}
+          {currentUser &&
+            <NavigationBar currentUser={currentUser} logout={this.logout} />}
           <div className={currentUser && "mainContainer__content"}>
             <Switch>
               <Route exact path="/login">

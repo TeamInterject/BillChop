@@ -55,7 +55,7 @@ class UserContextManager {
     if (this.user) this.currentUserSubject.next(undefined);
   }
 
-  public async register(name: string, email: string): Promise<Boolean> {
+  public async register(name: string, email: string): Promise<boolean> {
     try {
       const newUser = await this.userClient.postUser({
         name,

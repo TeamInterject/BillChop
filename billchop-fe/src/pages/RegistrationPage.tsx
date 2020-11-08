@@ -9,7 +9,10 @@ interface IRegistrationPageState {
   showRegisterError: boolean;
 }
 
-export default class RegistrationPage extends React.Component<unknown, IRegistrationPageState> {
+export default class RegistrationPage extends React.Component<
+  unknown,
+  IRegistrationPageState
+  > {
   constructor(props: unknown) {
     super(props);
 
@@ -34,18 +37,19 @@ export default class RegistrationPage extends React.Component<unknown, IRegistra
     const { name, email } = this.state;
 
     const registerResult = await UserContext.register(name, email);
-    registerResult ? BrowserHistory.push("/") : this.setState({ showRegisterError: true });
+    registerResult
+      ? BrowserHistory.push("/") : this.setState({ showRegisterError: true });
   };
 
   handleLogin = (): void => {
     BrowserHistory.push("/login");
-  }
+  };
 
   handleErrorToastClose = (): void => {
     this.setState({ showRegisterError: false });
   };
 
-  render() {
+  render(): JSX.Element {
     const { name, email, showRegisterError } = this.state;
 
     return (
