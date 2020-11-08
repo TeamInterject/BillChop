@@ -9,6 +9,7 @@ import BrowserHistory from "./backend/helpers/History";
 import User from "./backend/models/User";
 import UserContext from "./backend/helpers/UserContext";
 import LoginPage from "./pages/LoginPage";
+import RegistrationPage from "./pages/RegistrationPage";
 
 export interface IAppState {
   currentUser?: User;
@@ -35,15 +36,19 @@ export default class App extends React.Component<unknown, IAppState> {
 
     return (
       <Router history={BrowserHistory}>
-        <div className="mainContainer">
-          <NavigationBar currentUser={currentUser} logout={this.logout} />
-          <div className="mainContainer__content">
+        <div className={currentUser && "mainContainer"}>
+          {currentUser &&
+            <NavigationBar currentUser={currentUser} logout={this.logout} />}
+          <div className={currentUser && "mainContainer__content"}>
             <Switch>
               <Route exact path="/login">
                 <LoginPage />
               </Route>
+              <Route exact path="/register">
+                <RegistrationPage />
+              </Route>
               <PrivateRoute path="/profile">
-                <h1>In constructon</h1>
+                <h1>In construction</h1>
               </PrivateRoute>
               <PrivateRoute path="/groups">
                 <GroupsPage />
