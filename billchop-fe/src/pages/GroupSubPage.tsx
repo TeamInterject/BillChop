@@ -162,7 +162,10 @@ export default class GroupSubPage extends React.Component<
         <Container>
           <Row>
             <Col>
-              <GroupPageHeader onAddNewBill={this.handleOnAddNewBill} />
+              <GroupPageHeader
+                onAddNewBill={this.handleOnAddNewBill}
+                onAddNewMember={onAddNewMember}
+              />
             </Col>
           </Row>
           <Row>
@@ -170,7 +173,6 @@ export default class GroupSubPage extends React.Component<
               <GroupTable
                 group={group}
                 expenseAmounts={expenseAmounts ?? {}}
-                onAddNewMember={onAddNewMember}
                 colorCode
               />
             </Col>
