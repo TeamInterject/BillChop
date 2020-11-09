@@ -1,0 +1,9 @@
+.search-box {
+  position: relative;
+}
+
+.search-box__search-results {
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+}

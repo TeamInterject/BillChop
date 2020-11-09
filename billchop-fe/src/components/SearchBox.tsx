@@ -1,7 +1,10 @@
 import React from "react";
+import { debounce } from "lodash";
 import { Button, Col, FormControl, InputGroup, ListGroup, Row } from "react-bootstrap";
 import SearchIcon from "../assets/search-icon.svg";
+import ArrowBackIcon from "../assets/arrow-back-icon.svg";
 import OutsideClickListener from "./OutsideClickListener";
+import "../styles/search-box.css";
 
 export interface ISearchBoxProps {
   placeholder?: string;
@@ -28,11 +31,19 @@ export default class SearchBox extends React.Component<
     };
   }
 
-  handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  handleInputChange = (inputValue: string): void => {
+    if (!inputValue) return;
+
     const { onChange } = this.props;
 
-    this.setState({ inputValue: event.target.value });
-    onChange(event.target.value);
+    onChange(inputValue);
+  };
+
+  delayedHandleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const inputValue = event.target.value;
+    this.setState({ inputValue });
+    const delayed = debounce(() => this.handleInputChange(inputValue), 300);
+    delayed();
   };
 
   handleSearchResultClick = (selectedItemId: string): void => {
@@ -45,7 +56,7 @@ export default class SearchBox extends React.Component<
     const { searchResults, actionButtonText } = this.props;
 
     return (
-      <ListGroup className="shadow-sm">
+      <ListGroup className="shadow-sm search-box__search-results">
         {
           searchResults.size !== 0 ?
             Array.from(searchResults).map(([key, value]) => {
@@ -82,23 +93,28 @@ export default class SearchBox extends React.Component<
   };
 
   render(): JSX.Element {
-    const { placeholder, onHide } = this.props;
+    const { placeholder, onHide, onChange } = this.props;
     const { inputValue } = this.state;
 
     return (
       <OutsideClickListener onClickOutside={onHide}>
-        <div>
+        <div className="search-box">
           <InputGroup>
+            <InputGroup.Prepend>
+              <Button variant="outline-secondary" size="sm" onClick={onHide}>
+                <img src={ArrowBackIcon} height="24px" width="24px" alt="Go back" />
+              </Button>
+            </InputGroup.Prepend>
             <FormControl
               placeholder={placeholder}
               value={inputValue}
-              onChange={this.handleInputChange}
+              onChange={this.delayedHandleInputChange}
             />
-            <div className="input-group-append">
-              <span className="input-group-text">
+            <InputGroup.Append>
+              <Button variant="outline-secondary" size="sm" onClick={() => onChange(inputValue)}>
                 <img src={SearchIcon} height="24px" width="24px" alt="Search Icon" />
-              </span>
-            </div>
+              </Button>
+            </InputGroup.Append>
           </InputGroup>
           {inputValue && this.renderSearchResultsTable()}
         </div>
