@@ -163,6 +163,7 @@ export default class GroupSubPage extends React.Component<
           <Row>
             <Col>
               <GroupPageHeader
+                groupId={group.Id}
                 onAddNewBill={this.handleOnAddNewBill}
                 onAddNewMember={onAddNewMember}
               />

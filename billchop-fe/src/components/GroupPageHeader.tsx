@@ -9,6 +9,7 @@ import UserClient from "../backend/clients/UserClient";
 import User from "../backend/models/User";
 
 export interface IGroupPageHeaderProps {
+  groupId: string;
   onAddNewBill: (name: string, total: number) => void;
   onAddNewMember: (userId: string) => void;
 }
@@ -51,7 +52,8 @@ export default class GroupPageHeader extends React.Component<
   };
 
   handleSearchInputChange = async (keyword: string): Promise<void> => {
-    const result = await this.userClient.searchUserByKeyword({ keyword });
+    const { groupId } = this.props;
+    const result = await this.userClient.searchUserByKeyword({ keyword, exclusionGroupId: groupId });
     this.setState({ foundUsers: result });
   };
 

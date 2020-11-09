@@ -1,4 +1,3 @@
 {
-  "host": "https://localhost:5001",
-  "createTestUser": true
+  "host": "https://localhost:5001"
 }
