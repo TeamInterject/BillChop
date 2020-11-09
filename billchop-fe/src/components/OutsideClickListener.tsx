@@ -2,28 +2,28 @@
 import React, { ReactNode, useCallback, useEffect, useRef } from "react";
 
 export interface IOutsideClickListenerProps {
-  onClickOutside: () => void;
+  onOutsideClick: () => void;
   children?: ReactNode;
 }
 
 const OutsideClickListener: React.FunctionComponent<IOutsideClickListenerProps> = (props) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  const { onClickOutside } = props;
+  const { onOutsideClick } = props;
 
   const escapeListener = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") {
-      onClickOutside();
+      onOutsideClick();
     }
-  }, [onClickOutside]);
+  }, [onOutsideClick]);
 
   const clickListener = useCallback(
     (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClickOutside();
+        onOutsideClick();
       }
     },
-    [onClickOutside],
+    [onOutsideClick],
   );
 
   useEffect(() => {

@@ -97,7 +97,7 @@ export default class SearchBox extends React.Component<
     const { inputValue } = this.state;
 
     return (
-      <OutsideClickListener onClickOutside={onHide}>
+      <OutsideClickListener onOutsideClick={onHide}>
         <div className="search-box">
           <InputGroup>
             <InputGroup.Prepend>
