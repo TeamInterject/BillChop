@@ -38,11 +38,13 @@ export default class SearchBox extends React.Component<
     onChange(inputValue);
   };
 
+  debouncedHandleInputChange = debounce(this.handleInputChange, 300);
+
   delayedHandleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const inputValue = event.target.value;
     this.setState({ inputValue });
-    const delayed = debounce(() => this.handleInputChange(inputValue), 300);
-    delayed();
+
+    this.debouncedHandleInputChange(inputValue);
   };
 
   handleSearchResultClick = (selectedItemId: string): void => {
