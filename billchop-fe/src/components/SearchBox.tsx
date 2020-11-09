@@ -35,7 +35,6 @@ export default class SearchBox extends React.Component<
     if (!inputValue) return;
 
     const { onChange } = this.props;
-
     onChange(inputValue);
   };
 
