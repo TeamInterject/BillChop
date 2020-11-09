@@ -5,7 +5,6 @@ import Sidebar, { ISidebarTab } from "../components/Sidebar";
 import NoGroupSelectedSubPage from "./NoGroupSelectedSubPage";
 import "../styles/group-page.css";
 import GroupSubPage from "./GroupSubPage";
-import UserClient from "../backend/clients/UserClient";
 import GroupClient from "../backend/clients/GroupClient";
 import UserContext from "../backend/helpers/UserContext";
 
@@ -19,8 +18,6 @@ export default class GroupsPage extends React.Component<
   IGroupsPageState
 > {
   private groupClient = new GroupClient();
-
-  private userClient = new UserClient();
 
   constructor(props = {}) {
     super(props);
