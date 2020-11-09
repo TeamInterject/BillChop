@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Col, FormControl, InputGroup, ListGroup, Row } from "react-bootstrap";
 import SearchIcon from "../assets/search-icon.svg";
+import OutsideClickListener from "./OutsideClickListener";
 
 export interface ISearchBoxProps {
   placeholder?: string;
@@ -8,7 +9,7 @@ export interface ISearchBoxProps {
   onChange: (keyword: string) => void;
   onActionButtonClick: (selectedItemId: string) => void;
   actionButtonText: string;
-  onHide?: () => void;
+  onHide: () => void;
 }
 
 interface ISearchBoxState {
@@ -85,21 +86,23 @@ export default class SearchBox extends React.Component<
     const { inputValue } = this.state;
 
     return (
-      <div>
-        <InputGroup>
-          <FormControl
-            placeholder={placeholder}
-            value={inputValue}
-            onChange={this.handleInputChange}
-          />
-          <div className="input-group-append">
-            <span className="input-group-text">
-              <img src={SearchIcon} height="24px" width="24px" alt="Search Icon" />
-            </span>
-          </div>
-        </InputGroup>
-        {inputValue && this.renderSearchResultsTable()}
-      </div>
+      <OutsideClickListener onClickOutside={onHide}>
+        <div>
+          <InputGroup>
+            <FormControl
+              placeholder={placeholder}
+              value={inputValue}
+              onChange={this.handleInputChange}
+            />
+            <div className="input-group-append">
+              <span className="input-group-text">
+                <img src={SearchIcon} height="24px" width="24px" alt="Search Icon" />
+              </span>
+            </div>
+          </InputGroup>
+          {inputValue && this.renderSearchResultsTable()}
+        </div>
+      </OutsideClickListener>
     );
   }
 }

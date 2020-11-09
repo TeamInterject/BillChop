@@ -56,7 +56,7 @@ export default class GroupsPage extends React.Component<
     this.setState({ selectedGroupId: groupId });
   };
 
-  handleAddNewMember = (userId: string): void => {
+  handleAddNewMember = (newMemberId: string): void => {
     const { groups, selectedGroupId } = this.state;
     const selectedGroupIdx = groups.findIndex((g) => g.Id === selectedGroupId);
     const selectedGroup = groups[selectedGroupIdx];
@@ -74,7 +74,7 @@ export default class GroupsPage extends React.Component<
       this.setState({ groups: updatedGroups });
     };
 
-    this.groupClient.addUserToGroup(selectedGroup.Id, userId).then((updatedGroup) => updateGroups(updatedGroup));
+    this.groupClient.addUserToGroup(selectedGroup.Id, newMemberId).then((updatedGroup) => updateGroups(updatedGroup));
   };
 
   render(): JSX.Element {
