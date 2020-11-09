@@ -44,9 +44,9 @@ namespace BillChopBE.Controllers
         /// <param name="keyword">Substring of username or email</param>
         /// <param name="exclusionGroupId">Optional paramater for excluding users in passed group</param>
         /// <param name="top">Amount of returned results</param>
-        /// <returns></returns>
+        /// <returns>List of matching users</returns>
         [HttpGet("search/{keyword}")]
-        public async Task<ActionResult<User>> SearchForUsers(string keyword, Guid? exclusionGroupId, int top = 10)
+        public async Task<ActionResult<IList<User>>> SearchForUsers(string keyword, Guid? exclusionGroupId, int top = 10)
         {
             return Ok(await userService.SearchForUsersAsync(keyword, exclusionGroupId, top));
         }
