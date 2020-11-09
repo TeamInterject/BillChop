@@ -5,7 +5,6 @@ import Sidebar, { ISidebarTab } from "../components/Sidebar";
 import NoGroupSelectedSubPage from "./NoGroupSelectedSubPage";
 import "../styles/group-page.css";
 import GroupSubPage from "./GroupSubPage";
-import UserClient from "../backend/clients/UserClient";
 import GroupClient from "../backend/clients/GroupClient";
 import UserContext from "../backend/helpers/UserContext";
 
@@ -19,8 +18,6 @@ export default class GroupsPage extends React.Component<
   IGroupsPageState
 > {
   private groupClient = new GroupClient();
-
-  private userClient = new UserClient();
 
   constructor(props = {}) {
     super(props);
@@ -56,7 +53,7 @@ export default class GroupsPage extends React.Component<
     this.setState({ selectedGroupId: groupId });
   };
 
-  handleOnAddNewMember = (name: string): void => {
+  handleAddNewMember = (newMemberId: string): void => {
     const { groups, selectedGroupId } = this.state;
     const selectedGroupIdx = groups.findIndex((g) => g.Id === selectedGroupId);
     const selectedGroup = groups[selectedGroupIdx];
@@ -74,15 +71,7 @@ export default class GroupsPage extends React.Component<
       this.setState({ groups: updatedGroups });
     };
 
-    this.userClient
-      .postUser({
-        name,
-        email: `${name.replace(/ /g, ".")}@gmail.com`,
-      })
-      .then((newUser) =>
-        this.groupClient.addUserToGroup(selectedGroup.Id, newUser.Id),
-      )
-      .then((updatedGroup) => updateGroups(updatedGroup));
+    this.groupClient.addUserToGroup(selectedGroup.Id, newMemberId).then((updatedGroup) => updateGroups(updatedGroup));
   };
 
   render(): JSX.Element {
@@ -98,7 +87,7 @@ export default class GroupsPage extends React.Component<
         {selectedGroup ? (
           <GroupSubPage
             group={selectedGroup}
-            onAddNewMember={this.handleOnAddNewMember}
+            onAddNewMember={this.handleAddNewMember}
           />
         ) : (
           <NoGroupSelectedSubPage />
