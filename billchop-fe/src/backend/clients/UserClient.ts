@@ -6,6 +6,7 @@ import BaseClient from "./AbstractClient";
 import { LoginDetails } from "../models/LoginDetails";
 
 const TOP_PARAM = "top";
+const EXCLUSION_GROUP_PARAM = "exclusionGroupId";
 
 export default class UserClient extends BaseClient {
   public get relativeUrl(): string {
@@ -28,12 +29,15 @@ export default class UserClient extends BaseClient {
 
   public searchUserByKeyword = async (props: {
     keyword: string;
+    exclusionGroupId?: string;
     top?: number;
   }): Promise<User[]> => {
-    const { keyword, top } = props;
+    const { keyword, exclusionGroupId, top } = props;
 
     const topQuery = this.createQuery(TOP_PARAM, top);
-    const requestUrl = url(this.baseUrl, "search", keyword, topQuery);
+    const exclusionGroupQuery = this.createQuery(EXCLUSION_GROUP_PARAM, exclusionGroupId);
+
+    const requestUrl = url(this.baseUrl, "search", keyword, exclusionGroupQuery, topQuery);
 
     return Axios.get(requestUrl).then(
       (response: AxiosResponse<User[]>) => response.data,
