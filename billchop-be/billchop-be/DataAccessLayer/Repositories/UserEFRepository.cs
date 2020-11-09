@@ -20,11 +20,16 @@ namespace BillChopBE.DataAccessLayer.Repositories
             this.context = context;
         }
 
-        public async Task<IList<User>> SearchNameAndEmailAsync(string keyword, int top)
+        public async Task<IList<User>> SearchNameAndEmailAsync(string keyword, Guid? exclusionGroupId, int top)
         {
             keyword = keyword.ToLower();
-            return await DbSet
-                .Where(g => g.Email.ToLower().Contains(keyword) || g.Name.ToLower().Contains(keyword))
+            var users = DbSet
+                .Where(g => g.Email.ToLower().Contains(keyword) || g.Name.ToLower().Contains(keyword));
+
+            if (exclusionGroupId.HasValue)
+                users = users.Where(u => u.Groups.All(g => g.Id != exclusionGroupId.Value));
+
+            return await users
                 .Take(top)
                 .ToListAsync();
         }

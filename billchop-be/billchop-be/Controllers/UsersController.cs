@@ -38,17 +38,17 @@ namespace BillChopBE.Controllers
             return Ok(await userService.GetUserAsync(id));
         }
 
-        
         /// <summary>
         /// Searches for users by matching partial keyword to usernames and emails
         /// </summary>
         /// <param name="keyword">Substring of username or email</param>
+        /// <param name="exclusionGroupId">Optional paramater for excluding users in passed group</param>
         /// <param name="top">Amount of returned results</param>
         /// <returns>List of matching users</returns>
         [HttpGet("search/{keyword}")]
-        public async Task<ActionResult<IList<User>>> SearchForUsers(string keyword, int top = 10)
+        public async Task<ActionResult<IList<User>>> SearchForUsers(string keyword, Guid? exclusionGroupId, int top = 10)
         {
-            return Ok(await userService.SearchForUsersAsync(keyword, top));
+            return Ok(await userService.SearchForUsersAsync(keyword, exclusionGroupId, top));
         }
 
         [HttpPost]
