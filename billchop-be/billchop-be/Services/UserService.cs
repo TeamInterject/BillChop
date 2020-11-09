@@ -13,7 +13,7 @@ namespace BillChopBE.Services
         Task<User> AddUserAsync(CreateNewUser newUser);
         Task<User> GetUserAsync(Guid id);
         Task<IList<User>> GetUsersAsync();
-        Task<IList<User>> SearchForUsersAsync(string keyword, int top);
+        Task<IList<User>> SearchForUsersAsync(string keyword, Guid? exclusionGroupId, int top);
         Task<User> LoginAsync(LoginDetails loginDetails);
     }
 
@@ -44,9 +44,9 @@ namespace BillChopBE.Services
             return userRepository.GetAllAsync();
         }
 
-        public Task<IList<User>> SearchForUsersAsync(string keyword, int top)
+        public Task<IList<User>> SearchForUsersAsync(string keyword, Guid? exclusionGroupId, int top)
         {
-            return userRepository.SearchNameAndEmailAsync(keyword, top);
+            return userRepository.SearchNameAndEmailAsync(keyword, exclusionGroupId, top);
         }
 
         public Task<User> AddUserAsync(CreateNewUser newUser)
