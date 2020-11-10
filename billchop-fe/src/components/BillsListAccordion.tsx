@@ -31,7 +31,7 @@ export default class BillsListAccordion extends React.Component<
     return bills.map((bill) => {
       return (
         <Card key={bill.Id}>
-          <Accordion.Toggle className="d-flex" style={{ cursor: "pointer" }} variant="link" as={Card.Header} eventKey={bill.Id}>
+          <Accordion.Toggle className="d-flex" style={{ cursor: "pointer" }} as={Card.Header} eventKey={bill.Id}>
             <img className="mr-2" src={BillIcon} height="32px" width="32px" alt="Bill icon" />
             <div className="ml-2 d-flex justify-content-between flex-grow-1">
               <div>{bill.Name}</div>
