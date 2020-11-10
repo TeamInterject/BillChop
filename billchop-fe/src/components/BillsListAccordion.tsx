@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Accordion, Button, Card } from "react-bootstrap";
+import { Accordion, Card } from "react-bootstrap";
 import Bill from "../backend/models/Bill";
 import Group from "../backend/models/Group";
 import BillIcon from "../assets/bill-icon.svg";
@@ -31,13 +31,11 @@ export default class BillsListAccordion extends React.Component<
     return bills.map((bill) => {
       return (
         <Card key={bill.Id}>
-          <Card.Header>
-            <img src={BillIcon} height="32px" width="32px" alt="Bill icon" />
-            <Accordion.Toggle as={Button} variant="link" eventKey={bill.Id}>
-              {bill.Name}
-              {/* TODO Add date */}
-            </Accordion.Toggle>
-          </Card.Header>
+          <Accordion.Toggle style={{ cursor: "pointer" }} as={Card.Header} eventKey={bill.Id}>
+            <img className="mr-2" src={BillIcon} height="32px" width="32px" alt="Bill icon" />
+            {bill.Name}
+            {/* TODO Add date */}
+          </Accordion.Toggle>
           <Accordion.Collapse eventKey={bill.Id}>
             <Card.Body>
               <GroupTable
