@@ -36,6 +36,7 @@ export default class BillsListAccordion extends React.Component<
             <div className="ml-2 d-flex justify-content-between flex-grow-1">
               <div>{bill.Name}</div>
               <div>{bill.Total.toFixed(2)}</div>
+              {/* TODO Add date */}
             </div>
           </Accordion.Toggle>
           <Accordion.Collapse eventKey={bill.Id}>
