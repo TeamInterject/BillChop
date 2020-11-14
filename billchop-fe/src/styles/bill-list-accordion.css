@@ -1,0 +1,8 @@
+.bill-list-accordion {
+  display: flex;
+  cursor: pointer;
+}
+
+.bill-list-accordion:hover {
+  background-color: #f1f2f6;
+}
