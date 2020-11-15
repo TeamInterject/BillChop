@@ -3,10 +3,11 @@ import { produce } from "immer";
 import Group from "../backend/models/Group";
 import Sidebar, { ISidebarTab } from "../components/Sidebar";
 import NoGroupSelectedSubPage from "./NoGroupSelectedSubPage";
-import "../styles/group-page.css";
+import "../styles/groups-page.css";
 import GroupSubPage from "./GroupSubPage";
 import GroupClient from "../backend/clients/GroupClient";
 import UserContext from "../backend/helpers/UserContext";
+import { Col, Row } from "react-bootstrap";
 
 interface IGroupsPageState {
   groups: Group[];
@@ -79,20 +80,24 @@ export default class GroupsPage extends React.Component<
     const { groups } = this.state;
     const selectedGroup = groups.find((group) => group.Id === selectedGroupId);
     return (
-      <div>
-        <Sidebar
-          sidebarTabs={this.getGroupsSidebarTabs()}
-          onTabClick={this.handleOnGroupTabSelect}
-        />
-        {selectedGroup ? (
-          <GroupSubPage
-            group={selectedGroup}
-            onAddNewMember={this.handleAddNewMember}
+      <Row className="h-100">
+        <Col className="p-0 sidebar-column border-right" md={2}>
+          <Sidebar
+            sidebarTabs={this.getGroupsSidebarTabs()}
+            onTabClick={this.handleOnGroupTabSelect}
           />
-        ) : (
-          <NoGroupSelectedSubPage />
-        )}
-      </div>
+        </Col>
+        <Col className="p-0">
+          {selectedGroup ? (
+            <GroupSubPage
+              group={selectedGroup}
+              onAddNewMember={this.handleAddNewMember}
+            />
+          ) : (
+            <NoGroupSelectedSubPage />
+          )}
+        </Col>
+      </Row>
     );
   }
 }

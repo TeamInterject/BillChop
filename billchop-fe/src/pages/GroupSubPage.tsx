@@ -13,6 +13,7 @@ import MonthlySpendingGraph, { IBarChartDataset } from "../components/BarChart";
 import Dictionary from "../util/Dictionary";
 import getMonthName from "../util/Months";
 import UserContext from "../backend/helpers/UserContext";
+import "../styles/groups-page.css";
 
 export enum LoanType {
   Provided,
@@ -158,39 +159,37 @@ export default class GroupSubPage extends React.Component<
     const { expenseAmounts, bills } = this.state;
 
     return (
-      <div className="group-page__sub-page-container">
-        <Container>
-          <Row>
-            <Col>
-              <GroupPageHeader
-                groupId={group.Id}
-                onAddNewBill={this.handleOnAddNewBill}
-                onAddNewMember={onAddNewMember}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <GroupTable
-                group={group}
-                expenseAmounts={expenseAmounts ?? {}}
-                colorCode
-              />
-            </Col>
-            <Col>
-              <MonthlySpendingGraph
-                datasets={this.getRecentGroupSpendingDatasets()}
-                headingText="Total group spending"
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <BillsListAccordion group={group} bills={bills} />
-            </Col>
-          </Row>
-        </Container>
-      </div>
+      <Container fluid className="h-100 subpage-container">
+        <Row>
+          <Col>
+            <GroupPageHeader
+              groupId={group.Id}
+              onAddNewBill={this.handleOnAddNewBill}
+              onAddNewMember={onAddNewMember}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <GroupTable
+              group={group}
+              expenseAmounts={expenseAmounts ?? {}}
+              colorCode
+            />
+          </Col>
+          <Col>
+            <MonthlySpendingGraph
+              datasets={this.getRecentGroupSpendingDatasets()}
+              headingText="Total group spending"
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <BillsListAccordion group={group} bills={bills} />
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }

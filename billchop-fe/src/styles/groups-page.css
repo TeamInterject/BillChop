@@ -1,0 +1,8 @@
+.sidebar-column:hover {
+  overflow-y: scroll;
+}
+
+.subpage-container {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}

@@ -80,7 +80,7 @@ export default class GroupPageHeader extends React.Component<
         {
           showSearchBox ?
             <Row>
-              <Col>
+              <Col className="mb-2">
                 <SearchBox
                   placeholder="Enter email or name"
                   searchResults={this.generateSearchResultsMap()}
@@ -93,14 +93,14 @@ export default class GroupPageHeader extends React.Component<
             </Row>
             :
             <Row className="justify-content-start">
-              <Col className="col-1">
+              <Col xs={1}>
                 <ImageButton
                   imageSource={AddBillIcon}
                   tooltipText="Add Bill"
                   onClick={this.toggleAddBillModal}
                 />
               </Col>
-              <Col className="col-1">
+              <Col xs={1}>
                 <ImageButton
                   imageSource={AddPersonIcon}
                   tooltipText="Add new member"
