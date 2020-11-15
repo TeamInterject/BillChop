@@ -16,13 +16,7 @@ code {
     monospace;
 }
 
-:root {
-  --sidebar-width: 17%;
-  --pageHeader-height: 10%;
-}
-
 .container-vertical-center {
-  min-height: 100%;
   min-height: 100vh;
 
   display: flex;

@@ -49,7 +49,6 @@ export default class AddBillModal extends React.Component<
       <Modal
         show={showModal}
         onHide={this.handleOnHide}
-        size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
