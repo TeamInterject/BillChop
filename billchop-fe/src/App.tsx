@@ -37,7 +37,7 @@ export default class App extends React.Component<unknown, IAppState> {
 
     return (
       <Router history={BrowserHistory}>
-        <Container fluid className="vh-100 d-flex flex-column" style={{ overflow: "hidden" }}>
+        <Container fluid className="vh-100 d-flex flex-column" style={{ overflowX: "hidden" }}>
           {currentUser &&
           <Row>
             <Col className="flex-shrink-0 p-0 border">
