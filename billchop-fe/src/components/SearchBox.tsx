@@ -64,9 +64,8 @@ export default class SearchBox extends React.Component<
               return (
                 <ListGroup.Item
                   key={key}
-                  className="py-2"
+                  className="py-2 search-box__search-results-item"
                   onClick={() => this.handleSearchResultClick(key)}
-                  style={{ cursor: "pointer" }}
                 >
                   <Row>
                     <Col className="d-flex align-items-center">

@@ -16,6 +16,10 @@ code {
     monospace;
 }
 
+:root {
+  --hover-color: #f1f2f6;
+}
+
 .container-vertical-center {
   min-height: 100vh;
 
