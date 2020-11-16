@@ -2,6 +2,7 @@ import Axios, { AxiosResponse } from "axios";
 import url from "url-join";
 import BaseClient from "./AbstractClient";
 import Loan from "../models/Loan";
+import LoadingContext from "../helpers/LoadingContext";
 
 const LOANEE_PARAM = "loaneeId";
 const LOANER_PARAM = "loanerId";
@@ -35,9 +36,11 @@ export default class LoanClient extends BaseClient {
       endTimeQuery,
     );
 
-    return Axios.get(requestUrl).then(
-      (response: AxiosResponse<Loan[]>) => response.data,
-    );
+    LoadingContext.isLoading = true;
+    return Axios.get(requestUrl).then((response: AxiosResponse<Loan[]>) => {
+      LoadingContext.isLoading = false;
+      return response.data;
+    });
   };
 
   public getReceivedLoans = async (props: {
@@ -60,10 +63,12 @@ export default class LoanClient extends BaseClient {
       startTimeQuery,
       endTimeQuery,
     );
-
-    return Axios.get(requestUrl).then(
-      (response: AxiosResponse<Loan[]>) => response.data,
-    );
+    
+    LoadingContext.isLoading = true;
+    return Axios.get(requestUrl).then((response: AxiosResponse<Loan[]>) => {
+      LoadingContext.isLoading = false;
+      return response.data;
+    });
   };
 
   public getSelfLoans = async (props: {
@@ -87,9 +92,11 @@ export default class LoanClient extends BaseClient {
       endTimeQuery,
     );
 
-    return Axios.get(requestUrl).then(
-      (response: AxiosResponse<Loan[]>) => response.data,
-    );
+    LoadingContext.isLoading = true;
+    return Axios.get(requestUrl).then((response: AxiosResponse<Loan[]>) => {
+      LoadingContext.isLoading = false;
+      return response.data;
+    });
   };
 
   public getLoans = async (queryProps: {
@@ -116,8 +123,10 @@ export default class LoanClient extends BaseClient {
       endTimeQuery,
     );
 
-    return Axios.get(requestUrl).then(
-      (response: AxiosResponse<Loan[]>) => response.data,
-    );
+    LoadingContext.isLoading = true;
+    return Axios.get(requestUrl).then((response: AxiosResponse<Loan[]>) => {
+      LoadingContext.isLoading = false;
+      return response.data;
+    });
   };
 }

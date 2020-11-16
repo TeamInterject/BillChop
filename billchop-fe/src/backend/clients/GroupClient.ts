@@ -3,6 +3,7 @@ import url from "url-join";
 import BaseClient from "./AbstractClient";
 import Group from "../models/Group";
 import { CreateNewGroup } from "../models/CreateNewGroup";
+import LoadingContext from "../helpers/LoadingContext";
 
 const USER_PARAM = "userId";
 
@@ -15,25 +16,31 @@ export default class GroupClient extends BaseClient {
     const userQuery = this.createQuery(USER_PARAM, userId);
     const requestUrl = url(this.baseUrl, userQuery);
 
-    return Axios.get(requestUrl).then(
-      (response: AxiosResponse<Group[]>) => response.data,
-    );
+    LoadingContext.isLoading = true;
+    return Axios.get(requestUrl).then((response: AxiosResponse<Group[]>) => {
+      LoadingContext.isLoading = false;
+      return response.data;
+    });
   };
 
   public getGroup = async (groupId: string): Promise<Group> => {
     const requestUrl = url(this.baseUrl, groupId);
 
-    return Axios.get(requestUrl).then(
-      (response: AxiosResponse<Group>) => response.data,
-    );
+    LoadingContext.isLoading = true;
+    return Axios.get(requestUrl).then((response: AxiosResponse<Group>) => {
+      LoadingContext.isLoading = false;
+      return response.data;
+    });
   };
 
   public postGroup = async (createNewGroup: CreateNewGroup): Promise<Group> => {
     const requestUrl = url(this.baseUrl);
 
-    return Axios.post(requestUrl, createNewGroup).then(
-      (response: AxiosResponse<Group>) => response.data,
-    );
+    LoadingContext.isLoading = true;
+    return Axios.post(requestUrl, createNewGroup).then((response: AxiosResponse<Group>) => {
+      LoadingContext.isLoading = false;
+      return response.data;
+    });
   };
 
   public addUserToGroup = async (
@@ -42,8 +49,10 @@ export default class GroupClient extends BaseClient {
   ): Promise<Group> => {
     const requestUrl = url(this.baseUrl, groupId, "add-user", userId);
 
-    return Axios.post(requestUrl).then(
-      (response: AxiosResponse<Group>) => response.data,
-    );
+    LoadingContext.isLoading = true;
+    return Axios.post(requestUrl).then((response: AxiosResponse<Group>) => {
+      LoadingContext.isLoading = false;
+      return response.data;
+    });
   };
 }
