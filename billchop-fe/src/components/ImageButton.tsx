@@ -13,7 +13,7 @@ export default class ImageButton extends React.Component<IImageButtonProps> {
     const { imageSource, tooltipText, onClick } = this.props;
     return (
       <OverlayTrigger
-        placement="top"
+        placement="auto"
         overlay={<Tooltip id="image-button-tooltip">{tooltipText}</Tooltip>}
       >
         <Button variant="link" onClick={onClick}>

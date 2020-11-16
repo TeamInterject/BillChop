@@ -1,0 +1,11 @@
+.sidebar-column:hover {
+  overflow-y: scroll;
+}
+
+@media only screen and (min-width: 780px) {
+  .subpage-container {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    position: absolute;
+  }
+}
