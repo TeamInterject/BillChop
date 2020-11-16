@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { produce } from "immer";
 import BillClient from "../backend/clients/BillClient";
 import LoanClient from "../backend/clients/LoanClient";
@@ -159,7 +159,7 @@ export default class GroupSubPage extends React.Component<
     const { expenseAmounts, bills } = this.state;
 
     return (
-      <Container fluid className="h-100 subpage-container">
+      <div className="p-3 h-100 w-100 subpage-container">
         <Row>
           <Col>
             <GroupPageHeader
@@ -189,7 +189,7 @@ export default class GroupSubPage extends React.Component<
             <BillsListAccordion group={group} bills={bills} />
           </Col>
         </Row>
-      </Container>
+      </div>
     );
   }
 }
