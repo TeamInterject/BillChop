@@ -1,6 +1,0 @@
-.create-group-page__container {
-  position: fixed;
-  top: var(--pageHeader-height);
-  bottom: 0;
-  min-width: 100%;
-}

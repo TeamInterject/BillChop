@@ -1,9 +1,8 @@
 import * as React from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 import GroupClient from "../backend/clients/GroupClient";
 import UserContext from "../backend/helpers/UserContext";
-import "../styles/create-group-page.css";
 
 interface ICreateGroupPageState {
   inputValue: string;
@@ -47,8 +46,8 @@ export default class CreateGroupPage extends React.Component<
     return shouldRedirect ? (
       <Redirect to="/groups" />
     ) : (
-      <div className="create-group-page__container d-flex flex-column align-items-center justify-content-center">
-        <div>
+      <Row className="h-100 d-flex flex-column align-items-center justify-content-center">
+        <Col md={3}>
           <Form onSubmit={this.onCreateNewGroup}>
             <Form.Label>Group name:</Form.Label>
             <Form.Control
@@ -61,8 +60,8 @@ export default class CreateGroupPage extends React.Component<
               </Button>
             </div>
           </Form>
-        </div>
-      </div>
+        </Col>
+      </Row>
     );
   }
 }

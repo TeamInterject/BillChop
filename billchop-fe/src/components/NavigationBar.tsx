@@ -19,7 +19,7 @@ export default class NavigationBar extends React.Component<NavigationBarProps> {
     if (!currentUser) return <></>;
 
     return (
-      <Navbar className="mainContainer__pageHeader" bg="light">
+      <Navbar bg="light">
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
