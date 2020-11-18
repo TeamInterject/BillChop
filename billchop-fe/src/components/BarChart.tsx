@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { Bar, ChartData } from "react-chartjs-2";
 
 export interface IBarChartDataset<T> {
@@ -50,7 +50,7 @@ export default class BarChart<T> extends React.Component<IBarChartProps<T>> {
     const { headingText } = this.props;
 
     return (
-      <Container>
+      <div className="m-2">
         <Row>
           <Col className="text-center">
             {{ headingText } && <h5>{headingText}</h5>}
@@ -65,7 +65,7 @@ export default class BarChart<T> extends React.Component<IBarChartProps<T>> {
             />
           </Col>
         </Row>
-      </Container>
+      </div>
     );
   }
 }

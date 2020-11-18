@@ -11,21 +11,29 @@ import UserContext from "./backend/helpers/UserContext";
 import LoginPage from "./pages/LoginPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import { Col, Container, Row } from "react-bootstrap";
+import LoadingSpinner from "./components/LoadingSpinner";
+import LoadingContext from "./backend/helpers/LoadingContext";
 
 export interface IAppState {
   currentUser?: User;
+  isLoading: boolean;
 }
 
 export default class App extends React.Component<unknown, IAppState> {
   constructor(props: unknown) {
     super(props);
-    this.state = {};
+    this.state = {
+      isLoading: false,
+    };
   }
 
   public componentDidMount(): void {
     UserContext.userObservable.subscribe((user) =>
       this.setState({ currentUser: user }),
     );
+    LoadingContext.loadingObservable.subscribe((isLoading) => {
+      this.setState({ isLoading });
+    });
   }
 
   public logout = (): void => {
@@ -33,11 +41,12 @@ export default class App extends React.Component<unknown, IAppState> {
   };
 
   public render(): React.ReactNode {
-    const { currentUser } = this.state;
+    const { currentUser, isLoading } = this.state;
 
     return (
       <Router history={BrowserHistory}>
         <Container fluid className="vh-100 d-flex flex-column" style={{ overflowX: "hidden" }}>
+          <LoadingSpinner isLoading={isLoading} />
           {currentUser &&
           <Row>
             <Col className="flex-shrink-0 p-0 border">
