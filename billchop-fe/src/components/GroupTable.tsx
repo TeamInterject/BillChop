@@ -2,6 +2,7 @@ import * as React from "react";
 import Table from "react-bootstrap/Table";
 import UserContext from "../backend/helpers/UserContext";
 import Group from "../backend/models/Group";
+import toEuros from "../util/Currency";
 import Dictionary from "../util/Dictionary";
 
 export interface IGroupTableProps {
@@ -48,8 +49,8 @@ export default class GroupTable extends React.Component<IGroupTableProps> {
       groupUsers.sort((user) => user.Id === currentUserId ? -1 : 0)
         .map((user) => {
           const expense = expenseAmounts[user.Id]
-            ? expenseAmounts[user.Id].toFixed(2).replace("-0.00", "0.00")
-            : "0.00";
+            ? toEuros(expenseAmounts[user.Id]).replace("-0.00", "0.00")
+            : "0.00€";
           return (
             <tr key={user.Id}>
               <td>{user.Id === UserContext.authenticatedUser.Id ? "You" : user.Name} {user.Id === loanerId && "(Payer)"}</td>
