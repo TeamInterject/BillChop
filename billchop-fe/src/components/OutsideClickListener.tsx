@@ -27,7 +27,6 @@ const OutsideClickListener: React.FunctionComponent<IOutsideClickListenerProps> 
   );
 
   useEffect(() => {
-
     document.addEventListener("click", clickListener);
     document.addEventListener("keyup", escapeListener);
 
