@@ -35,9 +35,8 @@ export default class BillsListAccordion extends React.Component<
           <Accordion.Toggle className="bill-list-accordion" as={Card.Header} eventKey={bill.Id}>
             <img className="mr-2" src={BillIcon} height="32px" width="32px" alt="Bill icon" />
             <div className="ml-2 d-flex justify-content-between align-items-center flex-grow-1">
-              <div>{bill.Name}</div>
+              <div><span style={{ fontWeight: 500 }}>{bill.Name}</span> {/*TODO add date here*/}</div>
               <div>{bill.Total.toFixed(2)}</div>
-              {/* TODO Add date */}
             </div>
           </Accordion.Toggle>
           <Accordion.Collapse eventKey={bill.Id}>
