@@ -34,6 +34,7 @@ export default class LoginPage extends React.Component<
 
   handlePassword = (event: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ password: event.target.value });
+    event.currentTarget.setCustomValidity("");
   };
 
   handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
@@ -64,8 +65,14 @@ export default class LoginPage extends React.Component<
     this.setState({ showLoginError: false });
   };
 
+  handleInvalidPassword = (e: React.FormEvent<HTMLInputElement>): void => {
+    const passwordValidationMessage = "Password must have minimum eight characters, at least one letter, one number and one special character";
+    e.currentTarget.setCustomValidity(passwordValidationMessage);
+  };
+
   render(): React.ReactNode {
     const { email, password, showLoginError } = this.state;
+
     return (
       <div className="container-vertical-center">
         <Container className="col-lg-4">
@@ -94,6 +101,7 @@ export default class LoginPage extends React.Component<
                       <Form.Control
                         required
                         pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
+                        onInvalid={this.handleInvalidPassword}
                         type="password"
                         placeholder="*********"
                         value={password}
