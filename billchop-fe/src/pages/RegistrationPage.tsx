@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Card, Col, Container, Form, Toast } from "react-bootstrap";
 import BrowserHistory from "../backend/helpers/History";
+import LoadingContext from "../backend/helpers/LoadingContext";
 import UserContext from "../backend/helpers/UserContext";
 
 interface IRegistrationPageState {
@@ -38,7 +39,12 @@ export default class RegistrationPage extends React.Component<
 
     const registerResult = await UserContext.register(name, email);
     registerResult
-      ? BrowserHistory.push("/") : this.setState({ showRegisterError: true });
+      ? BrowserHistory.push("/") : this.handleRegisterError();
+  };
+
+  handleRegisterError = (): void => {
+    this.setState({ showRegisterError: true });
+    LoadingContext.isLoading = false; // TODO move this setter to user client, when catching axios error response
   };
 
   handleLogin = (): void => {
