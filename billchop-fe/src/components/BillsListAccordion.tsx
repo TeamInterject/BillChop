@@ -46,6 +46,7 @@ export default class BillsListAccordion extends React.Component<
                 group={group}
                 expenseAmounts={this.generateExpenseAmounts(bill)}
                 showMembersOnlyWithExpenses
+                loanerId={bill.Loaner.Id}
               />
             </Card.Body>
           </Accordion.Collapse>
