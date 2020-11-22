@@ -62,8 +62,7 @@ namespace BillChopBE
         {
             if (env.IsDevelopment())
             {
-                //app.UseDeveloperExceptionPage();
-                app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+                app.UseDeveloperExceptionPage();
 
             }
             else
