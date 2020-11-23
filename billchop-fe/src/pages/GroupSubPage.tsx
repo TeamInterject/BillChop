@@ -9,7 +9,7 @@ import Loan from "../backend/models/Loan";
 import BillsListAccordion from "../components/BillsListAccordion";
 import GroupPageHeader from "../components/GroupPageHeader";
 import GroupTable from "../components/GroupTable";
-import MonthlySpendingGraph, { IBarChartDataset } from "../components/BarChart";
+import BarChart, { IBarChartDataset } from "../components/BarChart";
 import Dictionary from "../util/Dictionary";
 import getMonthName from "../util/Months";
 import UserContext from "../backend/helpers/UserContext";
@@ -178,7 +178,7 @@ export default class GroupSubPage extends React.Component<
             />
           </Col>
           <Col>
-            <MonthlySpendingGraph
+            <BarChart
               datasets={this.getRecentGroupSpendingDatasets()}
               headingText="Total group spending"
             />

@@ -47,9 +47,7 @@ export default class UserClient extends BaseClient {
 
     const requestUrl = url(this.baseUrl, "search", keyword, exclusionGroupQuery, topQuery);
 
-    LoadingContext.isLoading = true;
     return Axios.get(requestUrl).then((response: AxiosResponse<User[]>) => {
-      LoadingContext.isLoading = false;
       return response.data;
     });
   };
