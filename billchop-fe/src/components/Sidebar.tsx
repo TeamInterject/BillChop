@@ -1,5 +1,6 @@
 import * as React from "react";
 import ListGroup from "react-bootstrap/ListGroup";
+import "../styles/groups-page.css";
 
 export interface ISidebarTab {
   groupName: string;
@@ -29,6 +30,6 @@ export default class Sidebar extends React.Component<ISidebarProps> {
   };
 
   render(): JSX.Element {
-    return <ListGroup>{this.renderGroupsTabs()}</ListGroup>;
+    return <ListGroup className="h-100 w-100 sidebar">{this.renderGroupsTabs()}</ListGroup>;
   }
 }
