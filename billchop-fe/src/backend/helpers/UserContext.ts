@@ -1,30 +1,58 @@
 import { BehaviorSubject, Observable } from "rxjs";
 import UserClient from "../clients/UserClient";
+import { CreateNewUser } from "../models/CreateNewUser";
+import { LoginDetails } from "../models/LoginDetails";
 import User from "../models/User";
+import UserWithToken from "../models/UserWithToken";
+import axios from "axios";
 
 class UserContextManager {
   private userClient = new UserClient();
-
   private userJson = localStorage.getItem("currentUser");
-
-  private currentUser: User | undefined = this.userJson
-    ? JSON.parse(this.userJson)
-    : undefined;
-
+  private currentUser: UserWithToken | undefined = this.userJson ? JSON.parse(this.userJson) : undefined;
   private currentUserSubject = new BehaviorSubject(this.currentUser);
 
-  public get user(): User | undefined {
+  constructor() {
+    this.intializeAxios();
+  }
+
+  intializeAxios(): void {
+    axios.interceptors.request.use((config) => {
+      if (!this.user) {
+        config.headers.credentials = "";
+        config.headers.Authorization = "";
+        return config;
+      }
+
+      config.headers.credentials = "include";
+      config.headers.Authorization = `Bearer ${this.user.token}`;
+      return config;
+    });
+
+    axios.interceptors.response.use(
+      (response) => response, 
+      (error) => {
+        if (error.response && error.response.status === 401) {
+          this.logout();
+          return;
+        }
+        
+        return Promise.reject(error);
+      });
+  }
+
+  public get user(): UserWithToken | undefined {
     return this.currentUserSubject.value;
   }
 
-  public get authenticatedUser(): User {
+  public get authenticatedUser(): UserWithToken {
     if (!this.user)
       throw new Error("Got unauthenticated user, when expecting authenticated");
 
     return this.user;
   }
 
-  public get userObservable(): Observable<User | undefined> {
+  public get userObservable(): Observable<UserWithToken | undefined> {
     return this.currentUserSubject.asObservable();
   }
 
@@ -32,7 +60,7 @@ class UserContextManager {
     if (!this.user) return false;
 
     try {
-      await this.login(this.user.Email);
+      await this.userClient.currentUser();
       return true;
     } catch (e) {
       this.logout(); // TODO.AZ: Do this smarter later (we shouldn't log out on random error or server down)
@@ -40,8 +68,8 @@ class UserContextManager {
     }
   }
 
-  public async login(email: string): Promise<User> {
-    return this.userClient.loginUser({ email }).then((user) => {
+  public async login(loginDetails: LoginDetails): Promise<User> {
+    return this.userClient.loginUser(loginDetails).then((user) => {
       localStorage.setItem("currentUser", JSON.stringify(user));
       this.currentUserSubject.next(user);
 
@@ -55,13 +83,10 @@ class UserContextManager {
     if (this.user) this.currentUserSubject.next(undefined);
   }
 
-  public async register(name: string, email: string): Promise<boolean> {
+  public async register(createNewUser: CreateNewUser): Promise<boolean> {
     try {
-      const newUser = await this.userClient.postUser({
-        name,
-        email,
-      });
-      await this.login(newUser.Email);
+      const newUser = await this.userClient.postUser(createNewUser);
+      await this.login({email: newUser.Email, password: createNewUser.password});
       return true;
     } catch (e) {
       return false;

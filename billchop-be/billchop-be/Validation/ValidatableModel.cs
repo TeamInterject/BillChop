@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using NetEscapades.Configuration.Validation;
 
 namespace BillChopBE.DataAccessLayer.Models.Validation
 {
-    public interface IValidatableModel
+    public interface IValidatableModel : IValidatable
     {
-        public void Validate();
-        public ValidationContainer SilentValidate();
+        ValidationContainer SilentValidate();
     }
 
     public class ValidationContainer
