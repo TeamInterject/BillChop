@@ -6,6 +6,7 @@ import BillIcon from "../assets/bill-icon.svg";
 import Dictionary from "../util/Dictionary";
 import GroupTable from "./GroupTable";
 import "../styles/bill-list-accordion.css";
+import toEuros from "../util/Currency";
 
 export interface IBillsListAccordionProps {
   group: Group;
@@ -35,9 +36,8 @@ export default class BillsListAccordion extends React.Component<
           <Accordion.Toggle className="bill-list-accordion" as={Card.Header} eventKey={bill.Id}>
             <img className="mr-2" src={BillIcon} height="32px" width="32px" alt="Bill icon" />
             <div className="ml-2 d-flex justify-content-between align-items-center flex-grow-1">
-              <div>{bill.Name}</div>
-              <div>{bill.Total.toFixed(2)}</div>
-              {/* TODO Add date */}
+              <div><span style={{ fontWeight: 500 }}>{bill.Name}</span></div>
+              <div>{toEuros(bill.Total)} {/* TODO add date */}</div>
             </div>
           </Accordion.Toggle>
           <Accordion.Collapse eventKey={bill.Id}>
@@ -46,6 +46,7 @@ export default class BillsListAccordion extends React.Component<
                 group={group}
                 expenseAmounts={this.generateExpenseAmounts(bill)}
                 showMembersOnlyWithExpenses
+                loanerId={bill.Loaner.Id}
               />
             </Card.Body>
           </Accordion.Collapse>
