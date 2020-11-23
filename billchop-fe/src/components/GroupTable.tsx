@@ -49,7 +49,7 @@ export default class GroupTable extends React.Component<IGroupTableProps> {
       groupUsers.sort((user) => user.Id === currentUserId ? -1 : 0)
         .map((user) => {
           const expense = expenseAmounts[user.Id]
-            ? toEuros(expenseAmounts[user.Id]).replace("-0.00", "0.00")
+            ? toEuros(expenseAmounts[user.Id])
             : "0.00€";
           return (
             <tr key={user.Id}>
