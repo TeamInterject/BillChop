@@ -1,10 +1,11 @@
 import React from "react";
 import { debounce } from "lodash";
-import { Button, Col, FormControl, InputGroup, ListGroup, Row } from "react-bootstrap";
+import { Button, FormControl, InputGroup } from "react-bootstrap";
 import SearchIcon from "../assets/search-icon.svg";
 import ArrowBackIcon from "../assets/arrow-back-icon.svg";
 import OutsideClickListener from "./OutsideClickListener";
 import "../styles/search-box.css";
+import SearchResultsTable from "./SearchResultsTable";
 
 export interface ISearchBoxProps {
   placeholder?: string;
@@ -53,47 +54,8 @@ export default class SearchBox extends React.Component<
     onActionButtonClick(selectedItemId);
   };
 
-  renderSearchResultsTable = (): JSX.Element => {
-    const { searchResults, actionButtonText } = this.props;
-
-    return (
-      <ListGroup className="shadow-sm search-box__search-results">
-        {
-          searchResults.size !== 0 ?
-            Array.from(searchResults).map(([key, value]) => {
-              return (
-                <ListGroup.Item
-                  key={key}
-                  className="py-2 search-box__search-results-item"
-                  onClick={() => this.handleSearchResultClick(key)}
-                >
-                  <Row>
-                    <Col className="d-flex align-items-center">
-                      {value}
-                    </Col>
-                    <Col className="col-1">
-                      <Button
-                        variant="light"
-                        onClick={() => this.handleSearchResultClick(key)}
-                      >
-                        {actionButtonText}
-                      </Button>
-                    </Col>
-                  </Row>
-                </ListGroup.Item>
-              );
-            })
-            :
-            <ListGroup.Item>
-              No search results were found.
-            </ListGroup.Item>
-        }
-      </ListGroup>
-    );
-  };
-
   render(): JSX.Element {
-    const { placeholder, onHide, onChange } = this.props;
+    const { searchResults, actionButtonText, placeholder, onHide, onChange } = this.props;
     const { inputValue } = this.state;
 
     return (
@@ -116,7 +78,11 @@ export default class SearchBox extends React.Component<
               </Button>
             </InputGroup.Append>
           </InputGroup>
-          {inputValue && this.renderSearchResultsTable()}
+          {inputValue && <SearchResultsTable 
+            searchResults={searchResults}
+            actionButtonText={actionButtonText}
+            handleSearchResultClick={this.handleSearchResultClick}
+          />}
         </div>
       </OutsideClickListener>
     );
