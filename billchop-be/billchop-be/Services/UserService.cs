@@ -1,9 +1,17 @@
-﻿using BillChopBE.DataAccessLayer.Models;
+﻿using BillChopBE.DataAccessLayer;
+using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using BillChopBE.Exceptions;
 using BillChopBE.Services.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BillChopBE.Services
@@ -20,6 +28,10 @@ namespace BillChopBE.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository userRepository;
+        private readonly IConfiguration configuration;
+        private readonly BillChopContext context;
+        protected DbContext DbContext => context;
+        protected DbSet<User> DbSet => context.Users;
         public UserService(IUserRepository userRepository)
         {
             this.userRepository = userRepository;

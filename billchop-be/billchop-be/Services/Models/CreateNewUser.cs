@@ -14,6 +14,7 @@ namespace BillChopBE.Services.Models
         public string Name { get; set; } = null!;
 
         [Required]
+        [RegularExpression(@"^[\w_+-\.]+@([\w-]+\.)+[\w-]{2,}$")]
         public string Email { get; set; } = null!;
 
         public User ToUser()
