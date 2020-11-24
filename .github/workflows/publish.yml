@@ -1,0 +1,52 @@
+name: Publish
+
+on:
+  push:
+    branches: [master]
+jobs:
+  publish-backend:
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./billchop-be
+    strategy:
+      matrix:
+        # Testing needs to happen on multiple platforms, since our developers use a variety of machines
+        os: [ubuntu-latest, windows-latest]
+        dotnet-version: ["3.1.101"]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Setup dotnet ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Build solution
+        run: dotnet build
+      - name: Package
+        shell: bash
+        run: |
+          # Define some variables for things we need
+          release_name="App-${{ matrix.target }}"
+
+          # Build everything
+          dotnet publish ./billchop-be/BillChopBE.csproj --framework netcoreapp3.1 --runtime "${{ matrix.target }}" -c Release -o "$release_name"
+
+          # Pack files
+          if [ "${{ matrix.target }}" == "win-x64" ]; then
+            7z a -tzip "${release_name}.zip" "./${release_name}/*"
+          else
+            tar czvf "${release_name}.tar.gz" "$release_name"
+          fi
+
+          # Delete output directory
+          rm -r "$release_name"
+      - name: Upload the artifacts
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: 'example-*'
