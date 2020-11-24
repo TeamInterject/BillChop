@@ -2,11 +2,9 @@ name: Publish
 
 on:
   push:
-    branches: [master, feat/artifacts]
-    paths:
-      - "billchop-be/**"
+    branches: [master]
 jobs:
-  build-backend:
+  publish-backend:
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
     defaults:
@@ -32,11 +30,10 @@ jobs:
         shell: bash
         run: |
           # Define some variables for things we need
-          tag=$(git describe --tags --abbrev=0)
-          release_name="App-$tag-${{ matrix.target }}"
+          release_name="App-${{ matrix.target }}"
 
           # Build everything
-          dotnet publish --framework netcoreapp3.1 --runtime "${{ matrix.target }}" -c Release -o "$release_name"
+          dotnet publish ./billchop-be/BillChopBE.csproj --framework netcoreapp3.1 --runtime "${{ matrix.target }}" -c Release -o "$release_name"
 
           # Pack files
           if [ "${{ matrix.target }}" == "win-x64" ]; then
