@@ -23,20 +23,27 @@ namespace BillChopBE.DataAccessLayer.Repositories
         public async Task<IList<User>> SearchNameAndEmailAsync(string keyword, Guid? exclusionGroupId, int top)
         {
             keyword = keyword.ToLower();
-            var users = DbSet
+            IQueryable<User> usersQuery = DbSet
                 .Where(g => g.Email.ToLower().Contains(keyword) || g.Name.ToLower().Contains(keyword));
 
             if (exclusionGroupId.HasValue)
-                users = users.Where(u => u.Groups.All(g => g.Id != exclusionGroupId.Value));
+                usersQuery = usersQuery.Where(u => u.Groups.All(g => g.Id != exclusionGroupId.Value));
 
-            return await users
+            IEnumerable<User> users = await usersQuery.ToListAsync();
+            if (!keyword.Contains("@"))
+            {
+                users = users.Where(g => g.Email.Split("@", StringSplitOptions.None)[0].ToLower().Contains(keyword) ||
+                        g.Name.ToLower().Contains(keyword));
+            }
+
+            return users
                 .Take(top)
-                .ToListAsync();
+                .ToList();
         }
         
-        public async Task<User> GetByEmailAsync(string email)
+        public async Task<User> GetByEmailAndPassword(string email, string password)
         {
-            return await DbSet.FirstAsync(u => u.Email == email);
+            return await DbSet.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
         }
     }
 }

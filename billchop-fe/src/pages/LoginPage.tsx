@@ -1,10 +1,12 @@
 import React from "react";
-import { Form, Button, Col, Container, Card } from "react-bootstrap";
+import { Form, Button, Col, Container, Card, Toast } from "react-bootstrap";
 import UserContext from "../backend/helpers/UserContext";
 import BrowserHistory from "../backend/helpers/History";
 
 interface ILoginPageState {
   email: string;
+  password: string;
+  showLoginError: boolean;
 }
 
 export default class LoginPage extends React.Component<
@@ -14,38 +16,56 @@ export default class LoginPage extends React.Component<
   constructor(props: unknown) {
     super(props);
 
-    this.state = { email: "" };
+    this.state = { 
+      email: "",
+      password: "",
+      showLoginError: false,
+    };
   }
 
   componentDidMount(): void {
-    this.verifyLogin();
+    UserContext.isLoggedIn()
+      .then((isLogged) => {
+        if(isLogged) 
+          BrowserHistory.push("/");
+      });
   }
 
   handleEmail = (event: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ email: event.target.value });
   };
 
+  handlePassword = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    this.setState({ password: event.target.value });
+    event.currentTarget.setCustomValidity("");
+  };
+
   handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    const { email } = this.state;
+    const { email, password } = this.state;
 
-    await UserContext.login(email);
-    this.verifyLogin();
+    UserContext.login({email, password})
+      .then(() => BrowserHistory.push("/"))
+      .catch(() => this.setState({ showLoginError: true }));
   };
 
   handleRegister = (): void => {
     BrowserHistory.push("/register");
   };
 
-  verifyLogin(): void {
-    UserContext.isLoggedIn().then((isLoggedIn) => {
-      if (isLoggedIn) BrowserHistory.push("/");
-    });
-  }
+  handleErrorToastClose = (): void => {
+    this.setState({ showLoginError: false });
+  };
+
+  handleInvalidPassword = (e: React.FormEvent<HTMLInputElement>): void => {
+    const passwordValidationMessage = "Password must have minimum eight characters, at least one letter, one number and one special character";
+    e.currentTarget.setCustomValidity(passwordValidationMessage);
+  };
 
   render(): React.ReactNode {
-    const { email } = this.state;
+    const { email, password, showLoginError } = this.state;
+
     return (
       <div className="container-vertical-center">
         <Container className="col-lg-4">
@@ -69,12 +89,36 @@ export default class LoginPage extends React.Component<
                 </Form.Row>
                 <Form.Row>
                   <Col>
+                    <Form.Group controlId="formPassword">
+                      <Form.Label>Password</Form.Label>
+                      <Form.Control
+                        required
+                        pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
+                        onInvalid={this.handleInvalidPassword}
+                        type="password"
+                        placeholder="*********"
+                        value={password}
+                        onChange={this.handlePassword}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Form.Row>
+                <Form.Row>
+                  <Col>
                     <Button type="submit">
                       Login
                     </Button>
                   </Col>
                   <Col className="d-flex justify-content-end">
                     <Button variant="light" onClick={this.handleRegister}>Register</Button>
+                  </Col>
+                </Form.Row>
+                <Form.Row>
+                  <Col className="d-flex justify-content-center">
+                    <Toast className="mt-3" show={showLoginError} onClose={this.handleErrorToastClose}>
+                      <Toast.Header><strong className="mr-auto text-danger">Oops...</strong></Toast.Header>
+                      <Toast.Body>Something wrong happened during login :/ Please try again later</Toast.Body>
+                    </Toast>
                   </Col>
                 </Form.Row>
               </Form>

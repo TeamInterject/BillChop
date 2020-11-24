@@ -70,7 +70,7 @@ export default class AddBillModal extends React.Component<
               />
             </Form.Row>
             <Form.Row>
-              <Form.Label className="mt-2">Total amount:</Form.Label>
+              <Form.Label className="mt-2">Total amount(€):</Form.Label>
               <Form.Control
                 placeholder="Enter the total amount of the bill"
                 onChange={(e) =>

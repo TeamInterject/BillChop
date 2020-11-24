@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.Services;
 using BillChopBE.Services.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BillChopBE.Controllers
 {
+    [Authorize]
     [ApiController]
     [Produces("application/json")]
     [Route("api/groups")]

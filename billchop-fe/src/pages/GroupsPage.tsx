@@ -3,7 +3,6 @@ import { produce } from "immer";
 import Group from "../backend/models/Group";
 import Sidebar, { ISidebarTab } from "../components/Sidebar";
 import NoGroupSelectedSubPage from "./NoGroupSelectedSubPage";
-import "../styles/groups-page.css";
 import GroupSubPage from "./GroupSubPage";
 import GroupClient from "../backend/clients/GroupClient";
 import UserContext from "../backend/helpers/UserContext";
@@ -81,7 +80,7 @@ export default class GroupsPage extends React.Component<
     const selectedGroup = groups.find((group) => group.Id === selectedGroupId);
     return (
       <Row className="h-100">
-        <Col className="p-0 sidebar-column border-right" md={2}>
+        <Col className="p-0 border-right" md={2}>
           <Sidebar
             sidebarTabs={this.getGroupsSidebarTabs()}
             onTabClick={this.handleOnGroupTabSelect}
