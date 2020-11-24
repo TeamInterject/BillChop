@@ -10,7 +10,6 @@ export interface ISearchResultsTableProps {
 export default class SearchResultsTable extends React.Component<ISearchResultsTableProps> {
   constructor(props: ISearchResultsTableProps) {
     super(props);
-
     this.state = {};
   }
 
@@ -54,7 +53,6 @@ function SearchResultsRow(props: {
   const {id, value, actionButtonText, onActionButtonClick} = props;
 
   function handleSearchResultClick() {
-    console.log(id);
     onActionButtonClick(id);
   }
 
