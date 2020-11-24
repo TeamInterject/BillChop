@@ -5,6 +5,7 @@ import { LoginDetails } from "../models/LoginDetails";
 import User from "../models/User";
 import UserWithToken from "../models/UserWithToken";
 import axios from "axios";
+import LoadingContext from "./LoadingContext";
 
 class UserContextManager {
   private userClient = new UserClient();
@@ -18,25 +19,24 @@ class UserContextManager {
 
   intializeAxios(): void {
     axios.interceptors.request.use((config) => {
+      config.headers["Content-Type"] = "application/json";
       if (!this.user) {
-        config.headers.credentials = "";
-        config.headers.Authorization = "";
         return config;
-      }
+      } 
 
       config.headers.credentials = "include";
-      config.headers.Authorization = `Bearer ${this.user.token}`;
+      config.headers.Authorization = `Bearer ${this.user.Token}`;
+
       return config;
     });
 
     axios.interceptors.response.use(
       (response) => response, 
       (error) => {
-        if (error.response && error.response.status === 401) {
+        if (error.response && error.response.status === 401)
           this.logout();
-          return;
-        }
         
+        LoadingContext.isLoading = false;
         return Promise.reject(error);
       });
   }
@@ -56,17 +56,18 @@ class UserContextManager {
     return this.currentUserSubject.asObservable();
   }
 
-  public async isLoggedIn(): Promise<boolean> {
-    if (!this.user) return false;
+  public isLoggedIn = async (): Promise<boolean> => {
+    if (!this.user)
+      return false;
 
     try {
       await this.userClient.currentUser();
       return true;
-    } catch (e) {
+    } catch {
       this.logout(); // TODO.AZ: Do this smarter later (we shouldn't log out on random error or server down)
       return false;
     }
-  }
+  };
 
   public async login(loginDetails: LoginDetails): Promise<User> {
     return this.userClient.loginUser(loginDetails).then((user) => {
@@ -80,19 +81,17 @@ class UserContextManager {
   public logout(): void {
     localStorage.removeItem("currentUser");
 
-    if (this.user) this.currentUserSubject.next(undefined);
+    if (this.user) 
+      this.currentUserSubject.next(undefined);
   }
 
-  public async register(createNewUser: CreateNewUser): Promise<boolean> {
-    try {
-      const newUser = await this.userClient.postUser(createNewUser);
-      await this.login({email: newUser.Email, password: createNewUser.password});
-      return true;
-    } catch (e) {
-      return false;
-    }
+  public async register(createNewUser: CreateNewUser): Promise<void> {
+    this.userClient.postUser(createNewUser)
+      .then((newUser) => this.login({email: newUser.Email, password: createNewUser.password}));
   }
 }
 
 const UserContext = new UserContextManager();
+UserContext.isLoggedIn(); //Do initial server ping to check stored credential validity
+
 export default UserContext;

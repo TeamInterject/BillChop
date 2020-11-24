@@ -53,11 +53,11 @@ export default class RegistrationPage extends React.Component<
   handleRegister = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    const { name, email } = this.state;
+    const { name, email, password } = this.state;
 
-    const registerResult = await UserContext.register(name, email);
-    registerResult
-      ? BrowserHistory.push("/") : this.handleRegisterError();
+    UserContext.register({name, email, password})
+      .then(() => BrowserHistory.push("/"))
+      .catch(() => this.handleRegisterError);
   };
 
   handleRegisterError = (): void => {

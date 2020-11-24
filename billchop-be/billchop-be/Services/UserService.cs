@@ -56,7 +56,7 @@ namespace BillChopBE.Services
         public async Task<UserWithToken> LoginAsync(LoginDetails loginDetails)
         {
             var hashed = GetHashed(loginDetails.Password);
-            var user = await userRepository.GetByEmailAndPassword(loginDetails.Email, loginDetails.Password);
+            var user = await userRepository.GetByEmailAndPassword(loginDetails.Email, hashed);
             if (user == null)
                 throw new UnauthorizedException($"Username or password is incorrect");
 

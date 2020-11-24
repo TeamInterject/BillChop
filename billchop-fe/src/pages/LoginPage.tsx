@@ -2,7 +2,6 @@ import React from "react";
 import { Form, Button, Col, Container, Card, Toast } from "react-bootstrap";
 import UserContext from "../backend/helpers/UserContext";
 import BrowserHistory from "../backend/helpers/History";
-import LoadingContext from "../backend/helpers/LoadingContext";
 
 interface ILoginPageState {
   email: string;
@@ -25,7 +24,11 @@ export default class LoginPage extends React.Component<
   }
 
   componentDidMount(): void {
-    this.verifyLogin(true);
+    UserContext.isLoggedIn()
+      .then((isLogged) => {
+        if(isLogged) 
+          BrowserHistory.push("/");
+      });
   }
 
   handleEmail = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -40,26 +43,16 @@ export default class LoginPage extends React.Component<
   handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    const { email } = this.state;
+    const { email, password } = this.state;
 
-    await UserContext.login(email);
-    this.verifyLogin(false);
+    UserContext.login({email, password})
+      .then(() => BrowserHistory.push("/"))
+      .catch(() => this.setState({ showLoginError: true }));
   };
 
   handleRegister = (): void => {
     BrowserHistory.push("/register");
   };
-
-  verifyLogin(componentDidMount: boolean): void {
-    UserContext.isLoggedIn().then((isLoggedIn) => {
-      if (isLoggedIn) {
-        BrowserHistory.push("/");
-      } else if (!componentDidMount) {
-        this.setState({ showLoginError: true });
-        LoadingContext.isLoading = false; // TODO move this setter to user client, when catching axios error response
-      }
-    });
-  }
 
   handleErrorToastClose = (): void => {
     this.setState({ showLoginError: false });
