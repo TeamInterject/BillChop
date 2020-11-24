@@ -40,10 +40,6 @@ namespace BillChopBE.DataAccessLayer
             base.OnModelCreating(modelbuilder);
 
             modelbuilder.Entity<User>()
-                .HasIndex(u => u.Name)
-                .IsUnique();
-
-            modelbuilder.Entity<User>()
                 .HasMany(u => u.Loans)
                 .WithOne(e => e.Loanee)
                 .OnDelete(DeleteBehavior.NoAction);

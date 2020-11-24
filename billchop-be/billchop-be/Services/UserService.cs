@@ -101,7 +101,7 @@ namespace BillChopBE.Services
             user.Password = GetHashed(user.Password);
 
             var addedUser = await userRepository.AddAsync(user);
-            return await LoginAsync(new LoginDetails() { Email = addedUser.Email, Password = addedUser.Password });
+            return await LoginAsync(new LoginDetails() { Email = addedUser.Email, Password = newUser.Password });
         }
     }
 }

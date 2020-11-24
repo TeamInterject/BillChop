@@ -23,14 +23,6 @@ export default class LoginPage extends React.Component<
     };
   }
 
-  componentDidMount(): void {
-    UserContext.isLoggedIn()
-      .then((isLogged) => {
-        if(isLogged) 
-          BrowserHistory.push("/");
-      });
-  }
-
   handleEmail = (event: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ email: event.target.value });
   };
@@ -46,7 +38,6 @@ export default class LoginPage extends React.Component<
     const { email, password } = this.state;
 
     UserContext.login({email, password})
-      .then(() => BrowserHistory.push("/"))
       .catch(() => this.setState({ showLoginError: true }));
   };
 

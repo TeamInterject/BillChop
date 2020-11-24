@@ -56,7 +56,6 @@ export default class RegistrationPage extends React.Component<
     const { name, email, password } = this.state;
 
     UserContext.register({name, email, password})
-      .then(() => BrowserHistory.push("/"))
       .catch(() => this.handleRegisterError);
   };
 

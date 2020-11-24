@@ -1,5 +1,5 @@
 import React from "react";
-import { Router, Redirect, Route, Switch } from "react-router-dom";
+import { Router, Redirect, Switch } from "react-router-dom";
 import GroupsPage from "./pages/GroupsPage";
 import CreateGroupPage from "./pages/CreateGroupPage";
 import "./App.css";
@@ -13,6 +13,7 @@ import RegistrationPage from "./pages/RegistrationPage";
 import { Col, Container, Row } from "react-bootstrap";
 import LoadingSpinner from "./components/LoadingSpinner";
 import LoadingContext from "./backend/helpers/LoadingContext";
+import { NonPrivateRoute } from "./NonPrivateRoute";
 
 export interface IAppState {
   currentUser?: User;
@@ -58,12 +59,12 @@ export default class App extends React.Component<unknown, IAppState> {
           <Row className="flex-fill border">
             <Col>
               <Switch>
-                <Route exact path="/login">
+                <NonPrivateRoute exact path="/login">
                   <LoginPage />
-                </Route>
-                <Route exact path="/register">
+                </NonPrivateRoute>
+                <NonPrivateRoute exact path="/register">
                   <RegistrationPage />
-                </Route>
+                </NonPrivateRoute>
                 <PrivateRoute path="/profile">
                   <h1>In construction</h1>
                 </PrivateRoute>
