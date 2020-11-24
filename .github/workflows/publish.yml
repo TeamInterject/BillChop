@@ -3,8 +3,6 @@ name: Publish
 on:
   push:
     branches: [master, feat/artifacts]
-    paths:
-      - "billchop-be/**"
 jobs:
   build-backend:
     # The type of runner that the job will run on
