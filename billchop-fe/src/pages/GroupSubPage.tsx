@@ -64,7 +64,10 @@ export default class GroupSubPage extends React.Component<
 
     this.billClient
       .getBills({ groupId: group.Id })
-      .then((bills) => this.setState({ bills }));
+      .then((bills) => {
+        bills = bills.sort((x, y) => y.CreationTime.localeCompare(x.CreationTime));
+        this.setState({ bills });
+      });
   };
 
   getUserLoans = async (): Promise<void> => {
@@ -114,7 +117,6 @@ export default class GroupSubPage extends React.Component<
 
   handleOnAddNewBill = (name: string, total: number): void => {
     const { group } = this.props;
-    const { bills } = this.state;
 
     const currentUserId = UserContext.authenticatedUser.Id;
 
@@ -125,11 +127,8 @@ export default class GroupSubPage extends React.Component<
         loanerId: currentUserId,
         groupContextId: group.Id,
       })
-      .then((bill) => {
-        const newBills = produce(bills, (draftBills) => {
-          draftBills.unshift(bill);
-        });
-        this.setState({ bills: newBills });
+      .then(() => {
+        this.getGroupBills();
         this.getUserLoans();
       });
   };
