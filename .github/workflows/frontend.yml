@@ -46,3 +46,8 @@ jobs:
         run: npm run-script build
       - name: Test App
         run: npm test
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: frontend-build
+          path: ./billchop-fe/build
