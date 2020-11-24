@@ -5,6 +5,7 @@ import { CreateNewUser } from "../models/CreateNewUser";
 import BaseClient from "./AbstractClient";
 import { LoginDetails } from "../models/LoginDetails";
 import LoadingContext from "../helpers/LoadingContext";
+import UserWithToken from "../models/UserWithToken";
 
 const TOP_PARAM = "top";
 const EXCLUSION_GROUP_PARAM = "exclusionGroupId";
@@ -61,11 +62,21 @@ export default class UserClient extends BaseClient {
     });
   };
 
-  public loginUser = async (loginDetails: LoginDetails): Promise<User> => {
+  public loginUser = async (loginDetails: LoginDetails): Promise<UserWithToken> => {
     const requestUrl = url(this.baseUrl, "login");
 
     LoadingContext.isLoading = true;
-    return Axios.post(requestUrl, loginDetails).then((response: AxiosResponse<User>) => {
+    return Axios.post(requestUrl, loginDetails).then((response: AxiosResponse<UserWithToken>) => {
+      LoadingContext.isLoading = false;
+      return response.data;
+    });
+  };
+
+  public currentUser = async (): Promise<User> => {
+    const requestUrl = url(this.baseUrl, "current");
+
+    LoadingContext.isLoading = true;
+    return Axios.get(requestUrl).then((response: AxiosResponse<User>) => {
       LoadingContext.isLoading = false;
       return response.data;
     });

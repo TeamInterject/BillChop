@@ -31,6 +31,7 @@ export default class App extends React.Component<unknown, IAppState> {
     UserContext.userObservable.subscribe((user) =>
       this.setState({ currentUser: user }),
     );
+
     LoadingContext.loadingObservable.subscribe((isLoading) => {
       this.setState({ isLoading });
     });

@@ -41,9 +41,9 @@ namespace BillChopBE.DataAccessLayer.Repositories
                 .ToList();
         }
         
-        public async Task<User> GetByEmailAsync(string email)
+        public async Task<User> GetByEmailAndPassword(string email, string password)
         {
-            return await DbSet.FirstAsync(u => u.Email == email);
+            return await DbSet.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
         }
     }
 }
