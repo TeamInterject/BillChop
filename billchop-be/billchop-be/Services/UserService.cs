@@ -55,6 +55,7 @@ namespace BillChopBE.Services
 
         public async Task<UserWithToken> LoginAsync(LoginDetails loginDetails)
         {
+            loginDetails.Validate();
             var hashed = GetHashed(loginDetails.Password);
             var user = await userRepository.GetByEmailAndPassword(loginDetails.Email, hashed);
             if (user == null)

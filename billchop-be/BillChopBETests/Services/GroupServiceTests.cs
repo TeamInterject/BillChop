@@ -22,9 +22,7 @@ namespace BillChopBETests
     {
         protected class GroupServiceSutBuilder : ISutBuilder<GroupService>
         {
-            internal IBillRepository BillRepository { get; set; } = A.Fake<IBillRepository>();
             internal IGroupRepository GroupRepository { get; set; } = A.Fake<IGroupRepository>();
-            internal IBillDbFilterFactory BillDbFilterFactory { get; set; } = A.Fake<IBillDbFilterFactory>();
             internal IUserRepository UserRepository { get; set; } = A.Fake<IUserRepository>();
 
             public GroupService CreateSut()
@@ -32,16 +30,6 @@ namespace BillChopBETests
                 return new GroupService(GroupRepository, UserRepository);
             }
 
-            public CreateNewBill CreateNewBill(string name, decimal total, Guid? groupContextId = null, Guid? loanerId = null) 
-            {
-                return new CreateNewBill()
-                {
-                    Name = name,
-                    Total = total,
-                    GroupContextId = groupContextId ?? Guid.NewGuid(),
-                    LoanerId = loanerId ?? Guid.NewGuid(),
-                };
-            }
 
             public Group CreateGroupWithUsers(string name, int userCount, Guid? groupId = null)
             {
@@ -72,21 +60,6 @@ namespace BillChopBETests
                 return user;
             }
         }
-        /*public Task<IList<Group>> GetGroupsAsync(Guid? userId)
-        {
-            if (userId.HasValue)
-                return GetGroupsOfUserAsync(userId.Value);
-
-            return groupRepository.GetAllAsync();
-        }*/
-        /*        private async Task<IList<Group>> GetGroupsOfUserAsync(Guid userId)
-                {
-                    var user = await userRepository.GetByIdAsync(userId);
-                    if (user == null)
-                        throw new NotFoundException($"User with id {userId} does not exist.");
-
-                    return await groupRepository.GetUserGroups(userId);
-                }*/
 
         [Test]
         public async Task GetGroupsAsync_WhenUserExists_ShouldReturnUserGroups()
@@ -138,7 +111,7 @@ namespace BillChopBETests
         }
 
         [Test]
-        public async Task GetGroupsAsync_WhenUserDoesNotExist_ShouldThrow()
+        public void GetGroupsAsync_WhenUserDoesNotExist_ShouldThrow()
         {
             //Arrange
             var sutBuilder = new GroupServiceSutBuilder();
@@ -158,11 +131,6 @@ namespace BillChopBETests
             var exception = Assert.ThrowsAsync<NotFoundException>(async () => await groupService.GetGroupsAsync(userid));
             exception.Message.ShouldBe($"User with id {userid} does not exist.");
         }
-        /* public async Task<Group> GetGroupAsync(Guid id)
-         {
-             var group = await groupRepository.GetByIdAsync(id);
-             return group ?? throw new NotFoundException($"Group with id ({id}) does not exist");
-         }*/
 
         [Test]
         public async Task GetGroupAsync_WhenGroupExists_ShouldReturnGroup()
@@ -183,7 +151,7 @@ namespace BillChopBETests
         }
 
         [Test]
-        public async Task GetGroupAsync_WhenGroupDoesNotExist_ShouldThrow()
+        public void GetGroupAsync_WhenGroupDoesNotExist_ShouldThrow()
         {
             //Arrange
             var sutBuilder = new GroupServiceSutBuilder();
@@ -198,21 +166,6 @@ namespace BillChopBETests
             exception.Message.ShouldBe($"Group with id ({group.Id}) does not exist");
         }
 
-        /* public async Task<Group> AddUserToGroupAsync(Guid groupId, Guid userId)
-         {
-             var group = await GetGroupAsync(groupId);
-             if (group == null)
-                 throw new NotFoundException($"Group with id {groupId} does not exist.");
-
-             var user = await userRepository.GetByIdAsync(userId);
-             if (user == null)
-                 throw new NotFoundException($"User with id {userId} does not exist.");
-
-             group.Users.Add(user);
-             await groupRepository.SaveChangesAsync();
-
-             return group;
-         }*/
 
         [Test]
         public async Task AddUserToGroupAsync_WhenUserAndGroupExists_ShouldReturnGroup()
@@ -228,7 +181,6 @@ namespace BillChopBETests
 
             A.CallTo(() => sutBuilder.UserRepository.GetByIdAsync(user.Id))
                 .Returns(user);
-
 
             //Act
             var resultGroup = await groupService.AddUserToGroupAsync(group.Id, user.Id);
@@ -253,7 +205,7 @@ namespace BillChopBETests
 
             //Act & Assert
             var exception = Assert.ThrowsAsync<NotFoundException>(async () => await groupService.AddUserToGroupAsync(group.Id, user.Id));
-            //exception.Message.ShouldBe($"Group with id {group.Id} does not exist.");
+            exception.Message.ShouldBe($"Group with id ({group.Id}) does not exist");
         }
 
         [Test]

@@ -15,6 +15,7 @@ using Bogus;
 using System.Collections.Generic;
 using System.Linq;
 using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
+using Microsoft.IdentityModel.Logging;
 
 namespace BillChopBETests
 {
@@ -22,40 +23,22 @@ namespace BillChopBETests
     {
         protected class UserServiceSutBuilder : ISutBuilder<UserService>
         {
-            internal IBillRepository BillRepository { get; set; } = A.Fake<IBillRepository>();
             internal IUserRepository UserRepository { get; set; } = A.Fake<IUserRepository>();
-            internal IGroupRepository GroupRepository { get; set; } = A.Fake<IGroupRepository>();
-            internal IBillDbFilterFactory BillDbFilterFactory { get; set; } = A.Fake<IBillDbFilterFactory>();
+
+            internal JwtConfig Config { get; set; } = new JwtConfig() 
+            {
+                Key = Guid.NewGuid().ToString(),
+                Issuer = "SomeIssuer",
+                Audience = "SomeAudience",
+                Subject = "SomeSubject"
+            };
 
             public UserService CreateSut()
             {
-                return new UserService(UserRepository);
+                return new UserService(UserRepository, Config);
             }
 
-            public CreateNewBill CreateNewBill(string name, decimal total, Guid? groupContextId = null, Guid? loanerId = null) 
-            {
-                return new CreateNewBill()
-                {
-                    Name = name,
-                    Total = total,
-                    GroupContextId = groupContextId ?? Guid.NewGuid(),
-                    LoanerId = loanerId ?? Guid.NewGuid(),
-                };
-            }
-
-            public Group CreateGroupWithUsers(string name, int userCount, Guid? groupId = null)
-            {
-                var group = new Group()
-                {
-                    Id = groupId ?? Guid.NewGuid(),
-                    Name = name,
-                };
-
-                group.Users = userCount.Select((_) => CreateUser(group)).ToList();
-                return group;
-            }
-
-            public User CreateUser(Group? group = null, string? name = null, string? email = null)
+            public User CreateUser(Group? group = null, string? name = null, string? email = null, string? password = null)
             {
                 var faker = new Faker();
                 var user = new User()
@@ -63,7 +46,8 @@ namespace BillChopBETests
                     Name = name ?? faker.Person.FullName,
                     Groups = new List<Group>(),
                     Id = Guid.NewGuid(),
-                    Email = email ?? faker.Person.Email
+                    Email = email ?? faker.Person.Email,
+                    Password = password ?? faker.Person.Email
                 };
 
                 if (group != null)
@@ -71,12 +55,13 @@ namespace BillChopBETests
 
                 return user;
             }
-            public LoginDetails CreateLoginDetails(string? email = null)
+            public LoginDetails CreateLoginDetails(string? email = null, string? password = null)
             {
                 var faker = new Faker();
                 var loginDetails = new LoginDetails()
                 {
-                    Email = email
+                    Email = email ?? faker.Person.Email,
+                    Password = password ?? faker.Person.Email
                 };
 
                 return loginDetails;
@@ -84,81 +69,67 @@ namespace BillChopBETests
         }
 
         [Test]
-        [TestCase("Test", "test@test.com")]
-        [TestCase("John K", "john@gmail.com")]
-        [TestCase("Alice", "alice@yahoo.com")]
-        public void LoginAsync_WhenLoginDetailsAreCorrect_ShouldLoginUser(string name, string email)
+        [TestCase("Test", "test@test.com", "test123")]
+        [TestCase("John K", "john@gmail.com", "test123")]
+        [TestCase("Alice", "alice@yahoo.com", "test123")]
+        public async Task LoginAsync_WhenLoginDetailsAreCorrect_ShouldLoginUser(string name, string email, string password)
         {
             //Arrange
             var sutBuilder = new UserServiceSutBuilder();
-            var user = sutBuilder.CreateUser(name: name, email: email);
-            var loginDetails = sutBuilder.CreateLoginDetails(email: email);
+            var user = sutBuilder.CreateUser(name: name, email: email, password: password);
+            var loginDetails = sutBuilder.CreateLoginDetails(email: email, password: password);
             var userService = sutBuilder.CreateSut();
 
-            A.CallTo(() => sutBuilder.UserRepository.GetByIdAsync(user.Id))
-                .Returns(user);
-
-            A.CallTo(() => sutBuilder.UserRepository.GetByEmailAsync(loginDetails.Email))
+            A.CallTo(() => sutBuilder.UserRepository.GetByEmailAndPassword(email, A<string>._))
                 .Returns(user);
 
             //Act
-            var resultLogin = userService.LoginAsync(loginDetails);
+            var resultLogin = await userService.LoginAsync(loginDetails);
 
             //Assert
-            resultLogin.Result.Name.ShouldBe(name);
-            resultLogin.Result.Email.ShouldBe(email);
+            resultLogin.Name.ShouldBe(name);
+            resultLogin.Email.ShouldBe(email);
         }
 
         [Test]
-        [TestCase("Test", "test@test.com")]
-        [TestCase("John K", "john@gmail.com")]
-        [TestCase("Alice", "alice@yahoo.com")]
-        public void LoginAsync_WhenUserDoesNotExist_ShouldThrow(string name, string email)
+        [TestCase("Test", "test@test.com", "test123")]
+        [TestCase("John K", "john@gmail.com", "test123")]
+        [TestCase("Alice", "alice@yahoo.com", "test123")]
+        public void LoginAsync_WhenUserDoesNotExist_ShouldThrow(string name, string email, string password)
         {
             //Arrange
             var sutBuilder = new UserServiceSutBuilder();
-            var user = sutBuilder.CreateUser(name: name, email: "wrong@email.com");
-            var loginDetails = sutBuilder.CreateLoginDetails(email: email);
+            var user = sutBuilder.CreateUser(name: name, email: "wrong@email.com", password: password);
+            var loginDetails = sutBuilder.CreateLoginDetails(email: email, password: password);
             var userService = sutBuilder.CreateSut();
 
             A.CallTo(() => sutBuilder.UserRepository.GetByIdAsync(user.Id))
                .Returns<User?>(null);
 
-            A.CallTo(() => sutBuilder.UserRepository.GetByEmailAsync(loginDetails.Email))
+            A.CallTo(() => sutBuilder.UserRepository.GetByEmailAndPassword(email, A<string>._))
                .Returns<User?>(null);
 
             //Act & Assert
-            var exception = Assert.ThrowsAsync<NotFoundException>(async () => await userService.LoginAsync(loginDetails));
-            exception.Message.ShouldBe($"User with email ({loginDetails.Email}) does not exist");
+            var exception = Assert.ThrowsAsync<UnauthorizedException>(async() => await userService.LoginAsync(loginDetails));
+            exception.Message.ShouldBe($"Username or password is incorrect");
         }
 
         [Test]
-        [TestCase("Test", "@test.com")]
-        [TestCase("John K", "john@gmailom")]
-        [TestCase("Alice", "alicyahoo.com")]
-        public void LoginAsync_WhenLoginDetailsAreIncorrect_ShouldThrow(string name, string email)
+        [TestCase("Test", "@test.com", "test123")]
+        [TestCase("John K", "john@gmailom", "test123")]
+        [TestCase("Alice", "alicyahoo.com", "test123")]
+        public void LoginAsync_WhenLoginDetailsAreIncorrect_ShouldThrow(string name, string email, string password)
         {
             //Arrange
             var sutBuilder = new UserServiceSutBuilder();
-            var user = sutBuilder.CreateUser(name: name, email: email);
-            var loginDetails = sutBuilder.CreateLoginDetails(email: email);
+            var user = sutBuilder.CreateUser(name: name, email: email, password: password);
+            var loginDetails = sutBuilder.CreateLoginDetails(email: email, password: password);
             var userService = sutBuilder.CreateSut();
-
-           /* A.CallTo(() => sutBuilder.UserRepository.GetByIdAsync(user.Id))
-               .Returns(user);
-
-            A.CallTo(() => sutBuilder.UserRepository.GetByEmailAsync(loginDetails.Email))
-                .Returns(user);*/
 
             //Act & Assert
             var exception = Assert.ThrowsAsync<ValidationException>(async () => await userService.LoginAsync(loginDetails));
         }
 
-        /* public async Task<User> GetUserAsync(Guid id)
-        {
-            var user = await userRepository.GetByIdAsync(id);
-            return user ?? throw new NotFoundException($"User with id ({id}) does not exist");
-        }*/
 
         [Test]
         [TestCase("Test", "test@test.com")]
@@ -200,13 +171,6 @@ namespace BillChopBETests
             exception.Message.ShouldBe($"User with id ({userId}) does not exist");
         }
 
-        /*public Task<User> AddUserAsync(CreateNewUser newUser)
-        {
-            newUser.Validate(); //TODO: Silent validate and throw appropriate HttpException
-            var user = newUser.ToUser();
-
-            return userRepository.AddAsync(user);
-        }*/
         [Test]
         [TestCase("Test", "@test.com")]
         [TestCase("John K", "john@gmailom")]
@@ -215,19 +179,16 @@ namespace BillChopBETests
         {
             //Arrange
             var sutBuilder = new UserServiceSutBuilder();
-            //var user = new CreateNewUser(name , email);
             var user = sutBuilder.CreateUser(name: name, email: email);
-            var user2 = new CreateNewUser();
-            user2.Email = email;
-            user2.Name = name;
+            var user2 = new CreateNewUser
+            {
+                Email = email,
+                Name = name
+            };
             var userService = sutBuilder.CreateSut();
-
-           /* A.CallTo(() => sutBuilder.UserRepository.AddAsync(user))
-               .Returns(user);*/
 
             //Act & Assert
             var exception = Assert.ThrowsAsync<ValidationException>(async () => await userService.AddUserAsync(user2));
         }
-
     }
 }
