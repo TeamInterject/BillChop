@@ -64,7 +64,7 @@ class UserContextManager {
       await this.userClient.currentUser();
       return true;
     } catch {
-      this.logout(); // TODO.AZ: Do this smarter later (we shouldn't log out on random error or server down)
+      this.logout(); // TODO.AZ: Do this smarter next iteration (we shouldn't log out on random error or server down)
       return false;
     }
   };
