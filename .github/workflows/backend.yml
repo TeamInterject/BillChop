@@ -37,7 +37,7 @@ jobs:
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ./BillChopBETests/TestResults/coverage.info 
+          path-to-lcov: ./billchop-be/BillChopBETests/TestResults/coverage.info 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
