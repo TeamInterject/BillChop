@@ -35,7 +35,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "cross-env TS_NODE_COMPILER_OPTIONS={\\\"module\\\":\\\"commonjs\\\"} mocha -r source-map-support/register -r jsdom-global/register -r ignore-styles -r ts-node/register \"src/tests/**/*.test.ts{,x}\"",
-    "cover": "nyc --reporter=lcov --reporter=text-summary npm run test",
+    "cover": "nyc --cwd .. --nycrc-path billchop-fe/.nycrc.json npm run test",
     "eject": "react-scripts eject",
     "lint": "tsc --noEmit && eslint src/**/*.ts{,x}"
   },

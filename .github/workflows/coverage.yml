@@ -1,0 +1,102 @@
+name: Coverage
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - '!./scripts/**'
+  pull_request:
+    branches: [master]
+    paths:
+      - '!./scripts/**'
+
+jobs:
+  cover-backend:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./billchop-be
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        dotnet-version: ["3.1.101"]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Setup dotnet ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Build solution
+        run: dotnet build
+      - name: Generate Code Coverage
+        run: dotnet test /p:CollectCoverage=true /p:CoverletOutput="TestResults/" /p:CoverletOutputFormat=lcov
+      - name: Archive coverage
+        uses: actions/upload-artifact@v2
+        with:
+          name: backend-coverage
+          path: ./billchop-be/BillChopBETests/TestResults/coverage.info 
+  cover-frontend:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./billchop-fe
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Packages
+        run: npm install
+      - name: Cover App
+        run: npm run cover
+      - name: Archive coverage
+        uses: actions/upload-artifact@v2
+        with:
+          name: frontend-coverage
+          path: ./billchop-fe/coverage/
+  post-coverage:
+    needs: [cover-backend, cover-frontend]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./billchop-fe
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: actions/download-artifact@v2
+        with:
+          name: backend-coverage
+          path: ./billchop-be/BillChopBETests/TestResults/coverage.info
+      - uses: actions/download-artifact@v2
+        with:
+          name: frontend-coverage
+          path: ./billchop-fe/coverage/
+      - name: Merge Coverage
+        run: |
+          cd lcov-merger/
+          npm install
+          npm run merge
+      - name: Publish coverage report to coveralls.io
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./lcov-merger/output.lcov

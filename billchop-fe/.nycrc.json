@@ -2,7 +2,10 @@
     "extends": "@istanbuljs/nyc-config-typescript",
     "all": true,
     "include": [
-        "src/**/*.ts",
-        "src/**/*.tsx"
-    ]
+        "billchop-fe/src/**/*.ts",
+        "billchop-fe/src/**/*.tsx"
+    ],
+    "reporter": ["lcov", "text"],
+    "report-dir": "billchop-fe/coverage/",
+    "temp-dir": "billchop-fe/.nyc_output/"
 }
