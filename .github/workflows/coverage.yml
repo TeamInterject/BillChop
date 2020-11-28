@@ -4,10 +4,12 @@ on:
   push:
     branches: [master]
     paths:
+      - './**'
       - '!./scripts/**'
   pull_request:
     branches: [master]
     paths:
+      - './**'
       - '!./scripts/**'
 
 jobs:
