@@ -34,7 +34,12 @@ jobs:
       - name: Build solution
         run: dotnet build
       - name: Test solution
-        run: dotnet test /p:CollectCoverage=true /p:CoverletOutput="TestResults/" /p:CoverletOutputFormat=lcov
+        run: |
+         if ["$RUNNER_OS" == "Linux"]; then
+            dotnet test /p:CollectCoverage=true /p:CoverletOutput="TestResults/" /p:CoverletOutputFormat=lcov
+         else
+            dotnet test
+         fi
       - name: Publish coverage report to coveralls.io
         uses: coverallsapp/github-action@master
         with:
