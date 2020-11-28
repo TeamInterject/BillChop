@@ -67,7 +67,6 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./billchop-fe
     strategy:
       matrix:
         os: [ubuntu-latest]
