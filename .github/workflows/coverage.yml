@@ -2,15 +2,9 @@ name: Coverage
 
 on:
   push:
-    branches: [master, feat/code-cov-fe]
-    paths:
-      - './**'
-      - '!./scripts/**'
+    branches: [master]
   pull_request:
     branches: [master]
-    paths:
-      - './**'
-      - '!./scripts/**'
 
 jobs:
   cover-backend:
