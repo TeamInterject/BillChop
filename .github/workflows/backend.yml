@@ -34,17 +34,16 @@ jobs:
       - name: Build solution
         run: dotnet build
       - name: Test solution
-        run: |
-         if ["$RUNNER_OS" == "Linux"]; then
-            dotnet test /p:CollectCoverage=true /p:CoverletOutput="TestResults/" /p:CoverletOutputFormat=lcov
-         else
-            dotnet test
-         fi
+        run: dotnet test
+      - name: Generate Code Coverage
+        run: dotnet test /p:CollectCoverage=true /p:CoverletOutput="TestResults/" /p:CoverletOutputFormat=lcov
+        if: matrix.os == 'ubuntu-latest'
       - name: Publish coverage report to coveralls.io
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ./billchop-be/BillChopBETests/TestResults/coverage.info 
+        if: matrix.os == 'ubuntu-latest'
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
