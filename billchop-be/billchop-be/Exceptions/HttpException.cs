@@ -3,6 +3,7 @@ using System.Net;
 
 namespace BillChopBE.Exceptions
 {
+    [Serializable]
     public class HttpException : AbstractUserFriendlyException
     {
         public override HttpStatusCode StatusCode { get; }

@@ -2,14 +2,13 @@
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace BillChopBE.DataAccessLayer.Repositories
 {
-    public class GroupEFRepository : AbstractEFRepository<Group>, IGroupRepository
+  public class GroupEFRepository : AbstractEFRepository<Group>, IGroupRepository
     {
         private readonly BillChopContext context;
         protected override DbContext DbContext => context;

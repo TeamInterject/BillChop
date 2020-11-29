@@ -53,7 +53,7 @@ namespace BillChopBE.Services
 
         public Task<Group> AddGroupAsync(CreateNewGroup newGroup)
         {
-            newGroup.Validate(); //TODO: Silent validate and throw appropriate HttpException
+            newGroup.Validate();
             var group = newGroup.ToGroup();
 
             return groupRepository.AddAsync(group);

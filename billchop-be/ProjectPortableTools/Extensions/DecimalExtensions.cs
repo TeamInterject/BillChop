@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProjectPortableTools.Extensions
 {
-    public static class DecimalExtensions
+  public static class DecimalExtensions
     {
         public static IEnumerable<decimal> SplitEqually(this decimal total, int splits, int afterDecimal = 2)
         {

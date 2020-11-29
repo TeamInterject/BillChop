@@ -3,11 +3,10 @@ using BillChopBE.DataAccessLayer.Models.Validation;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BillChopBE.DataAccessLayer.Models
 {
-    public class Loan : ValidatableModel, IDbModel
+  public class Loan : ValidatableModel, IDbModel
     {
         [Required]
         [Key]

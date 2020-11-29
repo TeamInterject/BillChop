@@ -2,14 +2,13 @@
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace BillChopBE.DataAccessLayer.Repositories
 {
-    public class UserEFRepository : AbstractEFRepository<User>, IUserRepository
+  public class UserEFRepository : AbstractEFRepository<User>, IUserRepository
     {
         private readonly BillChopContext context;
         protected override DbContext DbContext => context;

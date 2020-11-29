@@ -14,10 +14,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using BillChopBE.Services.Configurations;
 
 namespace BillChopBE
 {
-    public class Startup
+  public class Startup
     {
         public Startup(IConfiguration configuration)
         {
@@ -33,11 +34,9 @@ namespace BillChopBE
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                }); ;
+                });
 
             // Example of creating injectable config
-            // services.ConfigureValidatableSetting<SomeValidatableConfig>(Configuration.GetSection("SomeSection"));
-
             services.ConfigureValidatableSetting<JwtConfig>(Configuration.GetSection("Jwt"));
 
             services.AddBillChopContext(Configuration.GetConnectionString("BillChopDb"));

@@ -3,11 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace BillChopBE.DataAccessLayer.Filters
 {
-    public interface IDbFilter<TEntity> where TEntity : class, IDbModel
+  public interface IDbFilter<TEntity> where TEntity : class, IDbModel
     {
         List<Expression<Func<TEntity, bool>>> Filters { get; }
 

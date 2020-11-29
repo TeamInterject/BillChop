@@ -3,6 +3,7 @@ using System.Net;
 
 namespace BillChopBE.Exceptions
 {
+    [Serializable]
     public class DbException : AbstractUserFriendlyException
     {
         public override HttpStatusCode StatusCode => HttpStatusCode.InternalServerError;

@@ -1,11 +1,10 @@
-﻿using BillChopBE.DataAccessLayer.Models;
-using BillChopBE.DataAccessLayer.Models.Validation;
+﻿using BillChopBE.DataAccessLayer.Models.Validation;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace BillChopBE.Services.Models
 {
-    public class CreateNewBill : ValidatableModel
+  public class CreateNewBill : ValidatableModel
     {
         [Required]
         public string Name { get; set; } = null!;

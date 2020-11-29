@@ -13,7 +13,7 @@ namespace BillChopBE.DataAccessLayer.Repositories.Interfaces
 
         Task<TEntity?> GetByIdAsync(Guid id);
 
-        Task<TEntity> AddAsync(TEntity user);
+        Task<TEntity> AddAsync(TEntity entity);
 
         Task<TEntity?> ModifyAsync(Guid id, Action<TEntity> modifyCallback);
 

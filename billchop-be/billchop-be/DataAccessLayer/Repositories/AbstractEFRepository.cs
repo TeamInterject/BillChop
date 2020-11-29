@@ -1,5 +1,4 @@
 ﻿using BillChopBE.DataAccessLayer.Filters;
-using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.DataAccessLayer.Models.Interfaces;
 using BillChopBE.DataAccessLayer.Models.Validation;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BillChopBE.DataAccessLayer.Repositories
 {
-    public abstract class AbstractEFRepository<TEntity> : IRepository<TEntity> where TEntity : class, IValidatableModel, IDbModel
+  public abstract class AbstractEFRepository<TEntity> : IRepository<TEntity> where TEntity : class, IValidatableModel, IDbModel
     {
         protected abstract DbSet<TEntity> DbSet { get; }
         protected abstract DbContext DbContext { get; }
