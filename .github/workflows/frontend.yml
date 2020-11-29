@@ -7,8 +7,6 @@ name: Frontend-CI
 on:
   push:
     branches: [master]
-    paths:
-      - "billchop-fe/**"
   pull_request:
     branches: [master]
     paths:
