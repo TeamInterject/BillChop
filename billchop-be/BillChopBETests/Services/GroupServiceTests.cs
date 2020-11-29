@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace BillChopBETests
 {
-  public class GroupServiceTests
+    public class GroupServiceTests
     {
         protected class GroupServiceSutBuilder : ISutBuilder<GroupService>
         {

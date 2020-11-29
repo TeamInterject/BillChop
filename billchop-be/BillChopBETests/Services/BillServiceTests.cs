@@ -17,7 +17,7 @@ using ValidationException = System.ComponentModel.DataAnnotations.ValidationExce
 
 namespace BillChopBETests
 {
-  public class BillServiceTests
+    public class BillServiceTests
     {
         protected class BillServiceSutBuilder : ISutBuilder<BillService>
         {
