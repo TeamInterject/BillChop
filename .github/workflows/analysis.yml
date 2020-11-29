@@ -8,8 +8,8 @@ on:
       - master
 
 jobs:
-  build:
-    name: Build
+  backend-analyze:
+    name: Backend-Analyze
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -27,10 +27,31 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           # The key of the SonarQube project
-          sonarProjectKey: TeamInterject_BillChop
+          sonarProjectKey: TeamInterject-164531_BillChop_BE
           # The name of the SonarQube project
-          sonarProjectName:  TeamInterject_BillChop
+          sonarProjectName: TeamInterject_BillChop_BE
           # The name of the SonarQube organization in SonarCloud. For hosted SonarQube, skip this setting.
           sonarOrganization: teaminterject-164531
           dotnetBuildArguments: ./billchop-be
           dotnetDisableTests: true
+
+  frontend-analyze:
+    name: Frontend-Analyze
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          persist-credentials: false
+      - name: Analyze with SonarCloud #TeamInterject_BillChop_FE
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: ./billchop-fe
+          args: >
+            -Dsonar.organization=teaminterject-164531
+            -Dsonar.projectKey=TeamInterject-164531_BillChop_FE
+            -Dsonar.sources=src/
+            -Dsonar.verbose=true
