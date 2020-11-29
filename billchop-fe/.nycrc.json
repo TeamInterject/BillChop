@@ -1,0 +1,11 @@
+{
+    "extends": "nyc-config-tsx",
+    "all": true,
+    "include": [
+        "billchop-fe/src/**/*.tsx",
+        "billchop-fe/src/**/*.ts"
+    ],
+    "reporter": ["lcov", "text"],
+    "report-dir": "billchop-fe/coverage/",
+    "temp-dir": "billchop-fe/.nyc_output/"
+}
