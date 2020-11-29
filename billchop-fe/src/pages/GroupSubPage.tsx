@@ -11,7 +11,7 @@ import GroupPageHeader from "../components/GroupPageHeader";
 import GroupTable from "../components/GroupTable";
 import BarChart, { IBarChartDataset } from "../components/BarChart";
 import Dictionary from "../util/Dictionary";
-import getMonthName from "../util/Months";
+import getMonthName from "../util/getMonthName";
 import UserContext from "../backend/helpers/UserContext";
 import "../styles/groups-page.css";
 

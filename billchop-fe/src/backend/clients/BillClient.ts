@@ -1,6 +1,6 @@
 import Axios, { AxiosResponse } from "axios";
 import url from "url-join";
-import BaseClient from "./AbstractClient";
+import BaseClient from "./BaseClient";
 import Bill from "../models/Bill";
 import { CreateNewBill } from "../models/CreateNewBill";
 import LoadingContext from "../helpers/LoadingContext";
