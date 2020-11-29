@@ -6,7 +6,7 @@ import BillIcon from "../assets/bill-icon.svg";
 import Dictionary from "../util/Dictionary";
 import GroupTable from "./GroupTable";
 import "../styles/bill-list-accordion.css";
-import toEuros from "../util/toEuros";
+import toEuros from "../util/Currency";
 
 export interface IBillsListAccordionProps {
   group: Group;
