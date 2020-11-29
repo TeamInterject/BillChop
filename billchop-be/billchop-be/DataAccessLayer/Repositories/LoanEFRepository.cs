@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BillChopBE.DataAccessLayer.Repositories
 {
-  public class LoanEFRepository : AbstractEFRepository<Loan>, ILoanRepository
+    public class LoanEFRepository : AbstractEFRepository<Loan>, ILoanRepository
     {
         private readonly BillChopContext context;
         protected override DbContext DbContext => context;

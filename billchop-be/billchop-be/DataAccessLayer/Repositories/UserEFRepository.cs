@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BillChopBE.DataAccessLayer.Repositories
 {
-  public class UserEFRepository : AbstractEFRepository<User>, IUserRepository
+    public class UserEFRepository : AbstractEFRepository<User>, IUserRepository
     {
         private readonly BillChopContext context;
         protected override DbContext DbContext => context;

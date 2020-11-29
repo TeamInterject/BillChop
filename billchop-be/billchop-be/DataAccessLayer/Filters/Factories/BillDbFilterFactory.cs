@@ -2,7 +2,7 @@
 
 namespace BillChopBE.DataAccessLayer.Filters.Factories
 {
-  public interface IBillDbFilterFactory
+    public interface IBillDbFilterFactory
     {
         IDbFilter<Bill> Create(BillFilterInfo billFilterInfo);
     }

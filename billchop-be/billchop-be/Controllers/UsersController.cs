@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BillChopBE.Controllers
 {
-  [ApiController]
+    [ApiController]
     [Produces("application/json")]
     [Route("api/users")]
     public class UsersController : ControllerBase

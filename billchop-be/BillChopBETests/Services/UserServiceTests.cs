@@ -15,7 +15,7 @@ using BillChopBE.Services.Configurations;
 
 namespace BillChopBETests
 {
-  public class UserServiceTests
+    public class UserServiceTests
     {
         protected class UserServiceSutBuilder : ISutBuilder<UserService>
         {

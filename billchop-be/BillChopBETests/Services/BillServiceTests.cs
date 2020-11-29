@@ -1,5 +1,4 @@
 using BillChopBE.Services;
-using BillChopBE.DataAccessLayer.Filters;
 using BillChopBE.DataAccessLayer.Filters.Factories;
 using BillChopBE.Exceptions;
 using NUnit.Framework;
@@ -18,7 +17,7 @@ using ValidationException = System.ComponentModel.DataAnnotations.ValidationExce
 
 namespace BillChopBETests
 {
-    public class BillServiceTests
+  public class BillServiceTests
     {
         protected class BillServiceSutBuilder : ISutBuilder<BillService>
         {

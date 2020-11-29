@@ -2,7 +2,7 @@
 
 namespace BillChopBE.DataAccessLayer.Filters.Factories
 {
-  public interface ILoanDbFilterFactory
+    public interface ILoanDbFilterFactory
     {
         IDbFilter<Loan> Create(LoanFilterInfo loanFilterInfo);
     }

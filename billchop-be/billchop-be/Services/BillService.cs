@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BillChopBE.Services
 {
-  public interface IBillService
+    public interface IBillService
     {
         Task<Bill> CreateAndSplitBillAsync(CreateNewBill newBill);
         Task<IList<Bill>> GetBillsAsync(Guid? groupId, DateTime? startTime, DateTime? endTime);

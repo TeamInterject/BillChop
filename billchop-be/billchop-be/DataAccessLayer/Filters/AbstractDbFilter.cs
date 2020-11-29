@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace BillChopBE.DataAccessLayer.Filters
 {
-  public interface IDbFilter<TEntity> where TEntity : class, IDbModel
+    public interface IDbFilter<TEntity> where TEntity : class, IDbModel
     {
         List<Expression<Func<TEntity, bool>>> Filters { get; }
 
