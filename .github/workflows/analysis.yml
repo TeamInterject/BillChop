@@ -31,6 +31,6 @@ jobs:
           # The name of the SonarQube project
           sonarProjectName:  TeamInterject_BillChop
           # The name of the SonarQube organization in SonarCloud. For hosted SonarQube, skip this setting.
-          sonarOrganization: teaminterject-164531
+          sonarOrganization: TeamInterject_BillChop
           dotnetBuildArguments: ./billchop-be
           dotnetDisableTests: true
