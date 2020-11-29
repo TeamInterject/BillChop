@@ -27,10 +27,10 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           # The key of the SonarQube project
-          sonarProjectKey: teaminterject-164531
+          sonarProjectKey: TeamInterject_BillChop
           # The name of the SonarQube project
           sonarProjectName:  TeamInterject_BillChop
           # The name of the SonarQube organization in SonarCloud. For hosted SonarQube, skip this setting.
-          sonarOrganization: TeamInterject_BillChop
+          sonarOrganization: teaminterject-164531
           dotnetBuildArguments: ./billchop-be
           dotnetDisableTests: true
