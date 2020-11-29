@@ -22,42 +22,42 @@ namespace BillChopBE.DataAccessLayer
         public DbSet<Loan> Loans => Set<Loan>();
         public DbSet<Bill> Bills => Set<Bill>();
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options) 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
         {
-            if (!options.IsConfigured)
+            if (!optionsBuilder.IsConfigured)
             {
-                options
+                optionsBuilder
                     .UseLoggerFactory(loggerFactory)
                     .UseLazyLoadingProxies()
                     .UseSqlServer(ConnectionStringResolver.GetBillChopDbConnectionString());
             }
 
-            base.OnConfiguring(options);
+            base.OnConfiguring(optionsBuilder);
         }
 
-        protected override void OnModelCreating(ModelBuilder modelbuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelbuilder);
+            base.OnModelCreating(modelBuilder);
 
-            modelbuilder.Entity<User>()
+            modelBuilder.Entity<User>()
                 .HasMany(u => u.Loans)
                 .WithOne(e => e.Loanee)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelbuilder.Entity<User>()
+            modelBuilder.Entity<User>()
                 .HasMany(u => u.Bills)
                 .WithOne(b => b.Loaner)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelbuilder.Entity<Group>()
+            modelBuilder.Entity<Group>()
                 .HasMany(g => g.Users)
                 .WithMany(u => u.Groups);
 
-            modelbuilder.Entity<Group>()
+            modelBuilder.Entity<Group>()
                 .HasMany(g => g.Bills)
                 .WithOne(b => b.GroupContext);
 
-            modelbuilder.Entity<Bill>()
+            modelBuilder.Entity<Bill>()
                 .HasMany(b => b.Loans)
                 .WithOne(e => e.Bill)
                 .OnDelete(DeleteBehavior.Cascade);

@@ -7,6 +7,8 @@ namespace BillChopBE
 {
     public class Program
     {
+        protected Program() {}
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args)
@@ -20,7 +22,6 @@ namespace BillChopBE
                 .ConfigureLogging(logging => 
                 {
                     logging.ClearProviders();
-                    logging.AddConsole();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

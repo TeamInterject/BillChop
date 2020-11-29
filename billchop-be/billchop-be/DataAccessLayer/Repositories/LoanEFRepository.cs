@@ -1,10 +1,6 @@
 ﻿using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BillChopBE.DataAccessLayer.Repositories
 {

@@ -4,7 +4,6 @@ using BillChopBE.Exceptions;
 using BillChopBE.Services.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BillChopBE.Services
@@ -53,7 +52,7 @@ namespace BillChopBE.Services
 
         public Task<Group> AddGroupAsync(CreateNewGroup newGroup)
         {
-            newGroup.Validate(); //TODO: Silent validate and throw appropriate HttpException
+            newGroup.Validate();
             var group = newGroup.ToGroup();
 
             return groupRepository.AddAsync(group);

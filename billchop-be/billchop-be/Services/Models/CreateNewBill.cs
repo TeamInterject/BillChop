@@ -1,5 +1,4 @@
-﻿using BillChopBE.DataAccessLayer.Models;
-using BillChopBE.DataAccessLayer.Models.Validation;
+﻿using BillChopBE.DataAccessLayer.Models.Validation;
 using System;
 using System.ComponentModel.DataAnnotations;
 

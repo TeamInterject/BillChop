@@ -3,7 +3,7 @@ using System.IO;
 
 namespace BillChopBE.DataAccessLayer
 {
-    public class ConnectionStringResolver
+    public static class ConnectionStringResolver
     {
         public static IConfigurationRoot BuildConfiguration() 
         {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BillChopBE.DataAccessLayer.Models;
+using BillChopBE.Exceptions;
 using BillChopBE.Services;
 using BillChopBE.Services.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -38,7 +38,11 @@ namespace BillChopBE.Controllers
         [HttpGet("current")]
         public async Task<ActionResult<UserWithoutPassword>> GetCurrentUser()
         {
-            var id = Guid.Parse(User.FindFirst("Id").Value);
+            var userId = User.FindFirst("Id");
+            if (userId == null)
+                throw new UnauthorizedException();
+
+            var id = Guid.Parse(userId.Value);
             var currentUser = await userService.GetUserAsync(id);
 
             System.Diagnostics.Debug.WriteLine($"Currently logged in user: {currentUser.Id} {currentUser.Email}");

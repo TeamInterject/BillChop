@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Net;
+using System.Runtime.Serialization;
 
 namespace BillChopBE.Exceptions
 {
+    [Serializable]
     public class DbException : AbstractUserFriendlyException
     {
         public override HttpStatusCode StatusCode => HttpStatusCode.InternalServerError;
@@ -16,6 +18,10 @@ namespace BillChopBE.Exceptions
         }
 
         public DbException(string message, Exception inner) : base(message, inner)
+        {
+        }
+
+        protected DbException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

@@ -1,16 +1,15 @@
-﻿using BillChopBE.DataAccessLayer.Models;
-using BillChopBE.DataAccessLayer.Repositories.Interfaces;
+﻿using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using BillChopBE.Exceptions;
 using BillChopBE.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Linq;
+using BillChopBE.Services.Configurations;
 
 namespace BillChopBE.Services
 {
@@ -43,20 +42,10 @@ namespace BillChopBE.Services
             return new UserWithoutPassword(user);
         }
 
-        private string GetHashed(string password)
-        {
-            return Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: password,
-                salt: new byte[0],
-                prf: KeyDerivationPrf.HMACSHA512,
-                iterationCount: 10000,
-                numBytesRequested: 256 / 8));
-        }
-
         public async Task<UserWithToken> LoginAsync(LoginDetails loginDetails)
         {
             loginDetails.Validate();
-            var hashed = GetHashed(loginDetails.Password);
+            var hashed = Hasher.GetHashed(loginDetails.Password);
             var user = await userRepository.GetByEmailAndPassword(loginDetails.Email, hashed);
             if (user == null)
                 throw new UnauthorizedException($"Username or password is incorrect");
@@ -96,10 +85,10 @@ namespace BillChopBE.Services
 
         public async Task<UserWithToken> AddUserAsync(CreateNewUser newUser)
         {
-            newUser.Validate(); //TODO: Silent validate and throw appropriate HttpException
+            newUser.Validate();
             var user = newUser.ToUser();
 
-            user.Password = GetHashed(user.Password);
+            user.Password = Hasher.GetHashed(user.Password);
 
             var addedUser = await userRepository.AddAsync(user);
             return await LoginAsync(new LoginDetails() { Email = addedUser.Email, Password = newUser.Password });

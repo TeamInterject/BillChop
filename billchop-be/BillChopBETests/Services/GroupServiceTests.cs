@@ -1,12 +1,9 @@
 using BillChopBE.Services;
-using BillChopBE.DataAccessLayer.Filters;
-using BillChopBE.DataAccessLayer.Filters.Factories;
 using BillChopBE.Exceptions;
 using NUnit.Framework;
 using FakeItEasy;
 using Shouldly;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
-using BillChopBE.Services.Models;
 using System;
 using System.Threading.Tasks;
 using BillChopBE.DataAccessLayer.Models;
@@ -14,7 +11,6 @@ using ProjectPortableTools.Extensions;
 using Bogus;
 using System.Collections.Generic;
 using System.Linq;
-using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 
 namespace BillChopBETests
 {

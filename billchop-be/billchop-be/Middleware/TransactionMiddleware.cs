@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -19,8 +18,8 @@ namespace BillChopBE.Middleware
             try
             {
                 var connection = transaction.Connection;
-                if (connection.State != ConnectionState.Open)
-                    throw new Exception("It seems our servers are down right now");
+                if (connection == null || connection.State != ConnectionState.Open)
+                    throw new BillChopBE.Exceptions.DbException("It seems our servers are down right now");
 
                 await next(context);
                 transaction.Commit();

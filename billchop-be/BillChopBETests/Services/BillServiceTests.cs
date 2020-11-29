@@ -1,5 +1,4 @@
 using BillChopBE.Services;
-using BillChopBE.DataAccessLayer.Filters;
 using BillChopBE.DataAccessLayer.Filters.Factories;
 using BillChopBE.Exceptions;
 using NUnit.Framework;

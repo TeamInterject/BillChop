@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Net;
+using System.Runtime.Serialization;
 
 namespace BillChopBE.Exceptions
 {
+    [Serializable]
     public class BadRequestException : AbstractUserFriendlyException
     {
         public override HttpStatusCode StatusCode => HttpStatusCode.BadRequest;
@@ -16,6 +18,10 @@ namespace BillChopBE.Exceptions
         }
 
         public BadRequestException(string message, Exception inner) : base(message, inner)
+        {
+        }
+
+        protected BadRequestException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
