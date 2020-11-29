@@ -9,7 +9,7 @@ namespace BillChopBE.Services
         {
             return Convert.ToBase64String(KeyDerivation.Pbkdf2(
                 password: password,
-                salt: new byte[0],
+                salt: Array.Empty<byte>(),
                 prf: KeyDerivationPrf.HMACSHA512,
                 iterationCount: 10000,
                 numBytesRequested: 256 / 8));
