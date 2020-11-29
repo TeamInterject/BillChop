@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BillChopBE.DataAccessLayer.Repositories.Interfaces
 {
-  public interface IBillRepository : IRepository<Bill>
+    public interface IBillRepository : IRepository<Bill>
     {
         Task<IList<Bill>> GetBillsByGroupId(Guid groupId);
     }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BillChopBE.Services.Models
 {
-  public class CreateNewBill : ValidatableModel
+    public class CreateNewBill : ValidatableModel
     {
         [Required]
         public string Name { get; set; } = null!;

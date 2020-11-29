@@ -18,7 +18,7 @@ using BillChopBE.Services.Configurations;
 
 namespace BillChopBE
 {
-  public class Startup
+    public class Startup
     {
         public Startup(IConfiguration configuration)
         {

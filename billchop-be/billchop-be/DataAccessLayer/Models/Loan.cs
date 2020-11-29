@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BillChopBE.DataAccessLayer.Models
 {
-  public class Loan : ValidatableModel, IDbModel
+    public class Loan : ValidatableModel, IDbModel
     {
         [Required]
         [Key]

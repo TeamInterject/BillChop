@@ -2,7 +2,7 @@
 
 namespace BillChopBE.DataAccessLayer.Repositories.Interfaces
 {
-  public interface ILoanRepository : IRepository<Loan>
+    public interface ILoanRepository : IRepository<Loan>
     {
     }
 }

@@ -13,7 +13,7 @@ using BillChopBE.Services.Configurations;
 
 namespace BillChopBE.Services
 {
-  public interface IUserService
+    public interface IUserService
     {
         Task<UserWithToken> LoginAsync(LoginDetails loginDetails);
         Task<IList<UserWithoutPassword>> GetUsersAsync();
