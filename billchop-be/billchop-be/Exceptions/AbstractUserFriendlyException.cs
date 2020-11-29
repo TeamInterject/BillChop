@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Runtime.Serialization;
 
 namespace BillChopBE.Exceptions
 {
@@ -17,6 +18,10 @@ namespace BillChopBE.Exceptions
         }
 
         protected AbstractUserFriendlyException(string message, Exception inner) : base(message, inner)
+        {
+        }
+
+        protected AbstractUserFriendlyException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

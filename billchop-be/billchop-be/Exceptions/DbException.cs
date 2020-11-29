@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Runtime.Serialization;
 
 namespace BillChopBE.Exceptions
 {
@@ -17,6 +18,10 @@ namespace BillChopBE.Exceptions
         }
 
         public DbException(string message, Exception inner) : base(message, inner)
+        {
+        }
+
+        protected DbException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

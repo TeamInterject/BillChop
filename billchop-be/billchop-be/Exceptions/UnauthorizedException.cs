@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Runtime.Serialization;
 
 namespace BillChopBE.Exceptions
 {
@@ -18,6 +19,10 @@ namespace BillChopBE.Exceptions
 
         public UnauthorizedException(string message, Exception inner) : base(message, inner)
         { 
+        }
+
+        protected UnauthorizedException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }

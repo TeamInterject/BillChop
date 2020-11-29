@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Runtime.Serialization;
 
 namespace BillChopBE.Exceptions
 {
@@ -17,6 +18,10 @@ namespace BillChopBE.Exceptions
         }
 
         public BadRequestException(string message, Exception inner) : base(message, inner)
+        {
+        }
+
+        protected BadRequestException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
