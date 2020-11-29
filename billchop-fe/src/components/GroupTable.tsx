@@ -3,7 +3,7 @@ import Table from "react-bootstrap/Table";
 import UserContext from "../backend/helpers/UserContext";
 import Group from "../backend/models/Group";
 import User from "../backend/models/User";
-import toEuros from "../util/Currency";
+import toEuros from "../util/toEuros";
 import Dictionary from "../util/Dictionary";
 
 export interface IGroupTableProps {
@@ -32,12 +32,12 @@ function GroupTableRow(props: {
     return { color: "red" };
   }
 
-  const expense = expenseAmounts[user.Id] ? toEuros(expenseAmounts[user.Id]) : "0.00€";
+  const formattedExpense = expenseAmounts[user.Id] ? toEuros(expenseAmounts[user.Id]) : "0.00€";
   return (
     <tr>
       <td>{user.Id === UserContext.authenticatedUser.Id ? "You" : user.Name} {user.Id === loanerId && "(Payer)"}</td>
       <td style={getExpenseStyling(expenseAmounts[user.Id])}>
-        {expense}
+        {formattedExpense}
       </td>
     </tr>
   );
@@ -62,8 +62,9 @@ export default class GroupTable extends React.Component<IGroupTableProps> {
       });
     }
 
+    groupUsers.sort((user) => user.Id === currentUserId ? -1 : 0);
+    
     return groupUsers
-      .sort((user) => user.Id === currentUserId ? -1 : 0)
       .map((user) => (
         <GroupTableRow 
           key={user.Id} 

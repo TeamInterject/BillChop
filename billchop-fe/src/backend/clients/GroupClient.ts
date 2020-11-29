@@ -1,6 +1,6 @@
 import Axios, { AxiosResponse } from "axios";
 import url from "url-join";
-import BaseClient from "./AbstractClient";
+import BaseClient from "./BaseClient";
 import Group from "../models/Group";
 import { CreateNewGroup } from "../models/CreateNewGroup";
 import LoadingContext from "../helpers/LoadingContext";

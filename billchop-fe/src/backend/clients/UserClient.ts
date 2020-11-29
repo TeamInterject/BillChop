@@ -2,7 +2,7 @@ import Axios, { AxiosResponse } from "axios";
 import url from "url-join";
 import User from "../models/User";
 import { CreateNewUser } from "../models/CreateNewUser";
-import BaseClient from "./AbstractClient";
+import BaseClient from "./BaseClient";
 import { LoginDetails } from "../models/LoginDetails";
 import LoadingContext from "../helpers/LoadingContext";
 import UserWithToken from "../models/UserWithToken";
