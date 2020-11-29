@@ -10,42 +10,23 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
           persist-credentials: false
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v1
-        with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache SonarCloud scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@v1
-        with:
-          path: .\billchop-be\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
-      - name: Install SonarCloud scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
-        run: |
-          New-Item -Path .\billchop-be\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\billchop-be\.sonar\scanner
       - name: Setup dotnet 5.0.100
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.100
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
-        run: |
-          cd .\billchop-be\
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"TeamInterject_BillChop" /o:"teaminterject-164531" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build billchop-be.sln
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+      - name: SonarScanner for .NET 5 with pull request decoration support
+        uses: highbyte/sonarscan-dotnet@2.0
+        with:
+          # The key of the SonarQube project
+          sonarProjectKey: ${{ secrets.SONAR_TOKEN }}
+          # The name of the SonarQube project
+          sonarProjectName:  TeamInterject_BillChop
+          # The name of the SonarQube organization in SonarCloud. For hosted SonarQube, skip this setting.
+          sonarOrganization: teaminterject-164531
+          dotnetBuildArguments: ./billchop-be
