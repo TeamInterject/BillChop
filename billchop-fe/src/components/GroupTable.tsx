@@ -3,7 +3,7 @@ import Table from "react-bootstrap/Table";
 import UserContext from "../backend/helpers/UserContext";
 import Group from "../backend/models/Group";
 import User from "../backend/models/User";
-import toEuros from "../util/toEuro";
+import toEuros from "../util/toEuros";
 import Dictionary from "../util/Dictionary";
 
 export interface IGroupTableProps {
