@@ -22,11 +22,15 @@ jobs:
           dotnet-version: 5.0.100
       - name: SonarScanner for .NET 5 with pull request decoration support
         uses: highbyte/sonarscan-dotnet@2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           # The key of the SonarQube project
-          sonarProjectKey: ${{ secrets.SONAR_TOKEN }}
+          sonarProjectKey: teaminterject-164531
           # The name of the SonarQube project
           sonarProjectName:  TeamInterject_BillChop
           # The name of the SonarQube organization in SonarCloud. For hosted SonarQube, skip this setting.
           sonarOrganization: teaminterject-164531
           dotnetBuildArguments: ./billchop-be
+          dotnetDisableTests: true
