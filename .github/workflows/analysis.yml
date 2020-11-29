@@ -48,4 +48,5 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"TeamInterject_BillChop" /o:"teaminterject-164531" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           cd .\billchop-be\
           dotnet build
+          cd ..
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
