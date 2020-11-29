@@ -35,6 +35,21 @@ jobs:
         run: dotnet build
       - name: Test solution
         run: dotnet test
+      - name: SonarScanner for .NET 5 with pull request decoration support
+        uses: highbyte/sonarscan-dotnet@2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          # The key of the SonarQube project
+          sonarProjectKey: TeamInterject-164531_BillChop_BE
+          # The name of the SonarQube project
+          sonarProjectName: TeamInterject_BillChop_BE
+          # The name of the SonarQube organization in SonarCloud. For hosted SonarQube, skip this setting.
+          sonarOrganization: teaminterject-164531
+          dotnetBuildArguments: ./billchop-be
+          dotnetDisableTests: true
+        if: matrix.os == 'ubuntu-latest'
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
