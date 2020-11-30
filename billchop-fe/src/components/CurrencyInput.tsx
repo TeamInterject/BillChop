@@ -30,7 +30,7 @@ const CurrencyInput: React.FC<ICurrencyInputProps> = (props: ICurrencyInputProps
   };
 
   return (
-    <InputGroup>
+    <InputGroup className="w-50">
       <Form.Control
         type="number"
         value={props.value}
