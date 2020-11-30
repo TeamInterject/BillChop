@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { Form } from "react-bootstrap";
 import "../styles/currency-input.css";
 
@@ -9,20 +9,21 @@ export interface ICurrencyInputProps {
 }
 
 const CurrencyInput: React.FC<ICurrencyInputProps> = (props: ICurrencyInputProps): JSX.Element => {
-  const previousValue = usePrevious(props.value ?? 0.00);
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const newValue = event.target.value;
-    const regex = /[0-9]*(?:\.[0-9]{2})?/;
-    const parsedNewValue = parseFloat(event.target.value);
+    const currencyRegex = /^[0-9]*(?:\.[0-9]{0,2})?$/; // Checks if value is in money format
 
-    if (regex.test(newValue) && props.max && parsedNewValue <= props.max && parsedNewValue >= 0) {
-      props.onChange(event);
-    } else if (newValue === "") {
-      event.target.value = "0.00";
-    } else {
-      event.target.value = previousValue.toString();
+    if (event.target.value === "") {
+      event.target.value = "0";
     }
+    const newValue = event.target.value;
+    const parsedNewValue = parseFloat(newValue);
+
+    if (currencyRegex.test(newValue) && parsedNewValue >= 0 && parsedNewValue <= (props.max ?? Infinity)) {
+      if (newValue.length > 1 && newValue[0] === "0" && newValue[1] !== ".") { // Checks for 01, 02, ... cases
+        event.target.value = newValue.slice(1);
+      }
+      props.onChange(event);
+    } 
   };
 
   return (
@@ -33,15 +34,5 @@ const CurrencyInput: React.FC<ICurrencyInputProps> = (props: ICurrencyInputProps
     />
   );
 };
-
-function usePrevious(value: number) {
-  const ref = useRef(0.00);
-  
-  useEffect(() => {
-    ref.current = value;
-  }, [value]);
-  
-  return ref.current;
-}
 
 export default CurrencyInput;
