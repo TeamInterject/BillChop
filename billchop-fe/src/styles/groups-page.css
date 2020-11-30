@@ -9,4 +9,13 @@
     position: absolute;
     overflow-y: auto;
   }
+
+  .settle-up-subpage__sliders {
+    margin-left: 20%;
+    margin-right: 20%;
+  }
+}
+
+.settle-up-subpage__sliders {
+  margin-bottom: 5%;
 }

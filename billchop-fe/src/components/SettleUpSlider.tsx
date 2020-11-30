@@ -28,21 +28,22 @@ export default class SettleUpSlider extends React.Component<
     this.setState({ settleAmount: parseFloat(event.currentTarget.value) });
   };
 
-  handleSettle = (event: React.FormEvent<HTMLFormElement>): void => {
-    
+  handleSettle = (): void => {
+    const { onSettle } = this.props;
+    onSettle();
   };
 
   render(): JSX.Element {
     const { loanerName, loanAmount} = this.props;
     const { settleAmount } = this.state;
     return (
-      <Form className="mt-2" onSubmit={this.handleSettle}>
+      <Form className="mt-4" onSubmit={this.handleSettle}>
         <Form.Group controlId="settleUpRange">
           <Form.Row>
-            <Col className="ml-1 mr-1">
+            <Col className="ml-2 mr-2 mb-1">
               <div className="d-flex justify-content-between align-items-center">
                 <span>You owe {`${loanerName} ${loanAmount}€`}</span>
-                <div className="d-flex align-items-center">
+                <div className="d-flex justify-content-end align-items-center">
                   <span className="mr-2">Pay:</span>
                   <CurrencyInput
                     onChange={this.handleSettleAmountChange}
@@ -52,10 +53,9 @@ export default class SettleUpSlider extends React.Component<
                 </div>
               </div>
             </Col>
-            <Col className="ml-1 mr-1" md={1} />
           </Form.Row>
           <Form.Row>
-            <Col className="d-flex align-items-center ml-1 mr-1">
+            <Col className="d-flex align-items-center ml-2 mr-2">
               <Form.Control
                 type="range"
                 min={0}
@@ -65,7 +65,9 @@ export default class SettleUpSlider extends React.Component<
                 value={settleAmount}
               />
             </Col>
-            <Col className="ml-1 mr-1" md={1}>
+          </Form.Row>
+          <Form.Row>
+            <Col className="d-flex justify-content-end ml-2 mr-2 mt-1">
               <Button
                 variant="outline-primary"
                 type="submit"
