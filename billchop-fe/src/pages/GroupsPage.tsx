@@ -7,10 +7,12 @@ import GroupSubPage from "./GroupSubPage";
 import GroupClient from "../backend/clients/GroupClient";
 import UserContext from "../backend/helpers/UserContext";
 import { Col, Row } from "react-bootstrap";
+import SettleUpSubPage from "./SettleUpSubPage";
 
 interface IGroupsPageState {
   groups: Group[];
   selectedGroupId?: string;
+  showSettleUp: boolean;
 }
 
 export default class GroupsPage extends React.Component<
@@ -24,6 +26,7 @@ export default class GroupsPage extends React.Component<
 
     this.state = {
       groups: [],
+      showSettleUp: false,
     };
   }
 
@@ -50,7 +53,7 @@ export default class GroupsPage extends React.Component<
   };
 
   handleOnGroupTabSelect = (groupId: string): void => {
-    this.setState({ selectedGroupId: groupId });
+    this.setState({ selectedGroupId: groupId, showSettleUp: false });
   };
 
   handleAddNewMember = (newMemberId: string): void => {
@@ -74,8 +77,16 @@ export default class GroupsPage extends React.Component<
     this.groupClient.addUserToGroup(selectedGroup.Id, newMemberId).then((updatedGroup) => updateGroups(updatedGroup));
   };
 
+  handleOpenSettleUp = (): void => {
+    this.setState({ showSettleUp: true });
+  };
+
+  handleCloseSettleUp = (): void => {
+    this.setState({ showSettleUp: false });
+  };
+
   render(): JSX.Element {
-    const { selectedGroupId } = this.state;
+    const { selectedGroupId, showSettleUp } = this.state;
     const { groups } = this.state;
     const selectedGroup = groups.find((group) => group.Id === selectedGroupId);
     return (
@@ -87,14 +98,22 @@ export default class GroupsPage extends React.Component<
           />
         </Col>
         <Col className="p-0">
-          {selectedGroup ? (
-            <GroupSubPage
-              group={selectedGroup}
-              onAddNewMember={this.handleAddNewMember}
-            />
-          ) : (
-            <NoGroupSelectedSubPage />
-          )}
+          {selectedGroup ?
+            showSettleUp ?
+              <SettleUpSubPage
+                onCloseSettleUp={this.handleCloseSettleUp}
+                onSettle={this.handleCloseSettleUp}
+              />
+              :
+              (
+                <GroupSubPage
+                  group={selectedGroup}
+                  onAddNewMember={this.handleAddNewMember}
+                  onOpenSettleUp={this.handleOpenSettleUp}
+                />
+              ) : (
+              <NoGroupSelectedSubPage />
+            )}
         </Col>
       </Row>
     );

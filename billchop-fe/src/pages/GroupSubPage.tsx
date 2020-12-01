@@ -23,6 +23,7 @@ export enum LoanType {
 export interface IGroupSubPageProps {
   group: Group;
   onAddNewMember: (name: string) => void;
+  onOpenSettleUp: () => void;
 }
 
 export interface IGroupSubPageState {
@@ -154,7 +155,7 @@ export default class GroupSubPage extends React.Component<
   }
 
   render(): JSX.Element {
-    const { group, onAddNewMember } = this.props;
+    const { group, onAddNewMember, onOpenSettleUp } = this.props;
     const { expenseAmounts, bills } = this.state;
 
     return (
@@ -165,6 +166,7 @@ export default class GroupSubPage extends React.Component<
               groupId={group.Id}
               onAddNewBill={this.handleOnAddNewBill}
               onAddNewMember={onAddNewMember}
+              onOpenSettleUp={onOpenSettleUp}
             />
           </Col>
         </Row>

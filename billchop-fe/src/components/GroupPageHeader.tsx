@@ -3,6 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import ImageButton from "./ImageButton";
 import AddBillIcon from "../assets/add-bill-icon.svg";
 import AddPersonIcon from "../assets/add-person-icon.svg";
+import SettleUpIcon from "../assets/settle-up-icon.svg";
 import AddBillModal from "./AddBillModal";
 import SearchBox from "./SearchBox";
 import UserClient from "../backend/clients/UserClient";
@@ -12,6 +13,7 @@ export interface IGroupPageHeaderProps {
   groupId: string;
   onAddNewBill: (name: string, total: number) => void;
   onAddNewMember: (userId: string) => void;
+  onOpenSettleUp: () => void;
 }
 
 export interface IGroupPageHeaderState {
@@ -74,6 +76,7 @@ export default class GroupPageHeader extends React.Component<
   };
 
   render(): JSX.Element {
+    const { onOpenSettleUp } = this.props;
     const { showAddBillModal, showSearchBox } = this.state;
     return (
       <div className="m-2">
@@ -105,6 +108,13 @@ export default class GroupPageHeader extends React.Component<
                   imageSource={AddPersonIcon}
                   tooltipText="Add new member"
                   onClick={this.toggleSearchBox}
+                />
+              </Col>
+              <Col xs={1}>
+                <ImageButton
+                  imageSource={SettleUpIcon}
+                  tooltipText="Settle up loans"
+                  onClick={onOpenSettleUp}
                 />
               </Col>
             </Row>
