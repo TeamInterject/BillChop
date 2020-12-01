@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import CurrencyInput from "./CurrencyInput";
 
 interface IAddBillModalProps {
   showModal: boolean;
@@ -30,7 +31,7 @@ export default class AddBillModal extends React.Component<
 
     const { onAdd } = this.props;
     const { nameInputValue, totalAmountInputValue } = this.state;
-    onAdd(nameInputValue, +totalAmountInputValue);
+    onAdd(nameInputValue, parseFloat(totalAmountInputValue));
     this.setState({ nameInputValue: "", totalAmountInputValue: "" });
   };
 
@@ -39,6 +40,14 @@ export default class AddBillModal extends React.Component<
 
     this.setState({ nameInputValue: "", totalAmountInputValue: "" });
     onHide();
+  };
+
+  handleNameChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    this.setState({ nameInputValue: event.target.value });
+  };
+
+  handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    this.setState({ totalAmountInputValue: event.target.value });
   };
 
   render(): JSX.Element {
@@ -64,25 +73,22 @@ export default class AddBillModal extends React.Component<
               <Form.Control
                 required
                 placeholder="Enter the name of the bill"
-                onChange={(e) =>
-                  this.setState({ nameInputValue: e.target.value })
-                }
+                onChange={this.handleNameChange}
                 value={nameInputValue}
               />
             </Form.Row>
-            <Form.Row>
-              <Form.Label className="mt-2">Total amount(€):</Form.Label>
-              <Form.Control
+            <Form.Row className="mt-2">
+              <CurrencyInput
                 required
+                fullWidth
+                min={0.01}
+                onChange={this.handleAmountChange}
+                value={parseFloat(totalAmountInputValue)}
+                label="Total amount:"
                 placeholder="Enter the total amount of the bill"
-                onChange={(e) =>
-                  this.setState({ totalAmountInputValue: e.target.value })
-                }
-                value={totalAmountInputValue}
-                type="number"
               />
             </Form.Row>
-            <Form.Row>
+            <Form.Row className="justify-content-end">
               <Button className="mt-3" type="submit">
                 Add
               </Button>
