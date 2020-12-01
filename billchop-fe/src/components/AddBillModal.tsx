@@ -62,6 +62,7 @@ export default class AddBillModal extends React.Component<
             <Form.Row>
               <Form.Label>Name:</Form.Label>
               <Form.Control
+                required
                 placeholder="Enter the name of the bill"
                 onChange={(e) =>
                   this.setState({ nameInputValue: e.target.value })
@@ -72,6 +73,7 @@ export default class AddBillModal extends React.Component<
             <Form.Row>
               <Form.Label className="mt-2">Total amount(€):</Form.Label>
               <Form.Control
+                required
                 placeholder="Enter the total amount of the bill"
                 onChange={(e) =>
                   this.setState({ totalAmountInputValue: e.target.value })
