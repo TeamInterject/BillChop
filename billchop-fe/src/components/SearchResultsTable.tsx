@@ -62,16 +62,16 @@ function SearchResultsRow(props: {
       onClick={handleSearchResultClick}
     >
       <Row>
-        <Col className="d-flex align-items-center">
-          {value}
-        </Col>
-        <Col className="col-1">
-          <Button
-            variant="light"
-            onClick={handleSearchResultClick}
-          >
-            {actionButtonText}
-          </Button>
+        <Col>
+          <div className="d-flex justify-content-between align-items-center">
+            <span>{value}</span>
+            <Button
+              variant="light"
+              onClick={handleSearchResultClick}
+            >
+              {actionButtonText}
+            </Button>
+          </div>
         </Col>
       </Row>
     </ListGroup.Item>
