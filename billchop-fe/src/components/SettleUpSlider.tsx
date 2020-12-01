@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Col, Form } from "react-bootstrap";
 import CurrencyInput from "./CurrencyInput";
+import "../styles/settle-up-slider.css";
 
 export interface ISettleUpSliderProps {
   loanerName: string;
@@ -57,6 +58,7 @@ export default class SettleUpSlider extends React.Component<
           <Form.Row>
             <Col className="d-flex align-items-center ml-2 mr-2">
               <Form.Control
+                style={{ cursor: "pointer" }}
                 type="range"
                 min={0}
                 max={loanAmount}
