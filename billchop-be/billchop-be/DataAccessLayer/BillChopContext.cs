@@ -21,6 +21,7 @@ namespace BillChopBE.DataAccessLayer
         public DbSet<Group> Groups => Set<Group>();
         public DbSet<Loan> Loans => Set<Loan>();
         public DbSet<Bill> Bills => Set<Bill>();
+        public DbSet<Payment> Payments => Set<Payment>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
         {
