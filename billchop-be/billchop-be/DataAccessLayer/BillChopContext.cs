@@ -1,6 +1,5 @@
-﻿using BillChopBE.DataAccessLayer.Models;
+using BillChopBE.DataAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace BillChopBE.DataAccessLayer
 {
