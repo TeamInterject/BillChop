@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Col, Row } from "react-bootstrap";
+import { Col, Navbar, Row } from "react-bootstrap";
 import ImageButton from "./ImageButton";
 import AddBillIcon from "../assets/add-bill-icon.svg";
 import AddPersonIcon from "../assets/add-person-icon.svg";
@@ -95,29 +95,23 @@ export default class GroupPageHeader extends React.Component<
               </Col>
             </Row>
             :
-            <Row className="justify-content-start">
-              <Col xs={1}>
-                <ImageButton
-                  imageSource={AddBillIcon}
-                  tooltipText="Add Bill"
-                  onClick={this.toggleAddBillModal}
-                />
-              </Col>
-              <Col xs={1}>
-                <ImageButton
-                  imageSource={AddPersonIcon}
-                  tooltipText="Add new member"
-                  onClick={this.toggleSearchBox}
-                />
-              </Col>
-              <Col xs={1}>
-                <ImageButton
-                  imageSource={SettleUpIcon}
-                  tooltipText="Settle up loans"
-                  onClick={onOpenSettleUp}
-                />
-              </Col>
-            </Row>
+            <Navbar>
+              <ImageButton
+                imageSource={AddBillIcon}
+                tooltipText="Add new bill"
+                onClick={this.toggleAddBillModal}
+              />
+              <ImageButton
+                imageSource={AddPersonIcon}
+                tooltipText="Add new member"
+                onClick={this.toggleSearchBox}
+              />
+              <ImageButton
+                imageSource={SettleUpIcon}
+                tooltipText="Settle up loans"
+                onClick={onOpenSettleUp}
+              />
+            </Navbar>
         }
         <AddBillModal
           showModal={showAddBillModal}

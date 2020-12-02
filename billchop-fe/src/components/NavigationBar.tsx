@@ -20,30 +20,27 @@ export default class NavigationBar extends React.Component<NavigationBarProps> {
 
     return (
       <Navbar bg="light">
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto">
-            <Link to="/profile">
-              <div className="mr-2">
-                <Avatar name={currentUser.Name} round size="40" />
-              </div>
-            </Link>
-            <Link to="/groups">
-              <ImageButton imageSource={GroupIcon} tooltipText="Groups" />
-            </Link>
-            <Link to="/createGroup">
-              <ImageButton
-                imageSource={GroupCreateIcon}
-                tooltipText="Create Group"
-              />
-            </Link>
-          </Nav>
-          <Link to="/login">
-            <Button variant="light" onClick={logout}>
-              Logout
-            </Button>
+        <Nav className="mr-auto">
+          <Link to="/profile">
+            <div className="mr-2 ml-2">
+              <Avatar name={currentUser.Name} round size="40" />
+            </div>
           </Link>
-        </Navbar.Collapse>
+          <Link to="/groups">
+            <ImageButton imageSource={GroupIcon} tooltipText="Groups" />
+          </Link>
+          <Link to="/createGroup">
+            <ImageButton
+              imageSource={GroupCreateIcon}
+              tooltipText="Create Group"
+            />
+          </Link>
+        </Nav>
+        <Link to="/login">
+          <Button variant="light" onClick={logout}>
+              Logout
+          </Button>
+        </Link>
       </Navbar>
     );
   }
