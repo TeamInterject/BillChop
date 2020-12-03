@@ -46,7 +46,7 @@ namespace BillChopBE.Services
         {
             loginDetails.Validate();
             var hashed = Hasher.GetHashed(loginDetails.Password);
-            var user = await userRepository.GetByEmailAndPassword(loginDetails.Email, hashed);
+            var user = await userRepository.GetByEmailAndPasswordAsync(loginDetails.Email, hashed);
             if (user == null)
                 throw new UnauthorizedException($"Username or password is incorrect");
 
