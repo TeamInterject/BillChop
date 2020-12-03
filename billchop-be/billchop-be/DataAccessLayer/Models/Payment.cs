@@ -27,5 +27,11 @@ namespace BillChopBE.DataAccessLayer.Models
 
         [Required]
         public virtual User Receiver { get; set; } = null!;
+
+        [Required]
+        public Guid GroupContextId { get; set; }
+
+        [JsonIgnore]
+        public virtual Group GroupContext { get; set; } = null!;
     }
 }
