@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BillChopBE.Migrations
 {
     [DbContext(typeof(BillChopContext))]
-    [Migration("20201203144219_AddEntityMapping")]
-    partial class AddEntityMapping
+    [Migration("20201203204057_AddedPaymentsModel")]
+    partial class AddedPaymentsModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -100,6 +100,12 @@ namespace BillChopBE.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("GroupContextId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("PayerId")
                         .HasColumnType("uniqueidentifier");
 
@@ -107,6 +113,8 @@ namespace BillChopBE.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GroupContextId");
 
                     b.HasIndex("PayerId");
 
@@ -193,6 +201,12 @@ namespace BillChopBE.Migrations
 
             modelBuilder.Entity("BillChopBE.DataAccessLayer.Models.Payment", b =>
                 {
+                    b.HasOne("BillChopBE.DataAccessLayer.Models.Group", "GroupContext")
+                        .WithMany()
+                        .HasForeignKey("GroupContextId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BillChopBE.DataAccessLayer.Models.User", "Payer")
                         .WithMany("PaymentsMade")
                         .HasForeignKey("PayerId")
@@ -204,6 +218,8 @@ namespace BillChopBE.Migrations
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("GroupContext");
 
                     b.Navigation("Payer");
 

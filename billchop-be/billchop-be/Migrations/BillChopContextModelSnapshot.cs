@@ -98,6 +98,9 @@ namespace BillChopBE.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("GroupContextId")
                         .HasColumnType("uniqueidentifier");
 

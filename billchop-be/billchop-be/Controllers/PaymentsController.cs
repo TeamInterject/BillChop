@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.Services;
@@ -10,7 +12,7 @@ namespace BillChopBE.Controllers
     [Authorize]
     [ApiController]
     [Produces("application/json")]
-    [Route("api/groups")]
+    [Route("api/payments")]
     public class PaymentsController : ControllerBase
     {
         private readonly IPaymentService paymentService;
@@ -20,8 +22,14 @@ namespace BillChopBE.Controllers
             this.paymentService = paymentService;
         }
 
+        [HttpGet("/user/{userId}")]
+        public async Task<ActionResult<IList<Payment>>> GetExpectedPayments(Guid userId, Guid? groupId)
+        {
+            return Ok(await paymentService.GetExpectedPaymentsForUserAsync(userId, groupId));
+        }
+
         [HttpPost]
-        public async Task<ActionResult<Group>> CreateGroup([FromBody] CreateNewPayment newPaymentData)
+        public async Task<ActionResult<Payment>> CreatePayment([FromBody] CreateNewPayment newPaymentData)
         {
             return Ok(await paymentService.AddPaymentAsync(newPaymentData));
         }

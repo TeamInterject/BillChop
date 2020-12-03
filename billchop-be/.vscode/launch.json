@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/billchop-be/bin/Debug/netcoreapp3.1/BillChopBE.dll",
+            "program": "${workspaceFolder}/billchop-be/bin/Debug/net5.0/BillChopBE.dll",
             "args": [],
             "cwd": "${workspaceFolder}/billchop-be",
             "stopAtEntry": false,

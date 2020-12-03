@@ -15,6 +15,7 @@ namespace BillChopBE.Services
     public interface IPaymentService
     {
         Task<Payment> AddPaymentAsync(CreateNewPayment newPaymentData);
+        Task<IList<Payment>> GetExpectedPaymentsForUserAsync(Guid userId, Guid? groupId);
     }
 
     public class PaymentService : IPaymentService
