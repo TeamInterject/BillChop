@@ -4,51 +4,50 @@ import ArrowBackIcon from "../assets/arrow-back-icon.svg";
 import ImageButton from "../components/ImageButton";
 import SettleUpSlider from "../components/SettleUpSlider";
 import "../styles/groups-page.css";
+import DoneIcon from "../assets/done-icon.svg";
 
 export interface ISettleUpSubPageProps {
-  onSettle: () => void;
+  loansToSettle: { // [TM] NOTE this is just a draft object, when implementing new model in BE feel free to change it however you seem fit.
+    Id: string;
+    loanerName: string;
+    amountToSettle: number;
+  }[];
+  onSettle: (Id: string, settleAmount: number) => void;
   onCloseSettleUp: () => void;
 }
 
 export default class SettleUpSubPage extends React.Component<ISettleUpSubPageProps> {
-  renderSettleUpSliders = (): JSX.Element[] => {
-    const { onSettle } = this.props;
+  renderSettleUpSliders = (): JSX.Element => {
+    const { onSettle, loansToSettle } = this.props;
 
-    return [
-      <SettleUpSlider
-        key="1"
-        loanerName="Ainoras"
-        loanAmount={100}
-        onSettle={onSettle}
-      />,
-      <SettleUpSlider
-        key="2"
-        loanerName="Martynas"
-        loanAmount={360}
-        onSettle={onSettle}
-      />,
-      <SettleUpSlider
-        key="3"
-        loanerName="Daniel"
-        loanAmount={500}
-        onSettle={onSettle}
-      />,
-      <SettleUpSlider
-        key="4"
-        loanerName="Henrik"
-        loanAmount={500}
-        onSettle={onSettle}
-      />,<SettleUpSlider
-        key="5"
-        loanerName="Tibor"
-        loanAmount={500}
-        onSettle={onSettle}
-      />,
-    ];
+    return (
+      <Col className="settle-up-subpage__sliders">
+        {
+          loansToSettle.map((loan) => {
+            return <SettleUpSlider
+              key={loan.Id}
+              loanToSettle={loan}
+              onSettle={onSettle}
+            />;
+          })
+        }
+      </Col>
+    );
+  };
+
+  renderInfoMessage = (): JSX.Element => {
+    return (
+      <Col className="d-flex flex-column align-items-center justify-content-center">
+        <img src={DoneIcon} height="48px" width="48px" alt="Groups icon" />
+        <p className="text-center m-2">
+          All loans are settled up.
+        </p>
+      </Col>
+    );
   };
 
   render(): JSX.Element {
-    const { onCloseSettleUp } = this.props;
+    const { loansToSettle, onCloseSettleUp } = this.props;
 
     return (
       <div className="h-100 w-100 subpage-container">
@@ -57,10 +56,8 @@ export default class SettleUpSubPage extends React.Component<ISettleUpSubPagePro
             <ImageButton imageSource={ArrowBackIcon} tooltipText="Go back" onClick={onCloseSettleUp} />
           </Col>
         </Row>
-        <Row>
-          <Col className="settle-up-subpage__sliders">
-            {this.renderSettleUpSliders()}
-          </Col>
+        <Row className="h-100">
+          {loansToSettle.length === 0 ? this.renderInfoMessage() : this.renderSettleUpSliders()}
         </Row>
       </div>
     );
