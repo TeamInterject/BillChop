@@ -31,5 +31,11 @@ namespace BillChopBE.DataAccessLayer.Models
 
         [JsonIgnore]
         public virtual List<Bill> Bills { get; set; } = new List<Bill>();
+
+        [JsonIgnore]
+        public virtual List<Payment> PaymentsMade { get; set; } = new List<Payment>();
+
+        [JsonIgnore]
+        public virtual List<Payment> PaymentsReceived { get; set; } = new List<Payment>();
     }
 }

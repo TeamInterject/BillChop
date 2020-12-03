@@ -62,6 +62,16 @@ namespace BillChopBE.DataAccessLayer
                 .HasMany(b => b.Loans)
                 .WithOne(e => e.Bill)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.PaymentsMade)
+                .WithOne(u => u.Payer)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.PaymentsReceived)
+                .WithOne(u => u.Receiver)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
