@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
+import { Button, Col, Modal, Row } from "react-bootstrap";
 import ArrowBackIcon from "../assets/arrow-back-icon.svg";
 import ImageButton from "../components/ImageButton";
 import SettleUpSlider from "../components/SettleUpSlider";
@@ -36,13 +36,21 @@ export default class SettleUpSubPage extends React.Component<ISettleUpSubPagePro
   };
 
   renderInfoMessage = (): JSX.Element => {
+    const { onCloseSettleUp } = this.props;
     return (
-      <Col className="d-flex flex-column align-items-center justify-content-center">
-        <img src={DoneIcon} height="48px" width="48px" alt="Groups icon" />
-        <p className="text-center m-2">
-          All loans are settled up.
-        </p>
-      </Col>
+      <Modal show centered onHide={onCloseSettleUp}>
+        <Modal.Body className="d-flex flex-column align-items-center justify-content-center">
+          <img src={DoneIcon} height="48px" width="48px" alt="Groups icon" />
+          <p className="text-center m-2">
+            All loans are settled up.
+          </p>
+        </Modal.Body>
+        <Modal.Footer className="justify-content-center">
+          <Button variant="primary" onClick={onCloseSettleUp}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     );
   };
 
@@ -51,14 +59,21 @@ export default class SettleUpSubPage extends React.Component<ISettleUpSubPagePro
 
     return (
       <div className="h-100 w-100 subpage-container">
-        <Row>
-          <Col>
-            <ImageButton imageSource={ArrowBackIcon} tooltipText="Go back" onClick={onCloseSettleUp} />
-          </Col>
-        </Row>
-        <Row className="h-100">
-          {loansToSettle.length === 0 ? this.renderInfoMessage() : this.renderSettleUpSliders()}
-        </Row>
+        {
+          loansToSettle.length === 0 ? 
+            this.renderInfoMessage()
+            :
+            <div>
+              <Row>
+                <Col>
+                  <ImageButton imageSource={ArrowBackIcon} tooltipText="Go back" onClick={onCloseSettleUp} />
+                </Col>
+              </Row>
+              <Row>
+                {this.renderSettleUpSliders()}
+              </Row>
+            </div>
+        }
       </div>
     );
   }
