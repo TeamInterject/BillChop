@@ -7,7 +7,7 @@ export default class NoGroupSelectedSubPage extends React.Component {
     return (
       <div className="h-100 d-flex flex-column align-items-center justify-content-center">
         <img src={InfoIcon} height="48px" width="48px" alt="Groups icon" />
-        <p>
+        <p className="text-center m-2">
           No group selected. Please create new group or select an existing one.
         </p>
       </div>
