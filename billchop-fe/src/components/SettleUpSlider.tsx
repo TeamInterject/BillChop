@@ -32,7 +32,9 @@ export default class SettleUpSlider extends React.Component<
     this.setState({ settleAmount: parseFloat(event.currentTarget.value) });
   };
 
-  handleSettle = (): void => {
+  handleSettle = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.stopPropagation();
+    event.preventDefault();
     const { loanToSettle, onSettle } = this.props;
     const { settleAmount } = this.state;
     onSettle(loanToSettle.Id, settleAmount);

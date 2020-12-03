@@ -7,18 +7,61 @@ import "../styles/groups-page.css";
 import DoneIcon from "../assets/done-icon.svg";
 
 export interface ISettleUpSubPageProps {
+  onCloseSettleUp: () => void;
+}
+
+interface ISettleUpSubPabeState {
   loansToSettle: { // [TM] NOTE this is just a draft object, when implementing new model in BE feel free to change it however you seem fit.
     Id: string;
     loanerName: string;
     amountToSettle: number;
   }[];
-  onSettle: (Id: string, settleAmount: number) => void;
-  onCloseSettleUp: () => void;
 }
 
-export default class SettleUpSubPage extends React.Component<ISettleUpSubPageProps> {
+export default class SettleUpSubPage extends React.Component<
+  ISettleUpSubPageProps,
+  ISettleUpSubPabeState
+> {
+  constructor(props: ISettleUpSubPageProps) {
+    super(props);
+    this.state = {
+      loansToSettle: [],
+    };
+  }
+
+  componentDidMount(): void {
+    this.getLoansToSettle();
+  }
+
+  getLoansToSettle = (): void => {
+    this.setState({
+      loansToSettle: [
+        {
+          Id: "1",
+          loanerName: "Ainoras",
+          amountToSettle: 100,
+        },
+        {
+          Id: "2",
+          loanerName: "Martynas",
+          amountToSettle: 350,
+        },
+        {
+          Id: "3",
+          loanerName: "Maurice",
+          amountToSettle: 225,
+        },
+      ],
+    });
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  handleSettle = (Id: string, settleAmount: number): void => {
+    //TODO call BE
+  };
+
   renderSettleUpSliders = (): JSX.Element => {
-    const { onSettle, loansToSettle } = this.props;
+    const { loansToSettle } = this.state;
 
     return (
       <Col className="settle-up-subpage__sliders">
@@ -27,7 +70,7 @@ export default class SettleUpSubPage extends React.Component<ISettleUpSubPagePro
             return <SettleUpSlider
               key={loan.Id}
               loanToSettle={loan}
-              onSettle={onSettle}
+              onSettle={this.handleSettle}
             />;
           })
         }
@@ -55,7 +98,8 @@ export default class SettleUpSubPage extends React.Component<ISettleUpSubPagePro
   };
 
   render(): JSX.Element {
-    const { loansToSettle, onCloseSettleUp } = this.props;
+    const { onCloseSettleUp } = this.props;
+    const { loansToSettle } = this.state;
 
     return (
       <div className="h-100 w-100 subpage-container">

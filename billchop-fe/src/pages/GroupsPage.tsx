@@ -85,30 +85,6 @@ export default class GroupsPage extends React.Component<
     this.setState({ showSettleUp: false });
   };
 
-  getLoansToSettle = (): { // [TM] NOTE this is just a draft object, when implementing new model in BE feel free to change it however you seem fit.
-    Id: string;
-    loanerName: string;
-    amountToSettle: number;
-  }[] => {
-    return [
-      {
-        Id: "1",
-        loanerName: "Ainoras",
-        amountToSettle: 100,
-      },
-      {
-        Id: "2",
-        loanerName: "Martynas",
-        amountToSettle: 350,
-      },
-      {
-        Id: "3",
-        loanerName: "Maurice",
-        amountToSettle: 225,
-      },
-    ];
-  };
-
   render(): JSX.Element {
     const { selectedGroupId, showSettleUp } = this.state;
     const { groups } = this.state;
@@ -126,8 +102,6 @@ export default class GroupsPage extends React.Component<
             showSettleUp ?
               <SettleUpSubPage
                 onCloseSettleUp={this.handleCloseSettleUp}
-                onSettle={this.handleCloseSettleUp}
-                loansToSettle={this.getLoansToSettle()}
               />
               :
               (
