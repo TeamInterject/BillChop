@@ -127,8 +127,7 @@ export default class GroupsPage extends React.Component<
               <SettleUpSubPage
                 onCloseSettleUp={this.handleCloseSettleUp}
                 onSettle={this.handleCloseSettleUp}
-                // loansToSettle={this.getLoansToSettle()}
-                loansToSettle={[]}
+                loansToSettle={this.getLoansToSettle()}
               />
               :
               (
