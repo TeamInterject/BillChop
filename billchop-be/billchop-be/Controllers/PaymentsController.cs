@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
+using BillChopBE.Controllers.Models;
 using BillChopBE.DataAccessLayer.Models;
 using BillChopBE.Services;
 using BillChopBE.Services.Models;
@@ -16,22 +18,26 @@ namespace BillChopBE.Controllers
     public class PaymentsController : ControllerBase
     {
         private readonly IPaymentService paymentService;
+        private readonly IMapper mapper;
 
-        public PaymentsController(IPaymentService paymentService)
+        public PaymentsController(IPaymentService paymentService, IMapper mapper)
         {
+            this.mapper = mapper;
             this.paymentService = paymentService;
         }
 
-        [HttpGet("/user/{userId}")]
-        public async Task<ActionResult<IList<Payment>>> GetExpectedPayments(Guid userId, Guid? groupId)
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<IList<ApiPayment>>> GetExpectedPayments(Guid userId, Guid? groupId)
         {
-            return Ok(await paymentService.GetExpectedPaymentsForUserAsync(userId, groupId));
+            var payments = await paymentService.GetExpectedPaymentsForUserAsync(userId, groupId);
+            return mapper.Map<List<ApiPayment>>(payments);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Payment>> CreatePayment([FromBody] CreateNewPayment newPaymentData)
+        public async Task<ActionResult<ApiPayment>> CreatePayment([FromBody] CreateNewPayment newPaymentData)
         {
-            return Ok(await paymentService.AddPaymentAsync(newPaymentData));
+            var payment = await paymentService.AddPaymentAsync(newPaymentData);
+            return mapper.Map<ApiPayment>(payment);
         }
     }
 }

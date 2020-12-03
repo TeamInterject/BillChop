@@ -1,5 +1,5 @@
 ﻿using BillChopBE.DataAccessLayer.Models.Interfaces;
-using BillChopBE.DataAccessLayer.Models.Validation;
+using BillChopBE.Validation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

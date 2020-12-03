@@ -1,8 +1,8 @@
 ﻿using BillChopBE.DataAccessLayer.Filters;
 using BillChopBE.DataAccessLayer.Models.Interfaces;
-using BillChopBE.DataAccessLayer.Models.Validation;
 using BillChopBE.DataAccessLayer.Repositories.Interfaces;
 using BillChopBE.Exceptions;
+using BillChopBE.Validation;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

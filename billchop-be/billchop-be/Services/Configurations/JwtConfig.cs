@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using BillChopBE.DataAccessLayer.Models.Validation;
+using BillChopBE.Validation;
 
 namespace BillChopBE.Services.Configurations
 {

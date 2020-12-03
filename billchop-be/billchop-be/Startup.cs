@@ -41,6 +41,7 @@ namespace BillChopBE
 
             services.AddBillChopContext(Configuration.GetConnectionString("BillChopDb"));
             services.AddBillChopRepositories();
+            services.AddAutoMapper();
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGroupService, GroupService>();

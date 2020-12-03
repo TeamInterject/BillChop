@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BillChopBE.DataAccessLayer.Models;
+using AutoMapper;
+using BillChopBE.Controllers.Models;
 using BillChopBE.Services;
 using BillChopBE.Services.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -16,34 +17,40 @@ namespace BillChopBE.Controllers
     public class GroupsController : ControllerBase
     {
         private readonly IGroupService groupService;
+        private readonly IMapper mapper;
 
-        public GroupsController(IGroupService groupService)
+        public GroupsController(IGroupService groupService, IMapper mapper)
         {
+            this.mapper = mapper;
             this.groupService = groupService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<Group>>> GetGroups(Guid? userId)
+        public async Task<ActionResult<IList<ApiGroup>>> GetGroups(Guid? userId)
         {
-            return Ok(await groupService.GetGroupsAsync(userId));
+            var groups = await groupService.GetGroupsAsync(userId);
+            return mapper.Map<List<ApiGroup>>(groups);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Group>> GetGroup(Guid id)
+        public async Task<ActionResult<ApiGroup>> GetGroup(Guid id)
         {
-            return Ok(await groupService.GetGroupAsync(id));
+            var group = await groupService.GetGroupAsync(id);
+            return mapper.Map<ApiGroup>(group);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Group>> CreateGroup([FromBody] CreateNewGroup newGroup)
+        public async Task<ActionResult<ApiGroup>> CreateGroup([FromBody] CreateNewGroup newGroupData)
         {
-            return Ok(await groupService.AddGroupAsync(newGroup));
+            var group = await groupService.AddGroupAsync(newGroupData);
+            return mapper.Map<ApiGroup>(group);
         }
 
         [HttpPost("{groupId}/add-user/{userId}")]
-        public async Task<ActionResult<Group>> AddUserToGroup(Guid groupId, Guid userId)
+        public async Task<ActionResult<ApiGroup>> AddUserToGroup(Guid groupId, Guid userId)
         {
-            return Ok(await groupService.AddUserToGroupAsync(groupId, userId));
+            var group = await groupService.AddUserToGroupAsync(groupId, userId);
+            return mapper.Map<ApiGroup>(group);
         }
     }
 }

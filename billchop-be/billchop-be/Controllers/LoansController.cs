@@ -1,5 +1,6 @@
-﻿using BillChopBE.DataAccessLayer.Filters;
-using BillChopBE.DataAccessLayer.Models;
+﻿using AutoMapper;
+using BillChopBE.Controllers.Models;
+using BillChopBE.DataAccessLayer.Filters;
 using BillChopBE.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +17,11 @@ namespace BillChopBE.Controllers
     public class LoansController : ControllerBase
     {
         private readonly ILoanService loanService;
+        private readonly IMapper mapper;
 
-        public LoansController(ILoanService loanService) 
+        public LoansController(ILoanService loanService, IMapper mapper) 
         {
+            this.mapper = mapper;
             this.loanService = loanService;
         }
 
@@ -31,9 +34,10 @@ namespace BillChopBE.Controllers
         /// <param name="endTime">Optional DateTime for filtering loans created before a certain time</param>
         /// <returns></returns>
         [HttpGet("provided-loans/{loanerId}")]
-        public async Task<ActionResult<IList<Loan>>> GetProvidedLoans(Guid loanerId, Guid? groupId, DateTime? startTime, DateTime? endTime)
+        public async Task<ActionResult<IList<ApiLoan>>> GetProvidedLoans(Guid loanerId, Guid? groupId, DateTime? startTime, DateTime? endTime)
         {
-            return Ok(await loanService.GetProvidedLoansAsync(loanerId, groupId, startTime, endTime));
+            var loans = await loanService.GetProvidedLoansAsync(loanerId, groupId, startTime, endTime);
+            return mapper.Map<List<ApiLoan>>(loans);
         }
 
         /// <summary>
@@ -46,9 +50,10 @@ namespace BillChopBE.Controllers
         /// <param name="endTime">Optional DateTime for filtering loans created before a certain time</param>
         /// <returns></returns>
         [HttpGet("received-loans/{loaneeId}")]
-        public async Task<ActionResult<IList<Loan>>> GetReceivedLoans(Guid loaneeId, Guid? groupId, DateTime? startTime, DateTime? endTime)
+        public async Task<ActionResult<IList<ApiLoan>>> GetReceivedLoans(Guid loaneeId, Guid? groupId, DateTime? startTime, DateTime? endTime)
         {
-            return Ok(await loanService.GetReceivedLoansAsync(loaneeId, groupId, startTime, endTime));
+            var loans = await loanService.GetReceivedLoansAsync(loaneeId, groupId, startTime, endTime);
+            return mapper.Map<List<ApiLoan>>(loans);
         }
 
         /// <summary>
@@ -60,9 +65,10 @@ namespace BillChopBE.Controllers
         /// <param name="endTime">Optional DateTime for filtering loans created before a certain time</param>
         /// <returns></returns>
         [HttpGet("self-loans/{loanerAndLoaneeId}")]
-        public async Task<ActionResult<IList<Loan>>> GetSelfLoans(Guid loanerAndLoaneeId, Guid? groupId, DateTime? startTime, DateTime? endTime)
+        public async Task<ActionResult<IList<ApiLoan>>> GetSelfLoans(Guid loanerAndLoaneeId, Guid? groupId, DateTime? startTime, DateTime? endTime)
         {
-            return Ok(await loanService.GetSelfLoansAsync(loanerAndLoaneeId, groupId, startTime, endTime));
+            var loans = await loanService.GetSelfLoansAsync(loanerAndLoaneeId, groupId, startTime, endTime);
+            return mapper.Map<List<ApiLoan>>(loans);
         }
 
         /// <summary>
@@ -71,9 +77,10 @@ namespace BillChopBE.Controllers
         /// <param name="loanFilterInfo"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IList<Loan>>> GetLoans([FromQuery] LoanFilterInfo loanFilterInfo) 
+        public async Task<ActionResult<IList<ApiLoan>>> GetLoans([FromQuery] LoanFilterInfo loanFilterInfo) 
         {
-            return Ok(await loanService.GetFilteredLoansAsync(loanFilterInfo));
+            var loans = await loanService.GetFilteredLoansAsync(loanFilterInfo);
+            return mapper.Map<List<ApiLoan>>(loans);
         }
     }
 }

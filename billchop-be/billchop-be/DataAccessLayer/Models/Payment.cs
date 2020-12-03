@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using BillChopBE.DataAccessLayer.Models.Interfaces;
-using BillChopBE.DataAccessLayer.Models.Validation;
+using BillChopBE.Validation;
 using Newtonsoft.Json;
 
 namespace BillChopBE.DataAccessLayer.Models
