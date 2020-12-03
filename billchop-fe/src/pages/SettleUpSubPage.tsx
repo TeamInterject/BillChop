@@ -35,7 +35,7 @@ export default class SettleUpSubPage extends React.Component<ISettleUpSubPagePro
     );
   };
 
-  renderInfoMessage = (): JSX.Element => {
+  renderInfoModal = (): JSX.Element => {
     const { onCloseSettleUp } = this.props;
     return (
       <Modal show centered onHide={onCloseSettleUp}>
@@ -61,7 +61,7 @@ export default class SettleUpSubPage extends React.Component<ISettleUpSubPagePro
       <div className="h-100 w-100 subpage-container">
         {
           loansToSettle.length === 0 ? 
-            this.renderInfoMessage()
+            this.renderInfoModal()
             :
             <div>
               <Row>
