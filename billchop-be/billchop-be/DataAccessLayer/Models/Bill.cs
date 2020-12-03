@@ -1,6 +1,5 @@
 ﻿using BillChopBE.DataAccessLayer.Models.Interfaces;
 using BillChopBE.Validation;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,7 +22,6 @@ namespace BillChopBE.DataAccessLayer.Models
         public DateTime CreationTime { get; set; } = DateTime.Now;
 
         [Required]
-        [JsonIgnore]
         public Guid LoanerId { get; set; }
 
         [Required]
@@ -34,7 +32,6 @@ namespace BillChopBE.DataAccessLayer.Models
         [Required]
         public Guid GroupContextId { get; set; }
 
-        [JsonIgnore]
         public virtual Group GroupContext { get; set; } = null!;
     }
 }

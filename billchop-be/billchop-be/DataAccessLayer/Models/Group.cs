@@ -1,6 +1,5 @@
 ﻿using BillChopBE.DataAccessLayer.Models.Interfaces;
 using BillChopBE.Validation;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,7 +17,6 @@ namespace BillChopBE.DataAccessLayer.Models
 
         public virtual List<User> Users { get; set; } = new List<User>();
         
-        [JsonIgnore]
         public virtual List<Bill> Bills { get; set; } = new List<Bill>();
     }
 }
