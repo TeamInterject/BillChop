@@ -1,16 +1,12 @@
-﻿using BillChopBE.DataAccessLayer.Models;
+using BillChopBE.DataAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace BillChopBE.DataAccessLayer
 {
     public class BillChopContext : DbContext
     {
-        private readonly ILoggerFactory? loggerFactory;
-
-        public BillChopContext(ILoggerFactory loggerFactory) : base()
+        public BillChopContext() : base()
         {
-            this.loggerFactory = loggerFactory;
         }
 
         public BillChopContext(DbContextOptions<BillChopContext> options) : base(options)
@@ -27,7 +23,6 @@ namespace BillChopBE.DataAccessLayer
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder
-                    .UseLoggerFactory(loggerFactory)
                     .UseLazyLoadingProxies()
                     .UseSqlServer(ConnectionStringResolver.GetBillChopDbConnectionString());
             }
@@ -38,6 +33,10 @@ namespace BillChopBE.DataAccessLayer
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
 
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Loans)
