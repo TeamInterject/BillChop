@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using BillChopBE.Extensions;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace BillChopBE
 {
@@ -22,6 +23,7 @@ namespace BillChopBE
                 .ConfigureLogging(logging => 
                 {
                     logging.ClearProviders();
+                    logging.AddConsole();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
