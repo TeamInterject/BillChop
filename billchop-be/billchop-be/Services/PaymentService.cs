@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MoreLinq.Extensions;
 
 namespace BillChopBE.Services
 {
@@ -50,13 +51,12 @@ namespace BillChopBE.Services
             var expectedPayments = new List<Payment>();
             foreach(var otherUser in otherUsers) 
             {
-                var expectedPayment = await GetExpectedPaymentBetweenUsers(
+                var userToUserPayments = await GetExpectedPaymentsBetweenUsers(
                     userA: user, 
                     userB: otherUser, 
                     groupContextId: groupId);
                 
-                if (expectedPayment != null)
-                    expectedPayments.Add(expectedPayment);
+                expectedPayments.AddRange(userToUserPayments);
             }
             
             return expectedPayments;
@@ -90,18 +90,18 @@ namespace BillChopBE.Services
             if (receiver == null)
                 throw new NotFoundException("User with given id does not exist");
 
-            var expectedPayment = await GetExpectedPaymentBetweenUsers(
+            var expectedPayments = await GetExpectedPaymentsBetweenUsers(
                 userA: payer,
                 userB: receiver,
                 groupContextId: newPaymentData.GroupContextId
             );
 
-            if (expectedPayment == null || 
-                payer.Id != expectedPayment.PayerId || 
-                receiver.Id != expectedPayment.ReceiverId) 
-            {
+            if (expectedPayments.Count < 1)
                 throw new BadRequestException("No payment expected.");
-            }
+
+            var expectedPayment = expectedPayments.Single();
+            if (payer.Id != expectedPayment.PayerId || receiver.Id != expectedPayment.ReceiverId) 
+                throw new BadRequestException("No payment expected.");
 
             if (newPaymentData.Amount > expectedPayment.Amount)
                 throw new BadRequestException("Trying to pay back more than owned.");
@@ -111,68 +111,103 @@ namespace BillChopBE.Services
             return await paymentRepository.AddAsync(paymentToAdd);
         }
 
-        public async Task<Payment?> GetExpectedPaymentBetweenUsers(User userA, User userB, Guid? groupContextId) 
+        private static Payment CreatePayment(decimal total, User payer, User receiver, Guid groupContextId) 
         {
-            var bOwesAmount = await GetLoaneeOwnedSum(
+            return new Payment() 
+            {
+                Id = Guid.NewGuid(),
+                Amount = total,
+                PayerId = payer.Id,
+                Payer = payer,
+                ReceiverId = receiver.Id,
+                Receiver = receiver,
+                GroupContextId = groupContextId,
+            };
+        }
+
+        public async Task<List<Payment>> GetExpectedPaymentsBetweenUsers(User userA, User userB, Guid? groupContextId) 
+        {
+            var bOwesTotals = await GetLoaneeOwnedTotals(
                 loaner: userA, 
                 loanee: userB, 
                 groupContextId: groupContextId
             );
 
-            var aOwesAmount = await GetLoaneeOwnedSum(
+            var aOwesTotals = await GetLoaneeOwnedTotals(
                 loaner: userB, 
                 loanee: userA, 
                 groupContextId: groupContextId
             );
 
-            if (aOwesAmount > bOwesAmount) 
-            {
-                return new Payment() 
+            var expectedPayments = aOwesTotals.FullJoin(
+                bOwesTotals,
+                (aOwes) => aOwes.GroupContextId,
+                (aOwes) => aOwes.Total != 0 ? CreatePayment(aOwes.Total, payer: userA, receiver: userB, aOwes.GroupContextId) : null,
+                (bOwes) => bOwes.Total != 0 ? CreatePayment(bOwes.Total, payer: userB, receiver: userA, bOwes.GroupContextId) : null,
+                (aOwes, bOwes) => 
                 {
-                    Id = Guid.NewGuid(),
-                    Amount = aOwesAmount - bOwesAmount,
-                    PayerId = userA.Id,
-                    Payer = userA,
-                    ReceiverId = userB.Id,
-                    Receiver = userB,
-                    GroupContextId = groupContextId ?? Guid.Empty, //TODO.AZ: Fix this by grouping payments
-                };
-            }
+                    if (aOwes.Total > bOwes.Total)
+                        return CreatePayment(aOwes.Total - bOwes.Total, payer: userA, receiver: userB, aOwes.GroupContextId);
 
-            if (bOwesAmount > aOwesAmount) {
-                return new Payment() 
-                {
-                    Id = Guid.NewGuid(),
-                    Amount = bOwesAmount - aOwesAmount,
-                    PayerId = userB.Id,
-                    Payer = userB,
-                    ReceiverId = userA.Id,
-                    Receiver = userA,
-                    GroupContextId = groupContextId ?? Guid.Empty, //TODO.AZ: Fix this by grouping payments
-                };
-            }
+                    if (bOwes.Total > aOwes.Total)
+                        return CreatePayment(bOwes.Total - aOwes.Total, payer: userB, receiver: userA, bOwes.GroupContextId);
 
-            return null;
+                    return null;
+                }
+            );
+
+            return expectedPayments
+                .NotNull()
+                .ToList();
         }
 
-        private async Task<decimal> GetLoaneeOwnedSum(User loaner, User loanee, Guid? groupContextId) {
-            var loansAToB = await GetLoansBetweenUsers(
+        private class GroupedTotals 
+        {
+            public Guid GroupContextId { get;set; }
+            public decimal Total { get; }
+
+            public GroupedTotals(Guid groupContextId, decimal total) 
+            {
+                GroupContextId = groupContextId;
+                Total = total;
+            }
+        }
+
+        private async Task<List<GroupedTotals>> GetLoaneeOwnedTotals(User loaner, User loanee, Guid? groupContextId) {
+            var loansToLoanee = await GetLoansBetweenUsers(
                 loanerId: loaner.Id,
                 loaneeId: loanee.Id,
                 groupContextId: groupContextId
             );
 
-            var bOwesAmount = loansAToB.Sum((loan) => loan.Amount);
+            var loaneeOwesTotals = loansToLoanee
+                .GroupBy(loan => loan.Bill.GroupContextId)
+                .Select(loanGroup => 
+                    new GroupedTotals(loanGroup.Key, loanGroup.Sum(loan => loan.Amount))
+                ).ToList();
 
-            var paymentsBToA = await GetPaymentsBetweenUsers(
+            var paymentsToLoaner = await GetPaymentsBetweenUsers(
                 payerId: loanee.Id,
                 receiverId: loaner.Id,
                 groupContextId: groupContextId
             );
 
-            var bPayedBackAmount = paymentsBToA.Sum((payment) => payment.Amount);
+            var loaneePayedBackTotals = paymentsToLoaner
+                .GroupBy(payment => payment.GroupContextId)
+                .Select(paymentGroup => 
+                    new GroupedTotals(paymentGroup.Key, paymentGroup.Sum(payment => payment.Amount))
+                ).ToList();
 
-            return bOwesAmount - bPayedBackAmount;
+            var totals = loaneeOwesTotals
+                .FullJoin(
+                    loaneePayedBackTotals,
+                    (owes) => owes.GroupContextId,
+                    (owes) => new GroupedTotals(owes.GroupContextId, owes.Total),
+                    (payedBack) => new GroupedTotals(payedBack.GroupContextId, payedBack.Total),
+                    (owes, payedBack) => new GroupedTotals(owes.GroupContextId, owes.Total - payedBack.Total)
+                ).ToList();
+
+            return totals;
         }
 
         private Task<IList<Loan>> GetLoansBetweenUsers(Guid loanerId, Guid loaneeId, Guid? groupContextId) 
