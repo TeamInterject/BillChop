@@ -200,35 +200,49 @@ namespace BillChopBETests
             var exception = Assert.ThrowsAsync<ValidationException>(async () => await userService.AddUserAsync(user2));
         }
 
-        /*[Test]
-        [TestCase("Test", "@test.com")]
-        [TestCase("John K", "john@gmailom")]
-        [TestCase("Alice", "alicyahoo.com")]
-        public void AddUserAsync_WhenAllInformationIsCorrect_ShouldReturnUserWithToken(string name, string email)
+        [Test]
+        [TestCase("Test", "test@test.com", "test123!")]
+        [TestCase("John K", "john@gmail.com", "test123!")]
+        [TestCase("Alice", "alice@yahoo.com", "test123!")]
+        public async Task AddUserAsync_WhenAllInformationIsCorrect_ShouldReturnUserWithToken(string name, string email, string password)
         {
             //Arrange
-            var sutBuilder = new UserServiceSutBuilder();
+            /*var sutBuilder = new UserServiceSutBuilder();
             var user = sutBuilder.CreateUser(name: name, email: email);
             var user2 = new CreateNewUser
             {
                 Email = email,
                 Name = name
             };
+            var userService = sutBuilder.CreateSut();*/
+            var sutBuilder = new UserServiceSutBuilder();
+            
+            var loginDetails = sutBuilder.CreateLoginDetails(email: email, password: password);
+            var user2 = new CreateNewUser
+            {
+                Email = email,
+                Name = name,
+                Password = password,
+            };
+            var user = user2.ToUser();
             var userService = sutBuilder.CreateSut();
 
-            A.CallTo(() => sutBuilder.UserRepository.AddAsync(user))
-               .Returns(user);
+            A.CallTo(() => sutBuilder.UserRepository.GetByEmailAndPasswordAsync(email, Hasher.GetHashed(password)))
+                .Returns(user);
+
+            A.CallTo(() => sutBuilder.UserRepository.AddAsync(A<User>.That.Matches(passedUser => passedUser.Name == user.Name && 
+            passedUser.Password == Hasher.GetHashed(user.Password) && 
+            passedUser.Email == user.Email)))
+                .Returns(user);
 
             //Act
-            var resultLogin = userService.GetUserAsync(user.Id);
+            var resultLogin = await userService.AddUserAsync(user2);
 
             //Assert
-            resultLogin.Result.Name.ShouldBe(name);
-            resultLogin.Result.Email.ShouldBe(email);
+            resultLogin.Name.ShouldBe(name);
+            resultLogin.Email.ShouldBe(email);
 
-            //Act & Assert
-            var exception = Assert.ThrowsAsync<ValidationException>(async () => await userService.AddUserAsync(user2));
-        }*/
+        }
 
         [Test]
         public async Task GetUsersAsync_WhenUsersExists_ShouldReturnAllUsers()
