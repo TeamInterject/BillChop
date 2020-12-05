@@ -61,8 +61,6 @@ namespace BillChopBE.Services
         public async Task<Group> AddUserToGroupAsync(Guid groupId, Guid userId)
         {
             var group = await GetGroupAsync(groupId);
-            if (group == null)
-                throw new NotFoundException($"Group with id {groupId} does not exist.");
 
             var user = await userRepository.GetByIdAsync(userId);
             if (user == null)

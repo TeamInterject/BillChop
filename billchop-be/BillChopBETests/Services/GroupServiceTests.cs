@@ -11,6 +11,7 @@ using ProjectPortableTools.Extensions;
 using Bogus;
 using System.Collections.Generic;
 using System.Linq;
+using BillChopBE.Services.Models;
 
 namespace BillChopBETests
 {
@@ -184,6 +185,7 @@ namespace BillChopBETests
             //Assert
             resultGroup.ShouldBe(group);
         }
+
         [Test]
         public void AddUserToGroupAsync_WhenGroupDoesNotExist_ShouldThrow()
         {
@@ -224,5 +226,30 @@ namespace BillChopBETests
             var exception = Assert.ThrowsAsync<NotFoundException>(async () => await groupService.AddUserToGroupAsync(group.Id, user.Id));
             exception.Message.ShouldBe($"User with id {user.Id} does not exist.");
         }
+
+       /* [Test]
+        public async Task AddGroupAsync_WhenGroupNameIsNotNull_ShouldReturnGroup(string groupName)
+        {
+            //Arrange
+            var sutBuilder = new GroupServiceSutBuilder();
+            var groupService = sutBuilder.CreateSut();
+            var groupToCreate = new CreateNewGroup()
+            {
+                Name = "Test Group 1",
+            };
+            var group = new Group()
+            {
+                Name = "Test Group 1",
+            };
+
+            A.CallTo(() => sutBuilder.GroupRepository.AddAsync(group))
+                .Returns(group);
+
+            //Act
+            var resultGroup = await groupService.AddGroupAsync(groupToCreate);
+
+            //Assert
+            resultGroup.ShouldBe(group);
+        }*/
     }
 }
