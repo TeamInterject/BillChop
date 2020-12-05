@@ -218,8 +218,6 @@ namespace BillChopBETests
                 GroupContextId = group.Id,
                 GroupContext = group,
             };
-            /*var bill = sutBuilder.CreateNewBill("Test bill", 100, group.Id, loaner.Id, DateTime.Now);
-            var bill2 = sutBuilder.CreateNewBill("Test bill2", 150, group.Id, loaner.Id, DateTime.Now);*/
             var billList = new List<Bill>();
             billList.Add(bill);
             var billService = sutBuilder.CreateSut();
@@ -232,11 +230,8 @@ namespace BillChopBETests
                 StartTime = startTime,
                 EndTime = endTime,
             };
-            //var filter = new BillDbFilter(filterInfo);
             var filter = new BillDbFilter(filterInfo);
 
-            /*A.CallTo(() => sutBuilder.BillRepository.GetAllAsync(filter))
-                .Returns(billList);*/
             A.CallTo(() => sutBuilder.BillDbFilterFactory.Create(filterInfo))
                 .Returns(filter);
 
@@ -244,7 +239,6 @@ namespace BillChopBETests
                 .Returns(billList);
 
             //Act
-
             IList<Bill> result = await billService.GetBillsAsync(group.Id, startTime, endTime);
 
             //Assert

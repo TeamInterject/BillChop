@@ -189,19 +189,20 @@ namespace BillChopBETests
         {
             //Arrange
             var sutBuilder = new GroupServiceSutBuilder();
-            var group = sutBuilder.CreateGroupWithUsers("Test", 1);
+            // var group = sutBuilder.CreateGroupWithUsers("Test", 1);
+            var randomGroupID = Guid.NewGuid();
             var user = sutBuilder.CreateUser(name: "Test", email: "test@email.com");
             var groupService = sutBuilder.CreateSut();
 
-            A.CallTo(() => sutBuilder.GroupRepository.GetByIdAsync(group.Id))
+            A.CallTo(() => sutBuilder.GroupRepository.GetByIdAsync(randomGroupID))
                 .Returns<Group?>(null);
 
             A.CallTo(() => sutBuilder.UserRepository.GetByIdAsync(user.Id))
                 .Returns(user);
 
             //Act & Assert
-            var exception = Assert.ThrowsAsync<NotFoundException>(async () => await groupService.AddUserToGroupAsync(group.Id, user.Id));
-            exception.Message.ShouldBe($"Group with id ({group.Id}) does not exist");
+            var exception = Assert.ThrowsAsync<NotFoundException>(async () => await groupService.AddUserToGroupAsync(randomGroupID, user.Id));
+            exception.Message.ShouldBe($"Group with id ({randomGroupID}) does not exist");
         }
 
         [Test]
