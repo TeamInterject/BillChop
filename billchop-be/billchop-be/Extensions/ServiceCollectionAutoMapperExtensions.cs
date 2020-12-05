@@ -1,4 +1,3 @@
-using System;
 using AutoMapper;
 using BillChopBE.Controllers.Models;
 using BillChopBE.DataAccessLayer.Models;

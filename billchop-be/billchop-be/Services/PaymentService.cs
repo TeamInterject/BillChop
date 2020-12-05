@@ -17,6 +17,7 @@ namespace BillChopBE.Services
     {
         Task<Payment> AddPaymentAsync(CreateNewPayment newPaymentData);
         Task<IList<Payment>> GetExpectedPaymentsForUserAsync(Guid userId, Guid? groupId);
+        Task<IList<Payment>> GetFilteredPaymentsAsync(PaymentFilterInfo paymentFilterInfo);
     }
 
     public class PaymentService : IPaymentService
@@ -38,6 +39,12 @@ namespace BillChopBE.Services
             this.userRepository = userRepository;
             this.loanRepository = loanRepository;
             this.paymentRepository = paymentRepository;
+        }
+
+        public Task<IList<Payment>> GetFilteredPaymentsAsync(PaymentFilterInfo paymentFilterInfo)
+        {
+            var filter = paymentDbFilterFactory.Create(paymentFilterInfo);
+            return paymentRepository.GetAllAsync(filter);
         }
 
         public async Task<IList<Payment>> GetExpectedPaymentsForUserAsync(Guid userId, Guid? groupId)
