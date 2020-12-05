@@ -80,7 +80,7 @@ export default class SettleUpSubPage extends React.Component<
         <Modal.Body className="d-flex flex-column align-items-center justify-content-center">
           <img src={DoneIcon} height="48px" width="48px" alt="Groups icon" />
           <p className="text-center m-2">
-            All loans are settled up.
+            Everything is settled up!
           </p>
         </Modal.Body>
         <Modal.Footer className="justify-content-center">
