@@ -1,6 +1,5 @@
 import * as React from "react";
 import Table from "react-bootstrap/Table";
-import UserContext from "../backend/helpers/UserContext";
 import Group from "../backend/models/Group";
 import User from "../backend/models/User";
 import toEuros from "../util/toEuros";
@@ -9,6 +8,7 @@ import Dictionary from "../util/Dictionary";
 export interface IGroupTableProps {
   group: Group;
   expenseAmounts: Dictionary<number>;
+  currentUserId: string;
   colorCode?: boolean;
   showMembersOnlyWithExpenses?: boolean;
   loanerId?: string;
@@ -17,10 +17,11 @@ export interface IGroupTableProps {
 function GroupTableRow(props: {
   user: User, 
   expenseAmounts: Dictionary<number>, 
+  currentUserId: string,
   colorCode?: boolean, 
   loanerId?: string,
 }) {
-  const {user, expenseAmounts, colorCode, loanerId} = props;
+  const {user, expenseAmounts, currentUserId, colorCode, loanerId} = props;
 
   function getExpenseStyling(expense: number | undefined | null): React.CSSProperties | undefined {
     if (!colorCode || !expense || (expense > -0.01 && expense < 0.01))
@@ -35,7 +36,7 @@ function GroupTableRow(props: {
   const formattedExpense = expenseAmounts[user.Id] ? toEuros(expenseAmounts[user.Id]) : "0.00€";
   return (
     <tr>
-      <td>{user.Id === UserContext.authenticatedUser.Id ? "You" : user.Name} {user.Id === loanerId && "(Payer)"}</td>
+      <td>{user.Id === currentUserId ? "You" : user.Name} {user.Id === loanerId && "(Payer)"}</td>
       <td style={getExpenseStyling(expenseAmounts[user.Id])}>
         {formattedExpense}
       </td>
@@ -48,13 +49,13 @@ export default class GroupTable extends React.Component<IGroupTableProps> {
     const {
       group,
       expenseAmounts,
+      currentUserId,
       showMembersOnlyWithExpenses,
       loanerId,
       colorCode,
     } = this.props;
 
     let groupUsers = [...group.Users];
-    const currentUserId = UserContext.authenticatedUser.Id;
 
     if (showMembersOnlyWithExpenses && expenseAmounts !== undefined) {
       groupUsers = group.Users?.filter((user) => {
@@ -70,6 +71,7 @@ export default class GroupTable extends React.Component<IGroupTableProps> {
           key={user.Id} 
           user={user}
           expenseAmounts={expenseAmounts}
+          currentUserId={currentUserId}
           colorCode={colorCode}
           loanerId={loanerId}
         />),

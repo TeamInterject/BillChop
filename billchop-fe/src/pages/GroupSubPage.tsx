@@ -175,6 +175,7 @@ export default class GroupSubPage extends React.Component<
             <GroupTable
               group={group}
               expenseAmounts={expenseAmounts ?? {}}
+              currentUserId={UserContext.authenticatedUser.Id}
               colorCode
             />
           </Col>
