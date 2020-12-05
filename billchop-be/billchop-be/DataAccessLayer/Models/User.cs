@@ -1,6 +1,5 @@
 ﻿using BillChopBE.DataAccessLayer.Models.Interfaces;
-using BillChopBE.DataAccessLayer.Models.Validation;
-using Newtonsoft.Json;
+using BillChopBE.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,13 +22,13 @@ namespace BillChopBE.DataAccessLayer.Models
         [Required]
         public string Password { get; set; } = null!;
 
-        [JsonIgnore]
         public virtual List<Group> Groups { get; set; } = new List<Group>();
-
-        [JsonIgnore]
         public virtual List<Loan> Loans { get; set; } = new List<Loan>();
 
-        [JsonIgnore]
         public virtual List<Bill> Bills { get; set; } = new List<Bill>();
+
+        public virtual List<Payment> PaymentsMade { get; set; } = new List<Payment>();
+
+        public virtual List<Payment> PaymentsReceived { get; set; } = new List<Payment>();
     }
 }

@@ -14,7 +14,7 @@ namespace BillChopBE.Services
 {
     public interface IBillService
     {
-        Task<Bill> CreateAndSplitBillAsync(CreateNewBill newBill);
+        Task<Bill> CreateAndSplitBillAsync(CreateNewBill newBillData);
         Task<IList<Bill>> GetBillsAsync(Guid? groupId, DateTime? startTime, DateTime? endTime);
         Task<IList<Bill>> GetFilteredBillsAsync(BillFilterInfo billFilterInfo);
     }
@@ -52,22 +52,22 @@ namespace BillChopBE.Services
             return billRepository.GetAllAsync(filter);
         }
 
-        public async Task<Bill> CreateAndSplitBillAsync(CreateNewBill newBill)
+        public async Task<Bill> CreateAndSplitBillAsync(CreateNewBill newBillData)
         {
-            newBill.Validate();
+            newBillData.Validate();
 
-            var group = await groupRepository.GetByIdAsync(newBill.GroupContextId);
+            var group = await groupRepository.GetByIdAsync(newBillData.GroupContextId);
             if (group == null)
-                throw new NotFoundException($"Group with id {newBill.GroupContextId} does not exist.");
+                throw new NotFoundException($"Group with id {newBillData.GroupContextId} does not exist.");
 
-            var loaner = group.Users.FirstOrDefault(user => user.Id == newBill.LoanerId);
+            var loaner = group.Users.FirstOrDefault(user => user.Id == newBillData.LoanerId);
             if (loaner == null)
-                throw new NotFoundException($"Payee with id {newBill.LoanerId} does not exist in group.");
+                throw new NotFoundException($"Payee with id {newBillData.LoanerId} does not exist in group.");
 
             var bill = new Bill()
             {
-                Name = newBill.Name,
-                Total = newBill.Total,
+                Name = newBillData.Name,
+                Total = newBillData.Total,
                 LoanerId = loaner.Id,
                 Loaner = loaner,
                 GroupContextId = group.Id,

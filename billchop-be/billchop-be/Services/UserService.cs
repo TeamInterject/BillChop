@@ -19,7 +19,7 @@ namespace BillChopBE.Services
         Task<IList<UserWithoutPassword>> GetUsersAsync();
         Task<IList<UserWithoutPassword>> SearchForUsersAsync(string keyword, Guid? exclusionGroupId, int top);
         Task<UserWithoutPassword> GetUserAsync(Guid id);
-        Task<UserWithToken> AddUserAsync(CreateNewUser newUser);
+        Task<UserWithToken> AddUserAsync(CreateNewUser newUserData);
     }
 
     public class UserService : IUserService
@@ -46,7 +46,7 @@ namespace BillChopBE.Services
         {
             loginDetails.Validate();
             var hashed = Hasher.GetHashed(loginDetails.Password);
-            var user = await userRepository.GetByEmailAndPassword(loginDetails.Email, hashed);
+            var user = await userRepository.GetByEmailAndPasswordAsync(loginDetails.Email, hashed);
             if (user == null)
                 throw new UnauthorizedException($"Username or password is incorrect");
 
@@ -83,15 +83,15 @@ namespace BillChopBE.Services
                 .ToList();
         }
 
-        public async Task<UserWithToken> AddUserAsync(CreateNewUser newUser)
+        public async Task<UserWithToken> AddUserAsync(CreateNewUser newUserData)
         {
-            newUser.Validate();
-            var user = newUser.ToUser();
+            newUserData.Validate();
+            var user = newUserData.ToUser();
 
             user.Password = Hasher.GetHashed(user.Password);
 
             var addedUser = await userRepository.AddAsync(user);
-            return await LoginAsync(new LoginDetails() { Email = addedUser.Email, Password = newUser.Password });
+            return await LoginAsync(new LoginDetails() { Email = addedUser.Email, Password = newUserData.Password });
         }
     }
 }

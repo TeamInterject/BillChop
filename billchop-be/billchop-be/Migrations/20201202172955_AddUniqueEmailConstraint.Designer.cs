@@ -4,14 +4,16 @@ using BillChopBE.DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BillChopBE.Migrations
 {
     [DbContext(typeof(BillChopContext))]
-    partial class BillChopContextModelSnapshot : ModelSnapshot
+    [Migration("20201202172955_AddUniqueEmailConstraint")]
+    partial class AddUniqueEmailConstraint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,38 +89,6 @@ namespace BillChopBE.Migrations
                     b.HasIndex("LoaneeId");
 
                     b.ToTable("Loans");
-                });
-
-            modelBuilder.Entity("BillChopBE.DataAccessLayer.Models.Payment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("GroupContextId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PayerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ReceiverId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GroupContextId");
-
-                    b.HasIndex("PayerId");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("BillChopBE.DataAccessLayer.Models.User", b =>
@@ -200,33 +170,6 @@ namespace BillChopBE.Migrations
                     b.Navigation("Loanee");
                 });
 
-            modelBuilder.Entity("BillChopBE.DataAccessLayer.Models.Payment", b =>
-                {
-                    b.HasOne("BillChopBE.DataAccessLayer.Models.Group", "GroupContext")
-                        .WithMany()
-                        .HasForeignKey("GroupContextId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BillChopBE.DataAccessLayer.Models.User", "Payer")
-                        .WithMany("PaymentsMade")
-                        .HasForeignKey("PayerId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("BillChopBE.DataAccessLayer.Models.User", "Receiver")
-                        .WithMany("PaymentsReceived")
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("GroupContext");
-
-                    b.Navigation("Payer");
-
-                    b.Navigation("Receiver");
-                });
-
             modelBuilder.Entity("GroupUser", b =>
                 {
                     b.HasOne("BillChopBE.DataAccessLayer.Models.Group", null)
@@ -257,10 +200,6 @@ namespace BillChopBE.Migrations
                     b.Navigation("Bills");
 
                     b.Navigation("Loans");
-
-                    b.Navigation("PaymentsMade");
-
-                    b.Navigation("PaymentsReceived");
                 });
 #pragma warning restore 612, 618
         }

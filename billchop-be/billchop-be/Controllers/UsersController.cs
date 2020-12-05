@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
+using BillChopBE.Controllers.Models;
 using BillChopBE.Exceptions;
 using BillChopBE.Services;
 using BillChopBE.Services.Models;
@@ -15,28 +17,32 @@ namespace BillChopBE.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService userService;
+        private readonly IMapper mapper;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IMapper mapper)
         {
+            this.mapper = mapper;
             this.userService = userService;
         }
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<IList<UserWithoutPassword>>> GetUsers() 
+        public async Task<ActionResult<IList<ApiUser>>> GetUsers() 
         {
-            return Ok(await userService.GetUsersAsync());
+            var users = await userService.GetUsersAsync();
+            return mapper.Map<List<ApiUser>>(users);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserWithToken>> Login([FromBody] LoginDetails loginDetails)
+        public async Task<ActionResult<ApiUserWithToken>> Login([FromBody] LoginDetails loginDetails)
         {
-            return Ok(await userService.LoginAsync(loginDetails));
+            var user = await userService.LoginAsync(loginDetails);
+            return mapper.Map<ApiUserWithToken>(user);
         }
 
         [Authorize]
         [HttpGet("current")]
-        public async Task<ActionResult<UserWithoutPassword>> GetCurrentUser()
+        public async Task<ActionResult<ApiUser>> GetCurrentUser()
         {
             var userId = User.FindFirst("Id");
             if (userId == null)
@@ -47,14 +53,15 @@ namespace BillChopBE.Controllers
 
             System.Diagnostics.Debug.WriteLine($"Currently logged in user: {currentUser.Id} {currentUser.Email}");
 
-            return Ok(currentUser);
+            return mapper.Map<ApiUser>(currentUser);
         }
 
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserWithoutPassword>> GetUser(Guid id)
+        public async Task<ActionResult<ApiUser>> GetUser(Guid id)
         {
-            return Ok(await userService.GetUserAsync(id));
+            var user = await userService.GetUserAsync(id);
+            return mapper.Map<ApiUser>(user);
         }
 
         /// <summary>
@@ -66,15 +73,17 @@ namespace BillChopBE.Controllers
         /// <returns>List of matching users</returns>
         [Authorize]
         [HttpGet("search/{keyword}")]
-        public async Task<ActionResult<IList<UserWithoutPassword>>> SearchForUsers(string keyword, Guid? exclusionGroupId, int top = 10)
+        public async Task<ActionResult<IList<ApiUser>>> SearchForUsers(string keyword, Guid? exclusionGroupId, int top = 10)
         {
-            return Ok(await userService.SearchForUsersAsync(keyword, exclusionGroupId, top));
+            var users = await userService.SearchForUsersAsync(keyword, exclusionGroupId, top);
+            return mapper.Map<List<ApiUser>>(users);
         }
 
         [HttpPost]
-        public async Task<ActionResult<UserWithoutPassword>> CreateUser([FromBody] CreateNewUser newUser)
+        public async Task<ActionResult<ApiUser>> CreateUser([FromBody] CreateNewUser newUserData)
         {
-            return Ok(await userService.AddUserAsync(newUser));
+            var user = await userService.AddUserAsync(newUserData);
+            return mapper.Map<ApiUser>(user);
         }
     }
 }

@@ -1,4 +1,6 @@
 {
     "dotnet-test-explorer.testProjectPath": "",
-    "dotnet-test-explorer.autoWatch": true
+    "dotnet-test-explorer.autoWatch": true,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
 }

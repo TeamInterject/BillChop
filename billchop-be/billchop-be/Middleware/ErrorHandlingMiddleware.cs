@@ -30,11 +30,10 @@ namespace BillChopBE.Middleware
         private static Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             var code = HttpStatusCode.InternalServerError; // 500 if unexpected
-            var msg = "Internal server error";
+            var msg = ex.Message;
             if (ex is AbstractUserFriendlyException friendlyException)
             {
                 code = friendlyException.StatusCode;
-                msg = ex.Message;
             }
 
             var result = JsonConvert.SerializeObject(new { error = msg });
