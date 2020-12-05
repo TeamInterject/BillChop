@@ -41,6 +41,7 @@ export default class PaymentClient extends BaseClient {
 
     LoadingContext.isLoading = true;
     return Axios.post(requestUrl, createNewPayment).then((response: AxiosResponse<Payment>) => {
+      LoadingContext.isLoading = false;
       return response.data;
     });
   };
