@@ -30,10 +30,10 @@ export default class SettleUpSubPage extends React.Component<
   }
 
   componentDidMount(): void {
-    this.getLoansToSettle();
+    this.getExpectedPayments();
   }
 
-  getLoansToSettle = (): void => {
+  getExpectedPayments = (): void => {
     this.setState({
       loansToSettle: [
         {
