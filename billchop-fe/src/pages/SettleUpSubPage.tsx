@@ -5,71 +5,66 @@ import ImageButton from "../components/ImageButton";
 import SettleUpSlider from "../components/SettleUpSlider";
 import "../styles/groups-page.css";
 import DoneIcon from "../assets/done-icon.svg";
+import Payment from "../backend/models/Payment";
+import PaymentClient from "../backend/clients/PaymentClient";
+import UserContext from "../backend/helpers/UserContext";
 
 export interface ISettleUpSubPageProps {
+  groupId: string;
   onCloseSettleUp: () => void;
 }
 
-interface ISettleUpSubPabeState {
-  loansToSettle: { // [TM] NOTE this is just a draft object, when implementing new model in BE feel free to change it however you seem fit.
-    Id: string;
-    loanerName: string;
-    amountToSettle: number;
-  }[];
+interface ISettleUpSubPageState {
+  expectedPayments: Payment[];
 }
 
 export default class SettleUpSubPage extends React.Component<
   ISettleUpSubPageProps,
-  ISettleUpSubPabeState
+  ISettleUpSubPageState
 > {
   constructor(props: ISettleUpSubPageProps) {
     super(props);
     this.state = {
-      loansToSettle: [],
+      expectedPayments: [],
     };
   }
+
+  private paymentClient = new PaymentClient();
 
   componentDidMount(): void {
     this.getExpectedPayments();
   }
 
   getExpectedPayments = (): void => {
-    this.setState({
-      loansToSettle: [
-        {
-          Id: "1",
-          loanerName: "Ainoras",
-          amountToSettle: 100,
-        },
-        {
-          Id: "2",
-          loanerName: "Martynas",
-          amountToSettle: 350,
-        },
-        {
-          Id: "3",
-          loanerName: "Maurice",
-          amountToSettle: 225,
-        },
-      ],
+    const { groupId } = this.props;
+
+    this.paymentClient.getExpectedPayments({
+      userId: UserContext.authenticatedUser.Id,
+      groupId,
+    }).then((payments) => this.setState({ expectedPayments: payments }));
+  };
+
+  handleSettle = (receiverId: string, settleAmount: number): void => {
+    const { groupId } = this.props;
+
+    this.paymentClient.createPayment({
+      Amount: settleAmount,
+      PayerId: UserContext.authenticatedUser.Id,
+      ReceiverId: receiverId,
+      GroupContextId: groupId,
     });
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  handleSettle = (Id: string, settleAmount: number): void => {
-    //TODO call BE
-  };
-
   renderSettleUpSliders = (): JSX.Element => {
-    const { loansToSettle } = this.state;
+    const { expectedPayments } = this.state;
 
     return (
       <Col className="settle-up-subpage__sliders">
         {
-          loansToSettle.map((loan) => {
+          expectedPayments.map((payment) => {
             return <SettleUpSlider
-              key={loan.Id}
-              loanToSettle={loan}
+              key={payment.Id}
+              paymentToMake={payment}
               onSettle={this.handleSettle}
             />;
           })
@@ -99,12 +94,12 @@ export default class SettleUpSubPage extends React.Component<
 
   render(): JSX.Element {
     const { onCloseSettleUp } = this.props;
-    const { loansToSettle } = this.state;
+    const { expectedPayments } = this.state;
 
     return (
       <div className="h-100 w-100 subpage-container">
         {
-          loansToSettle.length === 0 ? 
+          expectedPayments.length === 0 ? 
             this.renderInfoModal()
             :
             <div>
