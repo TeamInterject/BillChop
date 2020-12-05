@@ -206,11 +206,10 @@ namespace BillChopBE.Services
                 ).ToList();
 
             var totals = loaneeOwesTotals
-                .FullJoin(
+                .LeftJoin(
                     loaneePayedBackTotals,
                     (owes) => owes.GroupContextId,
                     (owes) => new GroupedTotals(owes.GroupContextId, owes.Total),
-                    (payedBack) => new GroupedTotals(payedBack.GroupContextId, payedBack.Total),
                     (owes, payedBack) => new GroupedTotals(owes.GroupContextId, owes.Total - payedBack.Total)
                 ).ToList();
 
