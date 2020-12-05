@@ -28,8 +28,6 @@ namespace BillChopBE.Extensions
                 cfg.CreateMap<Payment, ApiPayment>();          
             });
 
-            config.AssertConfigurationIsValid();
-
             return config;
         }
     }

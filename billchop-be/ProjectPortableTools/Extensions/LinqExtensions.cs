@@ -10,10 +10,5 @@ namespace ProjectPortableTools.Extensions
         {
             return enumerable.Where(e => e != null).Select(e => e!);
         }
-
-        public static async Task<IEnumerable<T>> WhenAll<T>(this IEnumerable<Task<T>> enumerable) 
-        {
-            return await Task.WhenAll(enumerable);
-        }
     }
 }
