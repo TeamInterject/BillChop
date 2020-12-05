@@ -47,6 +47,20 @@ function GroupTableRow(props: {
 }
 
 export default class GroupTable extends React.Component<IGroupTableProps> {
+  currentUserComparer = (userA: User, userB: User): number => {
+    const {
+      currentUserId,
+    } = this.props;
+
+    if (userA.Id === currentUserId)
+      return -1;
+
+    if (userB.Id === currentUserId)
+      return 1;
+
+    return 0;
+  };
+
   renderTableContent = (): React.ReactNode => {
     const {
       group,
@@ -66,7 +80,7 @@ export default class GroupTable extends React.Component<IGroupTableProps> {
       });
     }
 
-    groupUsers.sort((user) => user.Id === currentUserId ? -1 : 0);
+    groupUsers.sort(this.currentUserComparer);
     
     return groupUsers
       .map((user) => (
