@@ -218,8 +218,10 @@ namespace BillChopBETests
                 GroupContextId = group.Id,
                 GroupContext = group,
             };
-            var billList = new List<Bill>();
-            billList.Add(bill);
+            var billList = new List<Bill>
+            {
+                bill
+            };
             var billService = sutBuilder.CreateSut();
             var startTime = DateTime.Now.AddTicks(-1000);
             var endTime = DateTime.Now.AddTicks(1000);

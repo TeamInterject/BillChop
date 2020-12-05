@@ -12,6 +12,7 @@ using Bogus;
 using System.Collections.Generic;
 using System.Linq;
 using BillChopBE.Services.Models;
+using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 
 namespace BillChopBETests
 {
@@ -66,8 +67,10 @@ namespace BillChopBETests
             var group = sutBuilder.CreateGroupWithUsers("Test", 6);
             var user = sutBuilder.CreateUser(group: group, name: "Test", email: "test@email.com");
             var groupService = sutBuilder.CreateSut();
-            IList<Group> groupList = new List<Group>();
-            groupList.Add(group);
+            IList<Group> groupList = new List<Group>
+            {
+                group
+            };
 
             A.CallTo(() => sutBuilder.GroupRepository.GetByIdAsync(group.Id))
                 .Returns(group);
@@ -93,9 +96,10 @@ namespace BillChopBETests
             var group = sutBuilder.CreateGroupWithUsers("Test", 6);
             var user = sutBuilder.CreateUser(name: "Test", email: "test@email.com");
             var groupService = sutBuilder.CreateSut();
-            IList<Group> groupList = new List<Group>();
-            groupList.Add(group);
-
+            IList<Group> groupList = new List<Group>
+            {
+                group
+            };
 
             A.CallTo(() => sutBuilder.GroupRepository.GetAllAsync(null))
                 .Returns(groupList);
@@ -114,8 +118,10 @@ namespace BillChopBETests
             var sutBuilder = new GroupServiceSutBuilder();
             var group = sutBuilder.CreateGroupWithUsers("Test", 6);
             var groupService = sutBuilder.CreateSut();
-            IList<Group> groupList = new List<Group>();
-            groupList.Add(group);
+            IList<Group> groupList = new List<Group>
+            {
+                group
+            };
             var userid = Guid.NewGuid();
 
             A.CallTo(() => sutBuilder.GroupRepository.GetByIdAsync(group.Id))
@@ -227,22 +233,24 @@ namespace BillChopBETests
             exception.Message.ShouldBe($"User with id {user.Id} does not exist.");
         }
 
-       /* [Test]
-        public async Task AddGroupAsync_WhenGroupNameIsNotNull_ShouldReturnGroup(string groupName)
+        [Test]
+        public async Task AddGroupAsync_WhenGroupNameIsNotNull_ShouldReturnGroup()
         {
             //Arrange
             var sutBuilder = new GroupServiceSutBuilder();
             var groupService = sutBuilder.CreateSut();
+            string groupName = "Test Group 1";
             var groupToCreate = new CreateNewGroup()
             {
-                Name = "Test Group 1",
+                Name = groupName,
             };
             var group = new Group()
             {
-                Name = "Test Group 1",
+                Id = Guid.NewGuid(),
+                Name = groupName,
             };
 
-            A.CallTo(() => sutBuilder.GroupRepository.AddAsync(group))
+            A.CallTo(() => sutBuilder.GroupRepository.AddAsync(A<Group>.That.Matches(passedGroup => passedGroup.Name == groupToCreate.Name)))
                 .Returns(group);
 
             //Act
@@ -250,6 +258,18 @@ namespace BillChopBETests
 
             //Assert
             resultGroup.ShouldBe(group);
-        }*/
+        }
+
+        [Test]
+        public void AddGroupAsync_WhenGroupNameIsNull_ShouldThrow()
+        {
+            //Arrange
+            var sutBuilder = new GroupServiceSutBuilder();
+            var groupService = sutBuilder.CreateSut();
+            var groupToCreate = new CreateNewGroup();
+            
+            //Act & Assert
+            var exception = Assert.ThrowsAsync<ValidationException>(async () => await groupService.AddGroupAsync(groupToCreate));
+        }
     }
 }
