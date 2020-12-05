@@ -46,7 +46,7 @@ export default class SettleUpSlider extends React.Component<
           <Form.Row>
             <Col className="ml-2 mr-2 mb-1">
               <div className="d-flex justify-content-between align-items-center">
-                <span>You owe {`${paymentToMake.Payer.Id} ${paymentToMake.Amount}€`}</span>
+                <span>You owe {`${paymentToMake.Receiver.Name} ${paymentToMake.Amount}€`}</span>
                 <div className="d-flex justify-content-end align-items-center">
                   <span className="mr-2">Pay:</span>
                   <CurrencyInput

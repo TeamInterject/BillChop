@@ -5,7 +5,6 @@ import CreateNewPayment from "../models/CreateNewPayment";
 import Payment from "../models/Payment";
 import BaseClient from "./BaseClient";
 
-const USER_PARAM = "userId";
 const GROUP_PARAM = "groupId";
 
 export default class PaymentClient extends BaseClient {
@@ -19,12 +18,12 @@ export default class PaymentClient extends BaseClient {
   }): Promise<Payment[]> => {
     const { userId, groupId } = props;
 
-    const userQuery = this.createQuery(USER_PARAM, userId);
     const groupQuery = this.createQuery(GROUP_PARAM, groupId);
 
     const requestUrl = url(
       this.baseUrl,
-      userQuery,
+      "user",
+      userId,
       groupQuery,
     );
 
