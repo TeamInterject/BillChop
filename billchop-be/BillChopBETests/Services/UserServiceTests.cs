@@ -12,6 +12,8 @@ using Bogus;
 using System.Collections.Generic;
 using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 using BillChopBE.Services.Configurations;
+using ProjectPortableTools.Extensions;
+using System.Linq;
 
 namespace BillChopBETests
 {
@@ -51,6 +53,17 @@ namespace BillChopBETests
 
                 return user;
             }
+
+            public List<UserWithoutPassword> CovertUsersToUsersWithoutPassword(List<User> users)
+            {
+                return users.Select(u => new UserWithoutPassword(u)).ToList();
+            }
+
+            public List<User> CreateUsers(int userCount)
+            {
+                return userCount.Select((_) => CreateUser()).ToList();
+            }
+
             public LoginDetails CreateLoginDetails(string? email = null, string? password = null)
             {
                 var faker = new Faker();
@@ -185,6 +198,78 @@ namespace BillChopBETests
 
             //Act & Assert
             var exception = Assert.ThrowsAsync<ValidationException>(async () => await userService.AddUserAsync(user2));
+        }
+
+        /*[Test]
+        [TestCase("Test", "@test.com")]
+        [TestCase("John K", "john@gmailom")]
+        [TestCase("Alice", "alicyahoo.com")]
+        public void AddUserAsync_WhenAllInformationIsCorrect_ShouldReturnUserWithToken(string name, string email)
+        {
+            //Arrange
+            var sutBuilder = new UserServiceSutBuilder();
+            var user = sutBuilder.CreateUser(name: name, email: email);
+            var user2 = new CreateNewUser
+            {
+                Email = email,
+                Name = name
+            };
+            var userService = sutBuilder.CreateSut();
+
+            A.CallTo(() => sutBuilder.UserRepository.AddAsync(user))
+               .Returns(user);
+
+            //Act
+            var resultLogin = userService.GetUserAsync(user.Id);
+
+            //Assert
+            resultLogin.Result.Name.ShouldBe(name);
+            resultLogin.Result.Email.ShouldBe(email);
+
+            //Act & Assert
+            var exception = Assert.ThrowsAsync<ValidationException>(async () => await userService.AddUserAsync(user2));
+        }*/
+
+        [Test]
+        public async Task GetUsersAsync_WhenUsersExists_ShouldReturnAllUsers()
+        {
+            //Arrange
+            var sutBuilder = new UserServiceSutBuilder();   
+            List<User> users = sutBuilder.CreateUsers(5);
+            var usersWithoutPassword = sutBuilder.CovertUsersToUsersWithoutPassword(users);
+            var userService = sutBuilder.CreateSut();
+
+            A.CallTo(() => sutBuilder.UserRepository.GetAllAsync(null))
+               .Returns(users);
+
+            //Act
+            IList<UserWithoutPassword> resultLogin = await userService.GetUsersAsync();
+
+            //Assert
+            resultLogin.ShouldBe(usersWithoutPassword);
+        }
+
+        [Test]
+        public async Task SearchFurUsersAsync_WhenUsersMatchKeyword_ShouldReturnMatchedUsers()
+        {
+            //Arrange
+            var sutBuilder = new UserServiceSutBuilder();
+            List<User> returnedUsers = new List<User>
+            {
+                sutBuilder.CreateUser(name: "Jack", email: "jack@gg.com", password: "password"),
+                sutBuilder.CreateUser(name: "James", email: "james@gg.com", password: "password"),
+            };
+            var usersWithoutPassword = sutBuilder.CovertUsersToUsersWithoutPassword(returnedUsers);
+            var userService = sutBuilder.CreateSut();
+
+            A.CallTo(() => sutBuilder.UserRepository.SearchNameAndEmailAsync("ja", null, 5))
+               .Returns(returnedUsers);
+
+            //Act
+            IList<UserWithoutPassword> resultLogin = await userService.SearchForUsersAsync("ja", null, 5);
+
+            //Assert
+            resultLogin.ShouldBe(usersWithoutPassword);
         }
     }
 }

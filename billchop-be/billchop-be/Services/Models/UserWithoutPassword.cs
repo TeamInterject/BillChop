@@ -26,6 +26,25 @@ namespace BillChopBE.Services.Models
 
         [Required]
         public string Email { get; set; } = null!;
+
+        public override bool Equals(object? obj)
+        {
+            var item = obj as UserWithoutPassword;
+
+            if (item == null)
+            {
+                return false;
+            }
+
+            return Id.Equals(item.Id) &&
+                Name.Equals(item.Name) &&
+                Email.Equals(item.Email);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 
     public class UserWithToken: UserWithoutPassword
