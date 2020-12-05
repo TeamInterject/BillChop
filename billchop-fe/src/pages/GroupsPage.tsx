@@ -91,7 +91,7 @@ export default class GroupsPage extends React.Component<
     const selectedGroup = groups.find((group) => group.Id === selectedGroupId);
     return (
       <Row className="h-100">
-        <Col className="p-0 border-right" md={2}>
+        <Col className="p-0 border-right" sm={2}>
           <Sidebar
             sidebarTabs={this.getGroupsSidebarTabs()}
             onTabClick={this.handleOnGroupTabSelect}
@@ -102,7 +102,6 @@ export default class GroupsPage extends React.Component<
             showSettleUp ?
               <SettleUpSubPage
                 onCloseSettleUp={this.handleCloseSettleUp}
-                onSettle={this.handleCloseSettleUp}
               />
               :
               (

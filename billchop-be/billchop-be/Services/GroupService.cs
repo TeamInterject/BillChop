@@ -12,7 +12,7 @@ namespace BillChopBE.Services
     {
         Task<IList<Group>> GetGroupsAsync(Guid? userId);
         Task<Group> GetGroupAsync(Guid id);
-        Task<Group> AddGroupAsync(CreateNewGroup newGroup);
+        Task<Group> AddGroupAsync(CreateNewGroup newGroupData);
         Task<Group> AddUserToGroupAsync(Guid groupId, Guid userId);
     }
 
@@ -50,10 +50,10 @@ namespace BillChopBE.Services
             return group ?? throw new NotFoundException($"Group with id ({id}) does not exist");
         }       
 
-        public Task<Group> AddGroupAsync(CreateNewGroup newGroup)
+        public Task<Group> AddGroupAsync(CreateNewGroup newGroupData)
         {
-            newGroup.Validate();
-            var group = newGroup.ToGroup();
+            newGroupData.Validate();
+            var group = newGroupData.ToGroup();
 
             return groupRepository.AddAsync(group);
         }

@@ -17,6 +17,7 @@ namespace BillChopBE.DataAccessLayer
         public DbSet<Group> Groups => Set<Group>();
         public DbSet<Loan> Loans => Set<Loan>();
         public DbSet<Bill> Bills => Set<Bill>();
+        public DbSet<Payment> Payments => Set<Payment>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
         {
@@ -60,6 +61,16 @@ namespace BillChopBE.DataAccessLayer
                 .HasMany(b => b.Loans)
                 .WithOne(e => e.Bill)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.PaymentsMade)
+                .WithOne(u => u.Payer)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.PaymentsReceived)
+                .WithOne(u => u.Receiver)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

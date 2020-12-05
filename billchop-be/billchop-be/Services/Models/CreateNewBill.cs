@@ -1,6 +1,6 @@
-﻿using BillChopBE.DataAccessLayer.Models.Validation;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
+using BillChopBE.Validation;
 
 namespace BillChopBE.Services.Models
 {

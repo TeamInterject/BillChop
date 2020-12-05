@@ -22,6 +22,7 @@ namespace BillChopBE
                 .ConfigureLogging(logging => 
                 {
                     logging.ClearProviders();
+                    logging.AddConsole();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
