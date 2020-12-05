@@ -1,11 +1,8 @@
 import * as React from "react";
 import { Col, Row } from "react-bootstrap";
-import { produce } from "immer";
 import BillClient from "../backend/clients/BillClient";
-import LoanClient from "../backend/clients/LoanClient";
 import Bill from "../backend/models/Bill";
 import Group from "../backend/models/Group";
-import Loan from "../backend/models/Loan";
 import BillsListAccordion from "../components/BillsListAccordion";
 import GroupPageHeader from "../components/GroupPageHeader";
 import GroupTable from "../components/GroupTable";
@@ -14,6 +11,8 @@ import Dictionary from "../util/Dictionary";
 import getMonthName from "../util/getMonthName";
 import UserContext from "../backend/helpers/UserContext";
 import "../styles/groups-page.css";
+import PaymentClient from "../backend/clients/PaymentClient";
+import produce from "immer";
 
 export enum LoanType {
   Provided,
@@ -37,7 +36,7 @@ export default class GroupSubPage extends React.Component<
 > {
   private billClient = new BillClient();
 
-  private loanClient = new LoanClient();
+  private paymentClient = new PaymentClient();
 
   constructor(props: IGroupSubPageProps) {
     super(props);
@@ -48,14 +47,14 @@ export default class GroupSubPage extends React.Component<
   }
 
   componentDidMount(): void {
-    this.getUserLoans();
+    this.getExpectedPayments();
     this.getGroupBills();
   }
 
   componentDidUpdate(prevProps: IGroupSubPageProps): void {
     const { group } = this.props;
     if (group.Id !== prevProps.group.Id) {
-      this.getUserLoans();
+      this.getExpectedPayments();
       this.getGroupBills();
     }
   }
@@ -71,22 +70,29 @@ export default class GroupSubPage extends React.Component<
       });
   };
 
-  getUserLoans = async (): Promise<void> => {
+  getExpectedPayments = (): void => {
     const { group } = this.props;
 
-    const currentUserId = UserContext.authenticatedUser.Id;
+    this.paymentClient.getExpectedPayments({
+      userId: UserContext.authenticatedUser.Id,
+      groupId: group.Id,
+    }).then((payments) => {
+      const expenseAmounts: Dictionary<number> = {};
+      const currentUserId = UserContext.authenticatedUser.Id;
 
-    const providedLoansAmounts = await this.loanClient
-      .getProvidedLoans({ loanerId: currentUserId, groupId: group.Id })
-      .then((loans) => this.buildLoanAmounts(loans, LoanType.Provided));
+      produce(expenseAmounts, (draftAmounts) => {
+        payments.forEach((payment) => {
+          expenseAmounts[payment.Receiver.Id] = draftAmounts[payment.Receiver.Id] ?? 0;
+          if (payment.Payer.Id === currentUserId) {
+            expenseAmounts[payment.Receiver.Id] -= payment.Amount;
+          } else {
+            expenseAmounts[payment.Receiver.Id] += payment.Amount;
+          }
+        });
+      });
 
-    const expenseAmounts = await this.loanClient
-      .getReceivedLoans({ loaneeId: currentUserId, groupId: group.Id })
-      .then((loans) =>
-        this.buildLoanAmounts(loans, LoanType.Received, providedLoansAmounts),
-      );
-
-    this.setState({ expenseAmounts });
+      this.setState({ expenseAmounts });
+    });
   };
 
   getRecentGroupSpendingDatasets = (): IBarChartDataset<number>[] => {
@@ -130,29 +136,9 @@ export default class GroupSubPage extends React.Component<
       })
       .then(() => {
         this.getGroupBills();
-        this.getUserLoans();
+        this.getExpectedPayments();
       });
   };
-
-  private buildLoanAmounts(
-    loans: Loan[],
-    type: LoanType,
-    expenseAmounts?: Dictionary<number>,
-  ): Dictionary<number> {
-    const amounts = expenseAmounts ?? {};
-
-    return produce(amounts, (draftAmounts) => {
-      loans.forEach((loan: Loan) => {
-        if (type === LoanType.Provided) {
-          draftAmounts[loan.Loanee.Id] = draftAmounts[loan.Loanee.Id] ?? 0;
-          draftAmounts[loan.Loanee.Id] += loan.Amount;
-        } else if (type === LoanType.Received) {
-          draftAmounts[loan.Loaner.Id] = draftAmounts[loan.Loaner.Id] ?? 0;
-          draftAmounts[loan.Loaner.Id] -= loan.Amount;
-        }
-      });
-    });
-  }
 
   render(): JSX.Element {
     const { group, onAddNewMember, onOpenSettleUp } = this.props;

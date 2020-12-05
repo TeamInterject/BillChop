@@ -37,11 +37,15 @@ export default class SettleUpSubPage extends React.Component<
 
   getExpectedPayments = (): void => {
     const { groupId } = this.props;
+    const userId = UserContext.authenticatedUser.Id;
 
     this.paymentClient.getExpectedPayments({
-      userId: UserContext.authenticatedUser.Id,
+      userId,
       groupId,
-    }).then((payments) => this.setState({ expectedPayments: payments }));
+    }).then((payments) => {
+      const expectedPayments = payments.filter((payment) => payment.Payer.Id === userId);
+      this.setState({ expectedPayments });
+    });
   };
 
   handleSettle = (receiverId: string, settleAmount: number): void => {
