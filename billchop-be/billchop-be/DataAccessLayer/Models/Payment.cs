@@ -19,13 +19,11 @@ namespace BillChopBE.DataAccessLayer.Models
         [Required]
         public Guid PayerId { get; set; }
 
-        [Required]
         public virtual User Payer { get; set; } = null!;
 
         [Required]
         public Guid ReceiverId { get; set; }
 
-        [Required]
         public virtual User Receiver { get; set; } = null!;
 
         [Required]
