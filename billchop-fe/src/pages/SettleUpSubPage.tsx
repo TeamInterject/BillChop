@@ -56,7 +56,7 @@ export default class SettleUpSubPage extends React.Component<
       PayerId: UserContext.authenticatedUser.Id,
       ReceiverId: receiverId,
       GroupContextId: groupId,
-    });
+    }).then(() => this.getExpectedPayments());
   };
 
   renderSettleUpSliders = (): JSX.Element => {
