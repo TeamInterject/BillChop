@@ -1,4 +1,5 @@
-﻿using BillChopBE.DataAccessLayer.Models;
+﻿using AutoMapper;
+using BillChopBE.Controllers.Models;
 using BillChopBE.Services;
 using BillChopBE.Services.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -16,22 +17,26 @@ namespace BillChopBE.Controllers
     public class BillsController : ControllerBase
     {
         private readonly IBillService billService;
+        private readonly IMapper mapper;
 
-        public BillsController(IBillService billService)
+        public BillsController(IBillService billService, IMapper mapper)
         {
+            this.mapper = mapper;
             this.billService = billService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<Bill>>> GetBills(Guid? groupId, DateTime? startTime, DateTime? endTime)
+        public async Task<ActionResult<IList<ApiBill>>> GetBills(Guid? groupId, DateTime? startTime, DateTime? endTime)
         {
-            return Ok(await billService.GetBillsAsync(groupId, startTime, endTime));
+            var bills = await billService.GetBillsAsync(groupId, startTime, endTime);
+            return mapper.Map<List<ApiBill>>(bills);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Bill>> CreateBill([FromBody] CreateNewBill newBill) 
+        public async Task<ActionResult<ApiBill>> CreateBill([FromBody] CreateNewBill newBillData) 
         {
-            return Ok(await billService.CreateAndSplitBillAsync(newBill));
+            var bill = await billService.CreateAndSplitBillAsync(newBillData);
+            return mapper.Map<ApiBill>(bill);
         }
     }
 }

@@ -76,7 +76,7 @@ namespace BillChopBETests
             var loginDetails = sutBuilder.CreateLoginDetails(email: email, password: password);
             var userService = sutBuilder.CreateSut();
 
-            A.CallTo(() => sutBuilder.UserRepository.GetByEmailAndPassword(email, A<string>._))
+            A.CallTo(() => sutBuilder.UserRepository.GetByEmailAndPasswordAsync(email, A<string>._))
                 .Returns(user);
 
             //Act
@@ -102,7 +102,7 @@ namespace BillChopBETests
             A.CallTo(() => sutBuilder.UserRepository.GetByIdAsync(user.Id))
                .Returns<User?>(null);
 
-            A.CallTo(() => sutBuilder.UserRepository.GetByEmailAndPassword(email, A<string>._))
+            A.CallTo(() => sutBuilder.UserRepository.GetByEmailAndPasswordAsync(email, A<string>._))
                .Returns<User?>(null);
 
             //Act & Assert

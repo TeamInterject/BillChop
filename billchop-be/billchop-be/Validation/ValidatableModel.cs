@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using NetEscapades.Configuration.Validation;
 
-namespace BillChopBE.DataAccessLayer.Models.Validation
+namespace BillChopBE.Validation
 {
     public interface IValidatableModel : IValidatable
     {

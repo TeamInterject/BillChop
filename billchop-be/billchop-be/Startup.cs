@@ -41,14 +41,17 @@ namespace BillChopBE
 
             services.AddBillChopContext(Configuration.GetConnectionString("BillChopDb"));
             services.AddBillChopRepositories();
+            services.AddAutoMapper();
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<IBillService, BillService>();
             services.AddScoped<ILoanService, LoanService>();
+            services.AddScoped<IPaymentService, PaymentService>();
 
             services.AddScoped<ILoanDbFilterFactory, LoanDbFilterFactory>();
             services.AddScoped<IBillDbFilterFactory, BillDbFilterFactory>();
+            services.AddScoped<IPaymentDbFilterFactory, PaymentDbFilterFactory>();
 
             services.AddSwaggerGen(c => 
             {

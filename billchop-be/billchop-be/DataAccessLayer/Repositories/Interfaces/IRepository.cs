@@ -1,6 +1,6 @@
 ﻿using BillChopBE.DataAccessLayer.Filters;
 using BillChopBE.DataAccessLayer.Models.Interfaces;
-using BillChopBE.DataAccessLayer.Models.Validation;
+using BillChopBE.Validation;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
