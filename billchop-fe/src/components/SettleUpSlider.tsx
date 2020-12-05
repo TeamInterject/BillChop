@@ -4,9 +4,12 @@ import CurrencyInput from "./CurrencyInput";
 import "../styles/settle-up-slider.css";
 
 export interface ISettleUpSliderProps {
-  loanerName: string;
-  loanAmount: number;
-  onSettle: () => void;
+  loanToSettle: { // [TM] NOTE this is just a draft object, when implementing new model in BE feel free to change it however you seem fit.
+    Id: string;
+    loanerName: string;
+    amountToSettle: number;
+  };
+  onSettle: (Id: string, settleAmount: number) => void;
 }
 
 interface ISettleUpSliderState {
@@ -29,13 +32,16 @@ export default class SettleUpSlider extends React.Component<
     this.setState({ settleAmount: parseFloat(event.currentTarget.value) });
   };
 
-  handleSettle = (): void => {
-    const { onSettle } = this.props;
-    onSettle();
+  handleSettle = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.stopPropagation();
+    event.preventDefault();
+    const { loanToSettle, onSettle } = this.props;
+    const { settleAmount } = this.state;
+    onSettle(loanToSettle.Id, settleAmount);
   };
 
   render(): JSX.Element {
-    const { loanerName, loanAmount} = this.props;
+    const { loanToSettle} = this.props;
     const { settleAmount } = this.state;
     return (
       <Form className="mt-4" onSubmit={this.handleSettle}>
@@ -43,13 +49,13 @@ export default class SettleUpSlider extends React.Component<
           <Form.Row>
             <Col className="ml-2 mr-2 mb-1">
               <div className="d-flex justify-content-between align-items-center">
-                <span>You owe {`${loanerName} ${loanAmount}€`}</span>
+                <span>You owe {`${loanToSettle.loanerName} ${loanToSettle.amountToSettle}€`}</span>
                 <div className="d-flex justify-content-end align-items-center">
                   <span className="mr-2">Pay:</span>
                   <CurrencyInput
                     onChange={this.handleSettleAmountChange}
                     value={settleAmount}
-                    max={loanAmount}
+                    max={loanToSettle.amountToSettle}
                   />
                 </div>
               </div>
@@ -61,7 +67,7 @@ export default class SettleUpSlider extends React.Component<
                 style={{ cursor: "pointer" }}
                 type="range"
                 min={0}
-                max={loanAmount}
+                max={loanToSettle.amountToSettle}
                 step={0.01}
                 onChange={this.handleSettleAmountChange}
                 value={settleAmount}
