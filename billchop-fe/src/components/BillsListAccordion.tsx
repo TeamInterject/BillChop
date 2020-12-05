@@ -7,11 +7,11 @@ import Dictionary from "../util/Dictionary";
 import GroupTable from "./GroupTable";
 import "../styles/bill-list-accordion.css";
 import toEuros from "../util/toEuros";
-import UserContext from "../backend/helpers/UserContext";
 
 export interface IBillsListAccordionProps {
   group: Group;
   bills: Bill[];
+  currentUserId: string;
 }
 
 export default class BillsListAccordion extends React.Component<
@@ -29,7 +29,7 @@ export default class BillsListAccordion extends React.Component<
   };
 
   renderBillCards = (): JSX.Element[] => {
-    const { bills, group } = this.props;
+    const { bills, group, currentUserId } = this.props;
 
     return bills.map((bill) => {
       return (
@@ -49,7 +49,7 @@ export default class BillsListAccordion extends React.Component<
               <GroupTable
                 group={group}
                 expenseAmounts={this.generateExpenseAmounts(bill)}
-                currentUserId={UserContext.authenticatedUser.Id}
+                currentUserId={currentUserId}
                 showMembersOnlyWithExpenses
                 loanerId={bill.Loaner.Id}
               />
