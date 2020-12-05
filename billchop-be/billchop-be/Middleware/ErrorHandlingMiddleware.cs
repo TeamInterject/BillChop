@@ -30,7 +30,7 @@ namespace BillChopBE.Middleware
         private static Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             var code = HttpStatusCode.InternalServerError; // 500 if unexpected
-            var msg = ex.Message + " " + ex.StackTrace;
+            var msg = ex.Message;
             if (ex is AbstractUserFriendlyException friendlyException)
             {
                 code = friendlyException.StatusCode;
