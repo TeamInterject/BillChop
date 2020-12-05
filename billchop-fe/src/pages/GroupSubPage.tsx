@@ -82,11 +82,12 @@ export default class GroupSubPage extends React.Component<
 
       produce(expenseAmounts, (draftAmounts) => {
         payments.forEach((payment) => {
-          expenseAmounts[payment.Receiver.Id] = draftAmounts[payment.Receiver.Id] ?? 0;
           if (payment.Payer.Id === currentUserId) {
+            expenseAmounts[payment.Receiver.Id] = draftAmounts[payment.Receiver.Id] ?? 0;
             expenseAmounts[payment.Receiver.Id] -= payment.Amount;
           } else {
-            expenseAmounts[payment.Receiver.Id] += payment.Amount;
+            expenseAmounts[payment.Payer.Id] = draftAmounts[payment.Payer.Id] ?? 0;
+            expenseAmounts[payment.Payer.Id] += payment.Amount;
           }
         });
       });
@@ -162,6 +163,7 @@ export default class GroupSubPage extends React.Component<
               group={group}
               expenseAmounts={expenseAmounts ?? {}}
               colorCode
+              skipCurrentUserAmount
             />
           </Col>
           <Col>

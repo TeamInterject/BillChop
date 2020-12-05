@@ -11,6 +11,7 @@ export interface IGroupTableProps {
   expenseAmounts: Dictionary<number>;
   colorCode?: boolean;
   showMembersOnlyWithExpenses?: boolean;
+  skipCurrentUserAmount?: boolean;
   loanerId?: string;
 }
 
@@ -19,8 +20,9 @@ function GroupTableRow(props: {
   expenseAmounts: Dictionary<number>, 
   colorCode?: boolean, 
   loanerId?: string,
+  skipAmount?: boolean,
 }) {
-  const {user, expenseAmounts, colorCode, loanerId} = props;
+  const { user, expenseAmounts, colorCode, loanerId, skipAmount } = props;
 
   function getExpenseStyling(expense: number | undefined | null): React.CSSProperties | undefined {
     if (!colorCode || !expense || (expense > -0.01 && expense < 0.01))
@@ -37,7 +39,7 @@ function GroupTableRow(props: {
     <tr>
       <td>{user.Id === UserContext.authenticatedUser.Id ? "You" : user.Name} {user.Id === loanerId && "(Payer)"}</td>
       <td style={getExpenseStyling(expenseAmounts[user.Id])}>
-        {formattedExpense}
+        {skipAmount ? "-" : formattedExpense}
       </td>
     </tr>
   );
@@ -51,6 +53,7 @@ export default class GroupTable extends React.Component<IGroupTableProps> {
       showMembersOnlyWithExpenses,
       loanerId,
       colorCode,
+      skipCurrentUserAmount,
     } = this.props;
 
     let groupUsers = [...group.Users];
@@ -72,6 +75,7 @@ export default class GroupTable extends React.Component<IGroupTableProps> {
           expenseAmounts={expenseAmounts}
           colorCode={colorCode}
           loanerId={loanerId}
+          skipAmount={skipCurrentUserAmount && user.Id === currentUserId}
         />),
       );
   };

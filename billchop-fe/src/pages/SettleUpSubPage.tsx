@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Col, Modal, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import ArrowBackIcon from "../assets/arrow-back-icon.svg";
 import ImageButton from "../components/ImageButton";
 import SettleUpSlider from "../components/SettleUpSlider";
@@ -77,22 +77,18 @@ export default class SettleUpSubPage extends React.Component<
     );
   };
 
-  renderInfoModal = (): JSX.Element => {
+  renderInfoMessage = (): JSX.Element => {
     const { onCloseSettleUp } = this.props;
     return (
-      <Modal show centered onHide={onCloseSettleUp}>
-        <Modal.Body className="d-flex flex-column align-items-center justify-content-center">
-          <img src={DoneIcon} height="48px" width="48px" alt="Groups icon" />
-          <p className="text-center m-2">
-            Everything is settled up!
-          </p>
-        </Modal.Body>
-        <Modal.Footer className="justify-content-center">
-          <Button variant="primary" onClick={onCloseSettleUp}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <div className="h-100 d-flex flex-column align-items-center justify-content-center">
+        <img src={DoneIcon} height="48px" width="48px" alt="Groups icon" />
+        <p className="text-center m-2">
+        Everything is settled up!
+        </p>
+        <Button className="m-2" variant="outline-primary" onClick={onCloseSettleUp}>
+          Go back
+        </Button>
+      </div>
     );
   };
 
@@ -104,7 +100,7 @@ export default class SettleUpSubPage extends React.Component<
       <div className="h-100 w-100 subpage-container">
         {
           expectedPayments.length === 0 ? 
-            this.renderInfoModal()
+            this.renderInfoMessage()
             :
             <div>
               <Row>
