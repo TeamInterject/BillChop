@@ -9,7 +9,7 @@ describe("Group Table Tests", () => {
       <GroupTable
         group = {{
           Id: "10",
-          Name: "Test",
+          Name: "Test 1",
           Users:[
             {Id:"1", Name:"User1", Email:"user1@gmail.com"},
             {Id: "2", Name: "User2", Email: "user2@yahoo.com"}],
@@ -31,35 +31,35 @@ describe("Group Table Tests", () => {
   it("Should recognise both non-negative/positive and negative expenses", async () => {
     const grouptable = {
       group:{
-        Id: "10",
-        Name: "Test",
+        Id: "12",
+        Name: "Test 2",
         Users:[
-          {Id:"1", Name:"User1", Email:"user1@gmail.com"},
-          {Id: "2", Name: "User2", Email: "user2@yahoo.com"},
-          {Id: "3", Name: "User3", Email: "user3@hotmail.com"},
+          {Id:"2", Name:"John", Email:"johnny@yahoo.com"},
+          {Id: "4", Name: "Tom", Email: "tommy@hotmail.com"},
+          {Id: "5", Name: "Mark", Email: "mark@gmail.com"},
         ]},
-      expenseAmounts: {1: 36.49, 2: 0, 3: -12.65},
-      currentUserId: "1",
+      expenseAmounts: {2: 27.89, 4: 0, 5: -16.60},
+      currentUserId: "2",
     };
 
-    expect(grouptable.expenseAmounts[1]).to.be.greaterThan(0);
-    expect(grouptable.expenseAmounts[2]).to.be.equal(0);
-    expect(grouptable.expenseAmounts[3]).to.be.lessThan(0);
+    expect(grouptable.expenseAmounts[2]).to.be.greaterThan(0);
+    expect(grouptable.expenseAmounts[4]).to.be.equal(0);
+    expect(grouptable.expenseAmounts[5]).to.be.lessThan(0);
   });
 
   it("Should color the amounts accordingly depending on their values", async () => {
     const grouptable = render(
       <GroupTable
         group = {{
-          Id: "10",
-          Name: "Test",
+          Id: "8",
+          Name: "Test 3",
           Users:[
-            {Id:"1", Name:"User1", Email:"user1@gmail.com"},
-            {Id: "2", Name: "User2", Email: "user2@yahoo.com"},
-            {Id: "3", Name: "User3", Email: "user3@hotmail.com"}],
+            {Id:"6", Name:"Roommate1", Email:"roommate1@gmail.com"},
+            {Id: "8", Name: "Roommate2", Email: "roommate2@yahoo.com"},
+            {Id: "10", Name: "Roommate3", Email: "roommate3@hotmail.com"}],
         }}
-        expenseAmounts = {{1: 36.49, 2:-12.65, 3: 0}}
-        currentUserId = {"3"}
+        expenseAmounts = {{6: 36.49, 8:-12.65, 10: 0}}
+        currentUserId = {"10"}
         colorCode = {true}
         skipCurrentUserAmount = {true}
       />,
@@ -73,5 +73,26 @@ describe("Group Table Tests", () => {
 
     const current = await grouptable.findAllByText("-");
     expect(current[0].getAttribute("style")).to.be.equal(null);
+  });
+
+  it("Should only return users with expenses", async () => {
+    const grouptable = render(
+      <GroupTable
+        group = {{
+          Id: "10",
+          Name: "Test 4",
+          Users:[
+            {Id:"123", Name:"User123", Email:"user.123@gmail.com"},
+            {Id: "124", Name: "User124", Email: "user.124@yahoo.com"},
+            {Id: "126", Name: "User126", Email: "user.126@hotmail.com"}],
+        }}
+        expenseAmounts = {{123: 20, 124: -12.65}}
+        currentUserId = {"126"}
+        showMembersOnlyWithExpenses = {true}
+      />,
+    );
+
+    const initalValue = await grouptable.findAllByText("20.00€");
+    expect(initalValue[0].parentElement?.parentNode?.childElementCount).to.be.equal(2);
   });
 });
