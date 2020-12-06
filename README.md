@@ -11,7 +11,7 @@ Frontend: ![](https://github.com/TeamInterject/BillChop/workflows/Frontend-CI/ba
 
 Backend: ![](https://github.com/TeamInterject/BillChop/workflows/Backend-CI/badge.svg)
 
-Code coverage: [![Coverage Status](https://coveralls.io/repos/github/TeamInterject/BillChop/badge.svg?branch=master)](https://coveralls.io/github/TeamInterject/BillChop?branch=master)
+Code coverage: [![Coverage Status](https://coveralls.io/repos/github/TeamInterject/BillChop/badge.svg?branch=master&service=github)](https://coveralls.io/github/TeamInterject/BillChop?branch=master)
 
 SonarCloud code inspection:
   - Backend
