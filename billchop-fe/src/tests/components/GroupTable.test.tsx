@@ -2,7 +2,6 @@ import { expect } from "chai";
 import { render} from "@testing-library/react";
 import React from "react";
 import GroupTable from "../../components/GroupTable";
-import { initial } from "lodash";
 
 describe("Group Table Tests", () => {
   it("Should render group's table correctly", async () => {
