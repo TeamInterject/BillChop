@@ -75,7 +75,7 @@ export default class GroupTable extends React.Component<IGroupTableProps> {
     let groupUsers = [...group.Users];
 
     if (showMembersOnlyWithExpenses && expenseAmounts !== undefined) {
-      groupUsers = group.Users?.filter((user) => {
+      groupUsers = group.Users.filter((user) => {
         return expenseAmounts[user.Id] !== undefined;
       });
     }
