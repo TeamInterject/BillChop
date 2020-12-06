@@ -54,11 +54,6 @@ namespace BillChopBETests
                 return user;
             }
 
-            public List<UserWithoutPassword> CovertUsersToUsersWithoutPassword(List<User> users)
-            {
-                return users.Select(u => new UserWithoutPassword(u)).ToList();
-            }
-
             public List<User> CreateUsers(int userCount)
             {
                 return userCount.Select((_) => CreateUser()).ToList();
@@ -239,17 +234,17 @@ namespace BillChopBETests
             //Arrange
             var sutBuilder = new UserServiceSutBuilder();   
             List<User> users = sutBuilder.CreateUsers(5);
-            var usersWithoutPassword = sutBuilder.CovertUsersToUsersWithoutPassword(users);
+
             var userService = sutBuilder.CreateSut();
 
             A.CallTo(() => sutBuilder.UserRepository.GetAllAsync(null))
                .Returns(users);
 
             //Act
-            IList<UserWithoutPassword> resultLogin = await userService.GetUsersAsync();
+            var resultLogin = await userService.GetUsersAsync();
 
             //Assert
-            resultLogin.ShouldBe(usersWithoutPassword);
+            resultLogin.ShouldBe(users);
         }
 
         [Test]
@@ -262,17 +257,17 @@ namespace BillChopBETests
                 sutBuilder.CreateUser(name: "Jack", email: "jack@gg.com", password: "password"),
                 sutBuilder.CreateUser(name: "James", email: "james@gg.com", password: "password"),
             };
-            var usersWithoutPassword = sutBuilder.CovertUsersToUsersWithoutPassword(returnedUsers);
+
             var userService = sutBuilder.CreateSut();
 
             A.CallTo(() => sutBuilder.UserRepository.SearchNameAndEmailAsync("ja", null, 5))
                .Returns(returnedUsers);
 
             //Act
-            IList<UserWithoutPassword> resultLogin = await userService.SearchForUsersAsync("ja", null, 5);
+            var resultLogin = await userService.SearchForUsersAsync("ja", null, 5);
 
             //Assert
-            resultLogin.ShouldBe(usersWithoutPassword);
+            resultLogin.ShouldBe(returnedUsers);
         }
     }
 }

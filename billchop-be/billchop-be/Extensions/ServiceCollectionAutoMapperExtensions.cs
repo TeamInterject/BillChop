@@ -19,7 +19,6 @@ namespace BillChopBE.Extensions
         public static MapperConfiguration CreateMapperConfig() {
             var config = new MapperConfiguration(cfg => {
                 cfg.CreateMap<UserWithToken, ApiUserWithToken>();
-                cfg.CreateMap<UserWithoutPassword, ApiUser>();
                 cfg.CreateMap<User, ApiUser>();
                 cfg.CreateMap<Group, ApiGroup>();
                 cfg.CreateMap<Loan, ApiLoan>();
