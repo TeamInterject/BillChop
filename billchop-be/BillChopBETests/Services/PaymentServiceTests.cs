@@ -29,6 +29,7 @@ namespace BillChopBETests
             public List<Loan> ReceiverLoansToPayer { get; set; } = new List<Loan>();
             public List<Payment> PayerPaymentsToReceiver { get; set; } = new List<Payment>();
             public List<Payment> ReceiverPaymentsToPayer { get; set; } = new List<Payment>();
+            public decimal PayerOwesReceiver { get; private set; } = 0;
 
             public PaymentServiceTestData(decimal amount, string groupName = "Test group")
             {
@@ -63,6 +64,8 @@ namespace BillChopBETests
                 };
 
                 PayerLoansToReceiver.Add(loan);
+
+                PayerOwesReceiver -= amount;
                 
                 return this;
             }
@@ -85,6 +88,8 @@ namespace BillChopBETests
                 };
 
                 ReceiverLoansToPayer.Add(loan);
+
+                PayerOwesReceiver += amount;
                 
                 return this;
             }
@@ -104,6 +109,8 @@ namespace BillChopBETests
                 };
 
                 PayerPaymentsToReceiver.Add(payment);
+
+                PayerOwesReceiver -= amount;
                 
                 return this;
             }
@@ -123,6 +130,8 @@ namespace BillChopBETests
                 };
 
                 ReceiverPaymentsToPayer.Add(payment);
+
+                PayerOwesReceiver += amount;
                 
                 return this;
             }
@@ -198,7 +207,7 @@ namespace BillChopBETests
                 return user;
             }
 
-            public void SetupLoans(List<Loan> loans, Guid loanerId, Guid loaneeId, Guid groupId)
+            public void SetupLoans(List<Loan> loans, Guid loanerId, Guid loaneeId, Guid? groupId)
             {
                 var filter = A.Fake<LoanDbFilter>();
                 A.CallTo(() => LoanDbFilterFactory.Create(A<LoanFilterInfo>.That.Matches(passedInfo => 
@@ -211,7 +220,7 @@ namespace BillChopBETests
                     .Returns(loans);
             }
 
-            public void SetupPayments(List<Payment> payments, Guid payerId, Guid receiverId, Guid groupId)
+            public void SetupPayments(List<Payment> payments, Guid payerId, Guid receiverId, Guid? groupId)
             {
                 var filter = A.Fake<PaymentDbFilter>();
                 A.CallTo(() => PaymentDbFilterFactory.Create(A<PaymentFilterInfo>.That.Matches(passedInfo => 
@@ -230,8 +239,16 @@ namespace BillChopBETests
                     .Returns(user);
             }
 
-            public void SetupByGroupUser(Group group) 
+            public void SetupByGroupUser(Group group, bool nullGroup = false) 
             {
+                if (nullGroup)
+                {
+                    A.CallTo(() => UserRepository.GetAllAsync(null))
+                        .Returns(group.Users);
+
+                    return;
+                }
+
                 A.CallTo(() => UserRepository.GetByGroupIdAsync(group.Id))
                     .Returns(group.Users);
             }
@@ -249,37 +266,38 @@ namespace BillChopBETests
                 return expectedPayment;
             }
 
-            public Payment SetupFromTestData(PaymentServiceTestData testData)
+            public Payment SetupFromTestData(PaymentServiceTestData testData, bool nullGroup = false)
             {
                 SetupByIdUser(testData.Payer.Id, testData.Payer);
                 SetupByIdUser(testData.Receiver.Id, testData.Receiver);
+                SetupByGroupUser(testData.Group, nullGroup);
 
                 SetupLoans(
                     testData.PayerLoansToReceiver,
                     loanerId: testData.Payer.Id,
                     loaneeId: testData.Receiver.Id,
-                    testData.Group.Id
+                    nullGroup ? null : testData.Group.Id
                 );
 
                 SetupLoans(
                     testData.ReceiverLoansToPayer,
                     loanerId: testData.Receiver.Id,
                     loaneeId: testData.Payer.Id,
-                    testData.Group.Id
+                    nullGroup ? null : testData.Group.Id
                 );
 
                 SetupPayments(
                     testData.PayerPaymentsToReceiver,
                     payerId: testData.Payer.Id,
                     receiverId: testData.Receiver.Id,
-                    testData.Group.Id
+                    nullGroup ? null : testData.Group.Id
                 );
 
                 SetupPayments(
                     testData.ReceiverPaymentsToPayer,
                     payerId: testData.Receiver.Id,
                     receiverId: testData.Payer.Id,
-                    testData.Group.Id
+                    nullGroup ? null : testData.Group.Id
                 );
 
                 return SetupAddPayment(testData.NewPaymentData);
@@ -510,6 +528,133 @@ namespace BillChopBETests
 
             //Assert
             resultPayment.ShouldBe(expectedPayment);
+        }
+
+
+        static IEnumerable<PaymentServiceTestData> NullGroupExpectedPaymentsTestData() 
+        {
+            return new List<PaymentServiceTestData>() 
+            {
+                new PaymentServiceTestData(40)
+                    .AddReceiverLoanToPayer(50),
+                new PaymentServiceTestData(8)
+                    .AddReceiverLoanToPayer(4)
+                    .AddReceiverLoanToPayer(5.99M),
+                new PaymentServiceTestData(25)
+                    .AddReceiverLoanToPayer(50)
+                    .AddPayerLoanToReceiver(25),
+                new PaymentServiceTestData(10)
+                    .AddReceiverLoanToPayer(100)
+                    .AddPayerPaymentToReceiver(80),
+                new PaymentServiceTestData(0.01M)
+                    .AddReceiverLoanToPayer(500)
+                    .AddPayerLoanToReceiver(200)
+                    .AddPayerPaymentToReceiver(50)
+                    .AddPayerLoanToReceiver(80),
+                new PaymentServiceTestData(170)
+                    .AddReceiverLoanToPayer(500)
+                    .AddPayerLoanToReceiver(200)
+                    .AddPayerPaymentToReceiver(50)
+                    .AddPayerLoanToReceiver(80),
+                new PaymentServiceTestData(50)
+                    .AddReceiverLoanToPayer(500)
+                    .AddPayerLoanToReceiver(600)
+                    .AddReceiverPaymentToPayer(100)
+                    .AddReceiverLoanToPayer(100)
+                    .AddPayerLoanToReceiver(50),
+            };
+        } 
+
+        [Test]
+        [TestCaseSource(nameof(NullGroupExpectedPaymentsTestData))]
+        public async Task GetExpectedPaymentsForUserAsync_WhenCalledWithNullGroup_ShouldReturnExpectedPayments(PaymentServiceTestData testData)
+        {
+            //Arrange
+            var sutBuilder = new PaymentServiceSutBuilder();
+            sutBuilder.SetupFromTestData(testData, nullGroup: true);
+
+            var paymentService = sutBuilder.CreateSut();
+
+            //Act
+            var payerPayments = await paymentService.GetExpectedPaymentsForUserAsync(testData.Payer.Id, null);
+            var receiverPayments = await paymentService.GetExpectedPaymentsForUserAsync(testData.Receiver.Id, null);
+
+            //Assert
+            payerPayments.Count.ShouldBe(1);
+
+            var payerPayment = payerPayments.Single();
+            payerPayment.Amount.ShouldBe(testData.PayerOwesReceiver);
+            payerPayment.Payer.ShouldBe(testData.Payer);
+            payerPayment.Receiver.ShouldBe(testData.Receiver);
+
+            receiverPayments.Count.ShouldBe(1);
+            var receiverPayment = payerPayments.Single();
+            receiverPayment.Amount.ShouldBe(testData.PayerOwesReceiver);
+            receiverPayment.Payer.ShouldBe(testData.Payer);
+            receiverPayment.Receiver.ShouldBe(testData.Receiver);
+        }
+
+        static IEnumerable<PaymentServiceTestData> GroupExpectedPaymentsTestData() 
+        {
+            return new List<PaymentServiceTestData>() 
+            {
+                new PaymentServiceTestData(40)
+                    .AddReceiverLoanToPayer(50),
+                new PaymentServiceTestData(8)
+                    .AddReceiverLoanToPayer(4)
+                    .AddReceiverLoanToPayer(5.99M),
+                new PaymentServiceTestData(25)
+                    .AddReceiverLoanToPayer(50)
+                    .AddPayerLoanToReceiver(25),
+                new PaymentServiceTestData(10)
+                    .AddReceiverLoanToPayer(100)
+                    .AddPayerPaymentToReceiver(80),
+                new PaymentServiceTestData(0.01M)
+                    .AddReceiverLoanToPayer(500)
+                    .AddPayerLoanToReceiver(200)
+                    .AddPayerPaymentToReceiver(50)
+                    .AddPayerLoanToReceiver(80),
+                new PaymentServiceTestData(170)
+                    .AddReceiverLoanToPayer(500)
+                    .AddPayerLoanToReceiver(200)
+                    .AddPayerPaymentToReceiver(50)
+                    .AddPayerLoanToReceiver(80),
+                new PaymentServiceTestData(50)
+                    .AddReceiverLoanToPayer(500)
+                    .AddPayerLoanToReceiver(600)
+                    .AddReceiverPaymentToPayer(100)
+                    .AddReceiverLoanToPayer(100)
+                    .AddPayerLoanToReceiver(50),
+            };
+        } 
+
+        [Test]
+        [TestCaseSource(nameof(GroupExpectedPaymentsTestData))]
+        public async Task GetExpectedPaymentsForUserAsync_WhenCalledWithGroup_ShouldReturnExpectedPayments(PaymentServiceTestData testData)
+        {
+            //Arrange
+            var sutBuilder = new PaymentServiceSutBuilder();
+            sutBuilder.SetupFromTestData(testData);
+
+            var paymentService = sutBuilder.CreateSut();
+
+            //Act
+            var payerPayments = await paymentService.GetExpectedPaymentsForUserAsync(testData.Payer.Id, testData.Group.Id);
+            var receiverPayments = await paymentService.GetExpectedPaymentsForUserAsync(testData.Receiver.Id, testData.Group.Id);
+
+            //Assert
+            payerPayments.Count.ShouldBe(1);
+
+            var payerPayment = payerPayments.Single();
+            payerPayment.Amount.ShouldBe(testData.PayerOwesReceiver);
+            payerPayment.Payer.ShouldBe(testData.Payer);
+            payerPayment.Receiver.ShouldBe(testData.Receiver);
+
+            receiverPayments.Count.ShouldBe(1);
+            var receiverPayment = payerPayments.Single();
+            receiverPayment.Amount.ShouldBe(testData.PayerOwesReceiver);
+            receiverPayment.Payer.ShouldBe(testData.Payer);
+            receiverPayment.Receiver.ShouldBe(testData.Receiver);
         }
     }
 }
