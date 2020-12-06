@@ -179,34 +179,6 @@ namespace BillChopBETests
                 return new PaymentService(PaymentRepository, LoanRepository, LoanDbFilterFactory, PaymentDbFilterFactory, UserRepository);
             }
 
-            public static Group CreateGroupWithUsers(string name, int userCount, Guid? groupId = null)
-            {
-                var group = new Group()
-                {
-                    Id = groupId ?? Guid.NewGuid(),
-                    Name = name,
-                };
-
-                group.Users = userCount.Select((_) => CreateUser(group)).ToList();
-                return group;
-            }
-
-            public static User CreateUser(Group? group = null)
-            {
-                var faker = new Faker();
-                var user = new User()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = faker.Person.FullName,
-                    Groups = new List<Group>(),
-                };
-
-                if (group != null)
-                    user.Groups.Add(group);
-
-                return user;
-            }
-
             public void SetupLoans(List<Loan> loans, Guid loanerId, Guid loaneeId, Guid? groupId)
             {
                 var filter = A.Fake<LoanDbFilter>();
