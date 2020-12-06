@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { render} from "@testing-library/react";
 import React from "react";
 import GroupTable from "../../components/GroupTable";
+import { initial } from "lodash";
 
 describe("Group Table Tests", () => {
   it("Should render group's table correctly", async () => {
@@ -20,12 +21,13 @@ describe("Group Table Tests", () => {
     );
 
     const firstUser = await grouptable.findAllByText("You");
-
     expect(firstUser.length).to.be.equal(1);
     expect(firstUser[0].textContent).to.not.equal("User1");
 
     const secondUser = await grouptable.findAllByText("User2");
-    expect(secondUser[0].nextSibling?.textContent).to.equal("-12.65€");
+    const amountAssigned = secondUser[0].nextElementSibling;
+    expect(amountAssigned).to.not.equal(null);
+    expect(amountAssigned?.textContent).to.equal("-12.65€");
   });
 
   it("Should recognise both non-negative/positive and negative expenses", async () => {
@@ -92,7 +94,11 @@ describe("Group Table Tests", () => {
       />,
     );
 
-    const initalValue = await grouptable.findAllByText("20.00€");
-    expect(initalValue[0].parentElement?.parentNode?.childElementCount).to.be.equal(2);
+    const initialValue = await grouptable.findAllByText("20.00€");
+    expect(initialValue[0].isConnected).to.be.equal(true);
+    const rowPart = initialValue[0].parentElement;
+    expect(rowPart?.parentNode).to.exist;
+    const hasChildren = rowPart?.parentNode?.childElementCount;
+    expect(hasChildren).to.be.equal(2);
   });
 });
