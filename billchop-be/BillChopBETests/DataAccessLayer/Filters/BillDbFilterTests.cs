@@ -87,6 +87,7 @@ namespace BillChopBETests.DataAccessLayer.Filters
             //Assert
             result.ShouldBe(bills);
         }
+
         [Test]
         public void BillDbFilter_WhenGroupHasBills_ShouldReturnOnlyGroupsBills()
         {
