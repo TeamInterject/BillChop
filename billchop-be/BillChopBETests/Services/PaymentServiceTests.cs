@@ -447,6 +447,12 @@ namespace BillChopBETests
                     .AddPayerLoanToReceiver(200)
                     .AddPayerPaymentToReceiver(50)
                     .AddPayerLoanToReceiver(80),
+                new PaymentServiceTestData(50)
+                    .AddReceiverLoanToPayer(500)
+                    .AddPayerLoanToReceiver(600)
+                    .AddReceiverPaymentToPayer(100)
+                    .AddReceiverLoanToPayer(100)
+                    .AddPayerLoanToReceiver(50),
             };
         } 
 
