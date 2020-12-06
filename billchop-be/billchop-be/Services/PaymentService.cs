@@ -108,7 +108,7 @@ namespace BillChopBE.Services
 
             var expectedPayment = expectedPayments.Single();
             if (payer.Id != expectedPayment.PayerId || receiver.Id != expectedPayment.ReceiverId) 
-                throw new BadRequestException("No payment expected.");
+                throw new BadRequestException($"User {receiver.Email} already owes you money.");
 
             if (newPaymentData.Amount > expectedPayment.Amount)
                 throw new BadRequestException("Trying to pay back more than owned.");
@@ -132,7 +132,7 @@ namespace BillChopBE.Services
             };
         }
 
-        public async Task<List<Payment>> GetExpectedPaymentsBetweenUsers(User userA, User userB, Guid? groupContextId) 
+        private async Task<List<Payment>> GetExpectedPaymentsBetweenUsers(User userA, User userB, Guid? groupContextId) 
         {
             var bOwesTotals = await GetLoaneeOwnedTotals(
                 loaner: userA, 
