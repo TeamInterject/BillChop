@@ -14,7 +14,7 @@ namespace BillChopBETests.DataAccessLayer.Models
     class UserWithTokenTests
     {
         [Test]
-        public void User_WhenUserInfoIsPassed_ShouldReturnUserObject()
+        public void UserWithToken_WhenUserWithTokenInfoIsPassed_ShouldReturnUserWithTokenObject()
         {
             //Arrange    
             var id = Guid.NewGuid();
