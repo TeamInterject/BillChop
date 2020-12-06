@@ -92,13 +92,18 @@ describe("Group Table Tests", () => {
         expenseAmounts = {{123: 20, 124: -12.65}}
         currentUserId = {"126"}
         showMembersOnlyWithExpenses = {true}
+        loanerId = {"123"}
       />,
     );
+
+    const payer = await grouptable.findAllByText("User123 (Payer)");
+    expect(payer[0].textContent).to.equal("User123 (Payer)");
+    
     const initialValue = await grouptable.findAllByText("20.00€");
     expect(initialValue[0].isConnected).to.be.equal(true);
     const rowPart = initialValue[0].parentElement;
     expect(rowPart?.parentNode).to.exist;
     const hasChildren = rowPart?.parentNode?.childElementCount;
     expect(hasChildren).to.be.equal(2);
-  });    
+  }).timeout(10000);
 });
