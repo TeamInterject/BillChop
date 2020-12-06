@@ -135,7 +135,7 @@ namespace BillChopBETests.DataAccessLayer.Filters
         }
       
         [Test]
-        public void PaymentDbFilter_WhenThereArePaymentsThatWereCreatedAfterCertainTime_ShouldReturnAllPaymentsCreatedAfterThatTime()
+        public void PaymentDbFilter_WhenThereArePaymentsCreatedAfterCertainTime_ShouldReturnAllPaymentsCreatedAfterThatTime()
         {
             //Arrange           
             var sutBuilder = new PaymentDbFilterSutBuilder();
@@ -157,7 +157,7 @@ namespace BillChopBETests.DataAccessLayer.Filters
         }
 
         [Test]
-        public void PaymentDbFilter_WhenThereArePaymentsThatWereCreatedBeforeCertainTime_ShouldReturnAllPaymentsCreatedBeforeThatTime()
+        public void PaymentDbFilter_WhenThereArePaymentsCreatedBeforeCertainTime_ShouldReturnAllPaymentsCreatedBeforeThatTime()
         {
             //Arrange           
             var sutBuilder = new PaymentDbFilterSutBuilder();

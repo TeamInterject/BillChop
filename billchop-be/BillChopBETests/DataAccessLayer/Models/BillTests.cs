@@ -22,7 +22,7 @@ namespace BillChopBETests.DataAccessLayer.Models
             var creationTime = DateTime.Now;
             var loanerId = Guid.NewGuid();
             var loaner = A.Fake<User>();
-            var loans = A.Fake<List<Loan>>();
+            var loans = new List<Loan>();
             var groupContextId = Guid.NewGuid();
             var groupContext = A.Fake<Group>();
 

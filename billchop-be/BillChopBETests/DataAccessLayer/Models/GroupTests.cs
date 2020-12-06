@@ -13,13 +13,13 @@ namespace BillChopBETests.DataAccessLayer.Models
     class GroupTests
     {
         [Test]
-        public void Bill_WhenBillInfoIsPassed_ShouldReturnBillObject()
+        public void Group_WhenGrouoInfoIsPassed_ShouldReturnGroupObject()
         {
             //Arrange    
             var id = Guid.NewGuid();
             var name = "Group one";
-            var users = A.Fake<List<User>>();
-            var bills = A.Fake<List<Bill>>();
+            var users = new List<User>();
+            var bills = new List<Bill>();
 
             //Act
             var group = new Group()

@@ -21,11 +21,11 @@ namespace BillChopBETests.DataAccessLayer.Models
             var name = "test";
             var email = "test@test.com";
             var password = "password";
-            var groups = A.Fake<List<Group>>();
-            var loans = A.Fake<List<Loan>>();
-            var bills = A.Fake<List<Bill>>();
-            var paymentsMade = A.Fake<List<Payment>>();
-            var paymentsReceived = A.Fake<List<Payment>>();
+            var groups = new List<Group>();
+            var loans = new List<Loan>();
+            var bills = new List<Bill>();
+            var paymentsMade = new List<Payment>();
+            var paymentsReceived = new List<Payment>();
             var token = "token";
 
             //Act

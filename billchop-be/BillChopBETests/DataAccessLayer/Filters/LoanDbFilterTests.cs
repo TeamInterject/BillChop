@@ -186,7 +186,7 @@ namespace BillChopBETests.DataAccessLayer.Filters
         }
 
         [Test]
-        public void LoanDbFilter_WhenThereAreLoansWereCreatedAfterCertainTime_ShouldReturnAllLoansCreatedAfterCertainTime()
+        public void LoanDbFilter_WhenThereAreLoansCreatedAfterCertainTime_ShouldReturnAllLoansCreatedAfterThatTime()
         {
             //Arrange           
             var sutBuilder = new LoanDbFilterSutBuilder();
@@ -208,7 +208,7 @@ namespace BillChopBETests.DataAccessLayer.Filters
         }
 
         [Test]
-        public void LoanDbFilter_WhenThereAreLoansWereCreatedBeforeCertainTime_ShouldReturnAllLoansCreatedBeforeCertainTime()
+        public void LoanDbFilter_WhenThereAreLoansCreatedBeforeCertainTime_ShouldReturnAllLoansCreatedBeforeThatTime()
         {
             //Arrange           
             var sutBuilder = new LoanDbFilterSutBuilder();
