@@ -1,7 +1,5 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using BillChopBE.DataAccessLayer.Models;
-using BillChopBE.Validation;
 
 namespace BillChopBE.Services.Models
 {
@@ -22,6 +20,6 @@ namespace BillChopBE.Services.Models
         }
 
         [Required]
-        public string Token { get; set; } = null!;
+        public string Token { get; set; }
     }
 }
