@@ -42,7 +42,7 @@ describe("Group Table Tests", () => {
       expenseAmounts: {2: 27.89, 4: 0, 5: -16.60},
       currentUserId: "2",
     };
-
+    expect(grouptable.group.Users).to.not.equal(null);
     expect(grouptable.expenseAmounts[2]).to.be.greaterThan(0);
     expect(grouptable.expenseAmounts[4]).to.be.equal(0);
     expect(grouptable.expenseAmounts[5]).to.be.lessThan(0);
@@ -92,7 +92,6 @@ describe("Group Table Tests", () => {
         showMembersOnlyWithExpenses = {true}
       />,
     );
-
     const initialValue = await grouptable.findAllByText("20.00€");
     expect(initialValue[0].isConnected).to.be.equal(true);
     const rowPart = initialValue[0].parentElement;
