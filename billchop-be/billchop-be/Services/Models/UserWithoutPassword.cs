@@ -5,56 +5,19 @@ using BillChopBE.Validation;
 
 namespace BillChopBE.Services.Models
 {
-    public class UserWithoutPassword : ValidatableModel
-    {
-        public UserWithoutPassword() 
-        { 
-        }
-
-        public UserWithoutPassword(User user)
+    public class UserWithToken: User
+    {        
+        public UserWithToken(User user, string token)
         {
             Id = user.Id;
             Name = user.Name;
             Email = user.Email;
-        }
-
-        [Required]
-        public Guid Id { get; set; }
-
-        [Required]
-        public string Name { get; set; } = null!;
-
-        [Required]
-        public string Email { get; set; } = null!;
-
-        public override bool Equals(object? obj)
-        {
-            var item = obj as UserWithoutPassword;
-
-            if (item == null)
-            {
-                return false;
-            }
-
-            return Id.Equals(item.Id) &&
-                Name.Equals(item.Name) &&
-                Email.Equals(item.Email);
-        }
-
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
-        }
-    }
-
-    public class UserWithToken: UserWithoutPassword
-    {
-        public UserWithToken() 
-        {
-        }
-
-        public UserWithToken(User user, string token): base(user) 
-        {
+            Password  = user.Password;
+            Groups = user.Groups;
+            Loans = user.Loans;
+            Bills = user.Bills;
+            PaymentsMade = user.PaymentsMade;
+            PaymentsReceived = user.PaymentsReceived;
             Token = token;
         }
 
