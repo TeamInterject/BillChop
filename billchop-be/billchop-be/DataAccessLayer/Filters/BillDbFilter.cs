@@ -3,7 +3,7 @@ using System;
 
 namespace BillChopBE.DataAccessLayer.Filters
 {
-    public class BillFilterInfo 
+    public record BillFilterInfo 
     {
         /// <summary>
         /// Optional DateTime to find laons created after a certain time.

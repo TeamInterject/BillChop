@@ -14,6 +14,7 @@ using Bogus;
 using System.Collections.Generic;
 using System.Linq;
 using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
+using BillChopBE.DataAccessLayer.Filters;
 
 namespace BillChopBETests
 {
@@ -30,7 +31,7 @@ namespace BillChopBETests
                 return new BillService(BillRepository, GroupRepository, BillDbFilterFactory);
             }
 
-            public CreateNewBill CreateNewBill(string name, decimal total, Guid? groupContextId = null, Guid? loanerId = null) 
+            public CreateNewBill CreateNewBill(string name, decimal total, Guid? groupContextId = null, Guid? loanerId = null, DateTime? creationTime = null) 
             {
                 return new CreateNewBill()
                 {
@@ -38,6 +39,7 @@ namespace BillChopBETests
                     Total = total,
                     GroupContextId = groupContextId ?? Guid.NewGuid(),
                     LoanerId = loanerId ?? Guid.NewGuid(),
+                    CreationTime = creationTime ?? DateTime.Now,
                 };
             }
 
@@ -198,6 +200,51 @@ namespace BillChopBETests
 
             //Act & Assert
             var exception = Assert.ThrowsAsync<ValidationException>(async () => await billService.CreateAndSplitBillAsync(createNewBill));
+        }
+
+        [Test]
+        public async Task GetBillsAsyncAndGetFilteredBillsAsync_BillsExistInSpecifiedFilterCriteria_ShouldReturnBillList()
+        {
+            //Arrange
+            var sutBuilder = new BillServiceSutBuilder();
+            var group = sutBuilder.CreateGroupWithUsers("Test group", 10);
+            var loaner = group.Users.First();
+            var bill = new Bill()
+            {
+                Name = "Test bill",
+                Total = 100,
+                LoanerId = loaner.Id,
+                Loaner = loaner,
+                GroupContextId = group.Id,
+                GroupContext = group,
+            };
+            var billList = new List<Bill>
+            {
+                bill
+            };
+            var billService = sutBuilder.CreateSut();
+            var startTime = DateTime.Now.AddTicks(-1000);
+            var endTime = DateTime.Now.AddTicks(1000);
+
+            var filterInfo = new BillFilterInfo()
+            {
+                GroupId = group.Id,
+                StartTime = startTime,
+                EndTime = endTime,
+            };
+            var filter = new BillDbFilter(filterInfo);
+
+            A.CallTo(() => sutBuilder.BillDbFilterFactory.Create(filterInfo))
+                .Returns(filter);
+
+            A.CallTo(() => sutBuilder.BillRepository.GetAllAsync(filter))
+                .Returns(billList);
+
+            //Act
+            IList<Bill> result = await billService.GetBillsAsync(group.Id, startTime, endTime);
+
+            //Assert
+            result.ShouldBe(billList);
         }
     }
 }

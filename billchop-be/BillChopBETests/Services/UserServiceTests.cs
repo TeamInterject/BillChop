@@ -12,6 +12,8 @@ using Bogus;
 using System.Collections.Generic;
 using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 using BillChopBE.Services.Configurations;
+using ProjectPortableTools.Extensions;
+using System.Linq;
 
 namespace BillChopBETests
 {
@@ -51,6 +53,12 @@ namespace BillChopBETests
 
                 return user;
             }
+
+            public List<User> CreateUsers(int userCount)
+            {
+                return userCount.Select((_) => CreateUser()).ToList();
+            }
+
             public LoginDetails CreateLoginDetails(string? email = null, string? password = null)
             {
                 var faker = new Faker();
@@ -185,6 +193,81 @@ namespace BillChopBETests
 
             //Act & Assert
             var exception = Assert.ThrowsAsync<ValidationException>(async () => await userService.AddUserAsync(user2));
+        }
+
+        [Test]
+        [TestCase("Test", "test@test.com", "test123!")]
+        [TestCase("John K", "john@gmail.com", "test123!")]
+        [TestCase("Alice", "alice@yahoo.com", "test123!")]
+        public async Task AddUserAsync_WhenAllInformationIsCorrect_ShouldReturnUserWithToken(string name, string email, string password)
+        {
+            var sutBuilder = new UserServiceSutBuilder();          
+            var loginDetails = sutBuilder.CreateLoginDetails(email: email, password: password);
+            var user2 = new CreateNewUser
+            {
+                Email = email,
+                Name = name,
+                Password = password,
+            };
+            var user = user2.ToUser();
+            var userService = sutBuilder.CreateSut();
+
+            A.CallTo(() => sutBuilder.UserRepository.GetByEmailAndPasswordAsync(email, Hasher.GetHashed(password)))
+                .Returns(user);
+
+            A.CallTo(() => sutBuilder.UserRepository.AddAsync(A<User>.That.Matches(passedUser => passedUser.Name == user.Name && 
+            passedUser.Password == Hasher.GetHashed(user.Password) && 
+            passedUser.Email == user.Email)))
+                .Returns(user);
+
+            //Act
+            var resultLogin = await userService.AddUserAsync(user2);
+
+            //Assert
+            resultLogin.Name.ShouldBe(name);
+            resultLogin.Email.ShouldBe(email);
+        }
+
+        [Test]
+        public async Task GetUsersAsync_WhenUsersExists_ShouldReturnAllUsers()
+        {
+            //Arrange
+            var sutBuilder = new UserServiceSutBuilder();   
+            List<User> users = sutBuilder.CreateUsers(5);
+
+            var userService = sutBuilder.CreateSut();
+
+            A.CallTo(() => sutBuilder.UserRepository.GetAllAsync(null))
+               .Returns(users);
+
+            //Act
+            var resultLogin = await userService.GetUsersAsync();
+
+            //Assert
+            resultLogin.ShouldBe(users);
+        }
+
+        [Test]
+        public async Task SearchFurUsersAsync_WhenUsersMatchKeyword_ShouldReturnMatchedUsers()
+        {
+            //Arrange
+            var sutBuilder = new UserServiceSutBuilder();
+            List<User> returnedUsers = new List<User>
+            {
+                sutBuilder.CreateUser(name: "Jack", email: "jack@gg.com", password: "password"),
+                sutBuilder.CreateUser(name: "James", email: "james@gg.com", password: "password"),
+            };
+
+            var userService = sutBuilder.CreateSut();
+
+            A.CallTo(() => sutBuilder.UserRepository.SearchNameAndEmailAsync("ja", null, 5))
+               .Returns(returnedUsers);
+
+            //Act
+            var resultLogin = await userService.SearchForUsersAsync("ja", null, 5);
+
+            //Assert
+            resultLogin.ShouldBe(returnedUsers);
         }
     }
 }

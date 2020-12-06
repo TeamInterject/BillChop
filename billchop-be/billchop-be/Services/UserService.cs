@@ -10,16 +10,17 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Linq;
 using BillChopBE.Services.Configurations;
+using BillChopBE.DataAccessLayer.Models;
 
 namespace BillChopBE.Services
 {
     public interface IUserService
     {
-        Task<UserWithToken> LoginAsync(LoginDetails loginDetails);
-        Task<IList<UserWithoutPassword>> GetUsersAsync();
-        Task<IList<UserWithoutPassword>> SearchForUsersAsync(string keyword, Guid? exclusionGroupId, int top);
-        Task<UserWithoutPassword> GetUserAsync(Guid id);
-        Task<UserWithToken> AddUserAsync(CreateNewUser newUserData);
+        Task<User> LoginAsync(LoginDetails loginDetails);
+        Task<IList<User>> GetUsersAsync();
+        Task<IList<User>> SearchForUsersAsync(string keyword, Guid? exclusionGroupId, int top);
+        Task<User> GetUserAsync(Guid id);
+        Task<User> AddUserAsync(CreateNewUser newUserData);
     }
 
     public class UserService : IUserService
@@ -33,16 +34,16 @@ namespace BillChopBE.Services
             this.config = config;
         }
 
-        public async Task<UserWithoutPassword> GetUserAsync(Guid id)
+        public async Task<User> GetUserAsync(Guid id)
         {
             var user = await userRepository.GetByIdAsync(id);
             if (user == null) 
                 throw new NotFoundException($"User with id ({id}) does not exist");
 
-            return new UserWithoutPassword(user);
+            return user;
         }
 
-        public async Task<UserWithToken> LoginAsync(LoginDetails loginDetails)
+        public async Task<User> LoginAsync(LoginDetails loginDetails)
         {
             loginDetails.Validate();
             var hashed = Hasher.GetHashed(loginDetails.Password);
@@ -67,23 +68,19 @@ namespace BillChopBE.Services
             return new UserWithToken(user, token);
         }
 
-        public async Task<IList<UserWithoutPassword>> GetUsersAsync()
+        public async Task<IList<User>> GetUsersAsync()
         {
             var users = await userRepository.GetAllAsync();
-            return users
-                .Select(u => new UserWithoutPassword(u))
-                .ToList();
+            return users.ToList();
         }
 
-        public async Task<IList<UserWithoutPassword>> SearchForUsersAsync(string keyword, Guid? exclusionGroupId, int top)
+        public async Task<IList<User>> SearchForUsersAsync(string keyword, Guid? exclusionGroupId, int top)
         {
             var users = await userRepository.SearchNameAndEmailAsync(keyword, exclusionGroupId, top);
-            return users
-                .Select(u => new UserWithoutPassword(u))
-                .ToList();
+            return users.ToList();
         }
 
-        public async Task<UserWithToken> AddUserAsync(CreateNewUser newUserData)
+        public async Task<User> AddUserAsync(CreateNewUser newUserData)
         {
             newUserData.Validate();
             var user = newUserData.ToUser();
