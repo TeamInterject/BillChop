@@ -91,11 +91,11 @@ namespace BillChopBE.Services
 
             var payer = await userRepository.GetByIdAsync(newPaymentData.PayerId);
             if (payer == null)
-                throw new NotFoundException("User with given id does not exist");
+                throw new NotFoundException("User with given id does not exist.");
 
             var receiver = await userRepository.GetByIdAsync(newPaymentData.ReceiverId);
             if (receiver == null)
-                throw new NotFoundException("User with given id does not exist");
+                throw new NotFoundException("User with given id does not exist.");
 
             var expectedPayments = await GetExpectedPaymentsBetweenUsers(
                 userA: payer,

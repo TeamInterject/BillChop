@@ -224,9 +224,9 @@ namespace BillChopBETests
                     .Returns(payments);
             }
 
-            public void SetupByIdUser(User user) 
+            public void SetupByIdUser(Guid id, User? user) 
             {
-                A.CallTo(() => UserRepository.GetByIdAsync(user.Id))
+                A.CallTo(() => UserRepository.GetByIdAsync(id))
                     .Returns(user);
             }
 
@@ -251,8 +251,8 @@ namespace BillChopBETests
 
             public Payment SetupFromTestData(PaymentServiceTestData testData)
             {
-                SetupByIdUser(testData.Payer);
-                SetupByIdUser(testData.Receiver);
+                SetupByIdUser(testData.Payer.Id, testData.Payer);
+                SetupByIdUser(testData.Receiver.Id, testData.Receiver);
 
                 SetupLoans(
                     testData.PayerLoansToReceiver,
@@ -311,11 +311,50 @@ namespace BillChopBETests
             results.ShouldBe(expectedList);
         }
 
+        [Test]
+        public void AddPaymentAsync_WhenReceiverDoesNotExist_ShouldThrowNotFound()
+        {
+            //Arrange
+            var sutBuilder = new PaymentServiceSutBuilder();
+            var testData = new PaymentServiceTestData(40)
+                    .AddReceiverLoanToPayer(50);
+
+            sutBuilder.SetupFromTestData(testData);
+            sutBuilder.SetupByIdUser(testData.Receiver.Id, null);
+
+            var paymentService = sutBuilder.CreateSut();
+
+            //Act & Assert
+            var exception = Assert.ThrowsAsync<NotFoundException>(async () => await paymentService.AddPaymentAsync(testData.NewPaymentData));
+            exception.Message.ShouldBe("User with given id does not exist.");
+        }
+
+        [Test]
+        public void AddPaymentAsync_WhenPayerDoesNotExist_ShouldThrowNotFound()
+        {
+            //Arrange
+            var sutBuilder = new PaymentServiceSutBuilder();
+            var testData = new PaymentServiceTestData(40)
+                    .AddReceiverLoanToPayer(50);
+
+            sutBuilder.SetupFromTestData(testData);
+            sutBuilder.SetupByIdUser(testData.Payer.Id, null);
+
+            var paymentService = sutBuilder.CreateSut();
+
+            //Act & Assert
+            var exception = Assert.ThrowsAsync<NotFoundException>(async () => await paymentService.AddPaymentAsync(testData.NewPaymentData));
+            exception.Message.ShouldBe("User with given id does not exist.");
+        }
+
         static IEnumerable<PaymentServiceTestData> NoPaymentsExpectedTestData() 
         {
             return new List<PaymentServiceTestData>() 
             {
                 new PaymentServiceTestData(50),
+                new PaymentServiceTestData(50)
+                    .AddPayerLoanToReceiver(25)
+                    .AddReceiverPaymentToPayer(25),
                 new PaymentServiceTestData(10)
                     .AddPayerLoanToReceiver(25)
                     .AddReceiverLoanToPayer(25),
