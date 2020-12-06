@@ -51,7 +51,7 @@ namespace BillChopBE.Services
         {
             var user = await userRepository.GetByIdAsync(userId);
             if (user == null)
-                throw new NotFoundException("User with given id does not exist");
+                throw new NotFoundException("User with given id does not exist.");
 
             var otherUsers = await GetUsersForPaymentsAsync(user, groupId);
 
@@ -91,11 +91,11 @@ namespace BillChopBE.Services
 
             var payer = await userRepository.GetByIdAsync(newPaymentData.PayerId);
             if (payer == null)
-                throw new NotFoundException("User with given id does not exist");
+                throw new NotFoundException("User with given id does not exist.");
 
             var receiver = await userRepository.GetByIdAsync(newPaymentData.ReceiverId);
             if (receiver == null)
-                throw new NotFoundException("User with given id does not exist");
+                throw new NotFoundException("User with given id does not exist.");
 
             var expectedPayments = await GetExpectedPaymentsBetweenUsers(
                 userA: payer,
@@ -108,7 +108,7 @@ namespace BillChopBE.Services
 
             var expectedPayment = expectedPayments.Single();
             if (payer.Id != expectedPayment.PayerId || receiver.Id != expectedPayment.ReceiverId) 
-                throw new BadRequestException("No payment expected.");
+                throw new BadRequestException($"User {receiver.Email} already owes you money.");
 
             if (newPaymentData.Amount > expectedPayment.Amount)
                 throw new BadRequestException("Trying to pay back more than owned.");
@@ -132,7 +132,7 @@ namespace BillChopBE.Services
             };
         }
 
-        public async Task<List<Payment>> GetExpectedPaymentsBetweenUsers(User userA, User userB, Guid? groupContextId) 
+        private async Task<List<Payment>> GetExpectedPaymentsBetweenUsers(User userA, User userB, Guid? groupContextId) 
         {
             var bOwesTotals = await GetLoaneeOwnedTotals(
                 loaner: userA, 

@@ -22,12 +22,12 @@ namespace BillChopBE.Services.Models
         public Payment ToPayment () 
         {
             return new Payment()
-                {
-                    Amount = Amount,
-                    PayerId = PayerId,
-                    ReceiverId = ReceiverId,
-                    GroupContextId = GroupContextId,
-                };
+            {
+                Amount = Amount,
+                PayerId = PayerId,
+                ReceiverId = ReceiverId,
+                GroupContextId = GroupContextId,
+            };
         }
     }
 }
