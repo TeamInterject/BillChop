@@ -162,6 +162,7 @@ export default class GroupSubPage extends React.Component<
             <GroupTable
               group={group}
               expenseAmounts={expenseAmounts ?? {}}
+              currentUserId={UserContext.authenticatedUser.Id}
               colorCode
               skipCurrentUserAmount
             />
@@ -175,7 +176,7 @@ export default class GroupSubPage extends React.Component<
         </Row>
         <Row>
           <Col>
-            <BillsListAccordion group={group} bills={bills} />
+            <BillsListAccordion group={group} bills={bills} currentUserId={UserContext.authenticatedUser.Id}/>
           </Col>
         </Row>
       </div>
