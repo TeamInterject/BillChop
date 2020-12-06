@@ -24,7 +24,6 @@ namespace BillChopBE.DataAccessLayer.Models
         [Required]
         public Guid LoanerId { get; set; }
 
-        [Required]
         public virtual User Loaner { get; set; } = null!;
 
         public virtual List<Loan> Loans { get; set; } = new List<Loan>();

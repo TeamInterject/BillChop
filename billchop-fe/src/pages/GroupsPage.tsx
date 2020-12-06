@@ -101,6 +101,7 @@ export default class GroupsPage extends React.Component<
           {selectedGroup ?
             showSettleUp ?
               <SettleUpSubPage
+                groupId={selectedGroup.Id}
                 onCloseSettleUp={this.handleCloseSettleUp}
               />
               :

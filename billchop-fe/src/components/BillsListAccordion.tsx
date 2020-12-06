@@ -11,6 +11,7 @@ import toEuros from "../util/toEuros";
 export interface IBillsListAccordionProps {
   group: Group;
   bills: Bill[];
+  currentUserId: string;
 }
 
 export default class BillsListAccordion extends React.Component<
@@ -28,7 +29,7 @@ export default class BillsListAccordion extends React.Component<
   };
 
   renderBillCards = (): JSX.Element[] => {
-    const { bills, group } = this.props;
+    const { bills, group, currentUserId } = this.props;
 
     return bills.map((bill) => {
       return (
@@ -48,6 +49,7 @@ export default class BillsListAccordion extends React.Component<
               <GroupTable
                 group={group}
                 expenseAmounts={this.generateExpenseAmounts(bill)}
+                currentUserId={currentUserId}
                 showMembersOnlyWithExpenses
                 loanerId={bill.Loaner.Id}
               />
