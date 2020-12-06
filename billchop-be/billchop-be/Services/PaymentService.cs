@@ -51,7 +51,7 @@ namespace BillChopBE.Services
         {
             var user = await userRepository.GetByIdAsync(userId);
             if (user == null)
-                throw new NotFoundException("User with given id does not exist");
+                throw new NotFoundException("User with given id does not exist.");
 
             var otherUsers = await GetUsersForPaymentsAsync(user, groupId);
 

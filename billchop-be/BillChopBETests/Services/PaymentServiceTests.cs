@@ -531,6 +531,24 @@ namespace BillChopBETests
         }
 
 
+        [Test]
+        public void GetExpectedPaymentsForUserAsync_WhenUserDoesNotExist_ShouldThrow()
+        {
+            //Arrange
+            var sutBuilder = new PaymentServiceSutBuilder();
+            var testData = new PaymentServiceTestData(40)
+                    .AddReceiverLoanToPayer(50);
+
+            sutBuilder.SetupFromTestData(testData, nullGroup: true);
+            sutBuilder.SetupByIdUser(testData.Payer.Id, null);
+
+            var paymentService = sutBuilder.CreateSut();
+
+            //Act & Assert
+            var exception = Assert.ThrowsAsync<NotFoundException>(async () => await paymentService.GetExpectedPaymentsForUserAsync(testData.Payer.Id, null));
+            exception.Message.ShouldBe("User with given id does not exist.");
+        }
+
         static IEnumerable<PaymentServiceTestData> NullGroupExpectedPaymentsTestData() 
         {
             return new List<PaymentServiceTestData>() 
