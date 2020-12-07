@@ -5,6 +5,10 @@
         "billchop-fe/src/**/*.tsx",
         "billchop-fe/src/**/*.ts"
     ],
+    "exclude": [
+        "billchop-fe/src/serviceWorker.ts",
+        "billchop-fe/src/index.tsx"
+    ],
     "reporter": ["lcov", "text"],
     "report-dir": "billchop-fe/coverage/",
     "temp-dir": "billchop-fe/.nyc_output/"
