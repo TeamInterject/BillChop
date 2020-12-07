@@ -13,6 +13,7 @@ import UserContext from "../backend/helpers/UserContext";
 import "../styles/groups-page.css";
 import PaymentClient from "../backend/clients/PaymentClient";
 import produce from "immer";
+import BigNumber from "bignumber.js";
 
 export enum LoanType {
   Provided,
@@ -98,7 +99,7 @@ export default class GroupSubPage extends React.Component<
 
   getRecentGroupSpendingDatasets = (): IBarChartDataset<number>[] => {
     let { bills } = this.state;
-    const datasets: IBarChartDataset<number>[] = [];
+    const datasets: IBarChartDataset<BigNumber>[] = [];
     const currentMonth = new Date().getMonth();
 
     bills = bills.filter((bill) => {
@@ -115,12 +116,20 @@ export default class GroupSubPage extends React.Component<
 
       datasets[billMonth] = datasets[billMonth] ?? {
         label: getMonthName(billMonth),
-        data: 0,
+        data: new BigNumber(0),
       };
-      datasets[billMonth].data += bill.Total;
+      datasets[billMonth].data = datasets[billMonth].data.plus(bill.Total);
     });
 
-    return Object.values(datasets);
+    const datasetsToReturn: IBarChartDataset<number>[] = [];
+    datasets.forEach((set, index) => {
+      datasetsToReturn[index] = {
+        label: set.label,
+        data: set.data.toNumber(),
+      };
+    });
+
+    return Object.values(datasetsToReturn);
   };
 
   handleOnAddNewBill = (name: string, total: number): void => {
