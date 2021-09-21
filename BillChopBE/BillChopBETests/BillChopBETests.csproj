@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\billchop-be\BillChopBE.csproj" />
+    <ProjectReference Include="..\BillChopBE\BillChopBE.csproj" />
     <ProjectReference Include="..\ProjectPortableTools\ProjectPortableTools.csproj" />
   </ItemGroup>
 

@@ -15,7 +15,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using BillChopBE.Services.Configurations;
-
 namespace BillChopBE
 {
     public class Startup

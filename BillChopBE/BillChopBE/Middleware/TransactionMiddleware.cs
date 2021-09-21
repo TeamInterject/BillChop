@@ -19,7 +19,7 @@ namespace BillChopBE.Middleware
             {
                 var connection = transaction.Connection;
                 if (connection == null || connection.State != ConnectionState.Open)
-                    throw new BillChopBE.Exceptions.DbException("It seems our servers are down right now");
+                    throw new Exceptions.DbException("It seems our servers are down right now");
 
                 await next(context);
                 transaction.Commit();
