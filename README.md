@@ -7,25 +7,27 @@ Are you tired of having to figure out how to split the bill properly when you ar
 BillChop is an online tool that allows you to keep track of your payments, ascertain who owns whom and so much more!
 
 ## Github Actions
-Frontend: ![](https://github.com/TeamInterject/BillChop/workflows/Frontend-CI/badge.svg)
+Frontend: ![](https://github.com/ainoraz/BillChop/workflows/Frontend-CI/badge.svg)
 
-Backend: ![](https://github.com/TeamInterject/BillChop/workflows/Backend-CI/badge.svg)
+Backend: ![](https://github.com/ainoraz/BillChop/workflows/Backend-CI/badge.svg)
 
-Code coverage: [![Coverage Status](https://coveralls.io/repos/github/TeamInterject/BillChop/badge.svg?branch=master&service=github)](https://coveralls.io/github/TeamInterject/BillChop?branch=master)
+Code coverage: [![Coverage Status](https://coveralls.io/repos/github/AinoraZ/BillChop/badge.svg?branch=master&service=github)](https://coveralls.io/github/AinoraZ/BillChop?branch=master)
 
 SonarCloud code inspection:
   - Backend
-      - [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=TeamInterject-164531_BillChop_BE&metric=alert_status)](https://sonarcloud.io/dashboard?id=TeamInterject-164531_BillChop_BE)
-      - [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=TeamInterject-164531_BillChop_BE&metric=code_smells)](https://sonarcloud.io/dashboard?id=TeamInterject-164531_BillChop_BE)
-      - [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=TeamInterject-164531_BillChop_BE&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=TeamInterject-164531_BillChop_BE)
-      - [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=TeamInterject-164531_BillChop_BE&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=TeamInterject-164531_BillChop_BE)
+      - [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ainoraz-BillChopBE&metric=alert_status)](https://sonarcloud.io/dashboard?id=ainoraz-BillChopBE)
+      - [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ainoraz-BillChopBE&metric=code_smells)](https://sonarcloud.io/dashboard?id=ainoraz-BillChopBE)
+      - [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=ainoraz-BillChopBE&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=ainoraz-BillChopBE)
+      - [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=ainoraz-BillChopBE&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=ainoraz-BillChopBE)
   - Frontend:
-    - [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=TeamInterject-164531_BillChop_FE&metric=alert_status)](https://sonarcloud.io/dashboard?id=TeamInterject-164531_BillChop_FE)
-    - [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=TeamInterject-164531_BillChop_FE&metric=code_smells)](https://sonarcloud.io/dashboard?id=TeamInterject-164531_BillChop_FE)
-    - [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=TeamInterject-164531_BillChop_FE&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=TeamInterject-164531_BillChop_FE)
-    - [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=TeamInterject-164531_BillChop_FE&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=TeamInterject-164531_BillChop_FE)
+    - [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ainoraz-billchop-fe&metric=alert_status)](https://sonarcloud.io/dashboard?id=ainoraz-billchop-fe)
+    - [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ainoraz-billchop-fe&metric=code_smells)](https://sonarcloud.io/dashboard?id=ainoraz-billchop-fe)
+    - [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=ainoraz-billchop-fe&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=ainoraz-billchop-fe)
+    - [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=ainoraz-billchop-fe&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=ainoraz-billchop-fe)
 
 ## Disclaimer
-This project is done for UNIBZ university and is created for educational purposes.
+This project was originally done for a course at UNIBZ university.
+
+This fork is a post-mortem update. If You are looking for the original project, You can find it here [here](https://github.com/TeamInterject/BillChop).
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

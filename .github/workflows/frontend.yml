@@ -1,9 +1,5 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Frontend-CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   push:
     branches: [master]
@@ -11,12 +7,10 @@ on:
     branches: [master]
     paths:
       - "billchop-fe/**"
+      - .github/workflows/frontend.yml
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build-frontend:
-    # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -26,13 +20,10 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         node-version: [12.x]
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -45,7 +36,32 @@ jobs:
         run: npm run-script build
       - name: Test App
         run: npm test
-      - name: Analyze with SonarCloud #TeamInterject_BillChop_FE
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: frontend-build
+          path: ./billchop-fe/build
+
+  fe-code-quality:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./billchop-fe
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Analyze with SonarCloud
         uses: sonarsource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -56,8 +72,3 @@ jobs:
             -Dsonar.organization=ainoraz
             -Dsonar.projectKey=ainoraz-billchop-fe
         if: matrix.os == 'ubuntu-latest'
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: frontend-build
-          path: ./billchop-fe/build
