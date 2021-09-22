@@ -48,9 +48,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           # The key of the SonarQube project
-          sonarProjectKey: ainoraz-billchop-fe
+          sonarProjectKey: ainoraz-BillChopBE
           # The name of the SonarQube project
-          sonarProjectName: ainoraz-billchop-fe
+          sonarProjectName: ainoraz-BillChopBE
           # The name of the SonarQube organization in SonarCloud. For hosted SonarQube, skip this setting.
           sonarOrganization: ainoraz
           dotnetBuildArguments: ./BillChopBE
