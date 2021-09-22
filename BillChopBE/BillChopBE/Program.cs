@@ -19,10 +19,12 @@ namespace BillChopBE
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureLogging(logging => 
+                .ConfigureLogging((context, logging) => 
                 {
                     logging.ClearProviders();
-                    logging.AddConsole();
+
+                    if (context.HostingEnvironment.IsDevelopment())
+                        logging.AddConsole();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

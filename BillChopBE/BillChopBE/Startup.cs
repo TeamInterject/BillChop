@@ -15,10 +15,14 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using BillChopBE.Services.Configurations;
+using Microsoft.Extensions.Hosting;
+
 namespace BillChopBE
 {
     public class Startup
     {
+        readonly string localHostOrigins = "_localHostOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,9 +30,19 @@ namespace BillChopBE
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(localHostOrigins, builder => 
+                {
+                    builder
+                        .WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 {
@@ -122,11 +136,10 @@ namespace BillChopBE
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseCors(corsBuilder => corsBuilder
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .Build());
+            if (env.IsDevelopment()) 
+            {
+                app.UseCors(localHostOrigins);
+            }
 
             app.UseEndpoints(endpoints =>
             {
