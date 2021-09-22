@@ -53,7 +53,7 @@ jobs:
         with:
           projectBaseDir: ./billchop-fe
           args: >
-            -Dsonar.organization=ainoraz-billchop-fe
+            -Dsonar.organization=ainoraz
             -Dsonar.projectKey=ainoraz-billchop-fe
         if: matrix.os == 'ubuntu-latest'
       - name: Archive production artifacts
