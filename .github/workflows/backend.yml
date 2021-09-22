@@ -7,10 +7,10 @@ on:
     branches: [master]
     paths:
       - "BillChopBE/**"
+      - .github/workflows/backend.yml
 
 jobs:
   build-backend:
-    # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -18,14 +18,12 @@ jobs:
         working-directory: ./BillChopBE
     strategy:
       matrix:
-        # Testing needs to happen on multiple platforms, since our developers use a variety of machines
         os: [ubuntu-latest, windows-latest]
-        dotnet-version: ["5.0.100"]
+        dotnet-version: ["5.0.x"]
     steps:
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
       - name: Setup dotnet ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v1
         with:
@@ -41,17 +39,34 @@ jobs:
           path: ./BillChopBE/BillChopBE/bin
       - name: Clean solution
         run: dotnet clean
+
+  be-code-quality:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./BillChopBE
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        dotnet-version: ["5.0.x"]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Setup dotnet ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
       - name: SonarScanner for .NET 5 with pull request decoration support
         uses: highbyte/sonarscan-dotnet@2.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          # The key of the SonarQube project
           sonarProjectKey: ainoraz-BillChopBE
-          # The name of the SonarQube project
           sonarProjectName: ainoraz-BillChopBE
-          # The name of the SonarQube organization in SonarCloud. For hosted SonarQube, skip this setting.
           sonarOrganization: ainoraz
           dotnetBuildArguments: ./BillChopBE
           dotnetDisableTests: true

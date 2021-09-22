@@ -5,6 +5,10 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+    paths:
+      - "billchop-fe/**"
+      - "BillChopBE/**"
+      - .github/workflows/coverage.yml
 
 jobs:
   cover-backend:
