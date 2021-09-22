@@ -12,7 +12,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./billchop-be
+        working-directory: ./BillChopBE
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: backend-coverage
-          path: ./billchop-be/BillChopBETests/TestResults/coverage.info 
+          path: ./BillChopBE/BillChopBETests/TestResults/coverage.info 
   cover-frontend:
     runs-on: ${{ matrix.os }}
     defaults:
@@ -82,7 +82,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: backend-coverage
-          path: ./billchop-be/BillChopBETests/TestResults/coverage.info
+          path: ./BillChopBE/BillChopBETests/TestResults/coverage.info
       - uses: actions/download-artifact@v2
         with:
           name: frontend-coverage

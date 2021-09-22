@@ -53,8 +53,8 @@ jobs:
         with:
           projectBaseDir: ./billchop-fe
           args: >
-            -Dsonar.organization=teaminterject-164531
-            -Dsonar.projectKey=TeamInterject-164531_BillChop_FE
+            -Dsonar.organization=ainoraz-billchop-fe
+            -Dsonar.projectKey=ainoraz-billchop-fe
         if: matrix.os == 'ubuntu-latest'
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2

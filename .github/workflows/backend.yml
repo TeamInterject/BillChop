@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [master]
     paths:
-      - "billchop-be/**"
+      - "BillChopBE/**"
 
 jobs:
   build-backend:
@@ -15,7 +15,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./billchop-be
+        working-directory: ./BillChopBE
     strategy:
       matrix:
         # Testing needs to happen on multiple platforms, since our developers use a variety of machines
@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: backend-build
-          path: ./billchop-be/billchop-be/bin
+          path: ./BillChopBE/BillChopBE/bin
       - name: Clean solution
         run: dotnet clean
       - name: SonarScanner for .NET 5 with pull request decoration support
@@ -48,11 +48,11 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           # The key of the SonarQube project
-          sonarProjectKey: TeamInterject-164531_BillChop_BE
+          sonarProjectKey: ainoraz-billchop-fe
           # The name of the SonarQube project
-          sonarProjectName: TeamInterject_BillChop_BE
+          sonarProjectName: ainoraz-billchop-fe
           # The name of the SonarQube organization in SonarCloud. For hosted SonarQube, skip this setting.
-          sonarOrganization: teaminterject-164531
-          dotnetBuildArguments: ./billchop-be
+          sonarOrganization: ainoraz
+          dotnetBuildArguments: ./BillChopBE
           dotnetDisableTests: true
         if: matrix.os == 'ubuntu-latest'
