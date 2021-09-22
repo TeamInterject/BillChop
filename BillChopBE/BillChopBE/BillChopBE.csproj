@@ -30,6 +30,9 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BillChopBE.Common\BillChopBE.Exceptions.csproj" />
+    <ProjectReference Include="..\BillChopBE.DataAccessLayer\BillChopBE.DataAccessLayer.csproj" />
+    <ProjectReference Include="..\BillChopBE.Services\BillChopBE.Services.csproj" />
     <ProjectReference Include="..\ProjectPortableTools\ProjectPortableTools.csproj" />
   </ItemGroup>
 </Project>

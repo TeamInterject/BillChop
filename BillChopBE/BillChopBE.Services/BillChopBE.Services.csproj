@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="5.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BillChopBE.Common\BillChopBE.Exceptions.csproj" />
+    <ProjectReference Include="..\BillChopBE.DataAccessLayer\BillChopBE.DataAccessLayer.csproj" />
+	<PackageReference Include="morelinq" Version="3.3.2" />
+  </ItemGroup>
+
+</Project>
