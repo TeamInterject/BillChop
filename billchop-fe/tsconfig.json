@@ -24,7 +24,8 @@
       "chai-as-promised",
       "mocha",
       "chai-jest-snapshot"
-    ]
+    ],
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
     "src"
